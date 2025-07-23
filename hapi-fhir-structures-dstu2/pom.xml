@@ -23,11 +23,11 @@
 		<!--
 		Test dependencies on other optional parts of HAPI 
 		-->
-      <dependency>
-         <groupId>org.codehaus.woodstox</groupId>
-         <artifactId>woodstox-core-asl</artifactId>
-         <scope>test</scope>
-      </dependency>
+		<dependency>
+			<groupId>com.fasterxml.woodstox</groupId>
+			<artifactId>woodstox-core</artifactId>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>ca.uhn.hapi.fhir</groupId>
 			<artifactId>hapi-fhir-validation-resources-dstu2</artifactId>
@@ -72,8 +72,8 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-servlet</artifactId>
+			<groupId>org.eclipse.jetty.ee10</groupId>
+			<artifactId>jetty-ee10-servlet</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

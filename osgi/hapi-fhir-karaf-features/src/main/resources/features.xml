@@ -31,7 +31,7 @@
 	  <bundle dependency='true'>mvn:com.google.guava/guava/${guava_version}</bundle>
 	  <bundle dependency='true'>wrap:mvn:com.google.errorprone/error_prone_annotations/${error_prone_annotations_version}</bundle>
 	  <bundle dependency='true'>mvn:org.codehaus.woodstox/stax2-api/${stax2_api_version}</bundle>
-	  <bundle dependency='true'>mvn:org.codehaus.woodstox/woodstox-core-asl/${woodstox_core_asl_version}</bundle>
+	  <bundle dependency='true'>mvn:com.fasterxml.woodstox/woodstox-core/${woodstox_core_asl_version}</bundle>
 	  <bundle>mvn:ca.uhn.hapi.fhir/hapi-fhir-base/${project.version}</bundle>
   </feature>
 

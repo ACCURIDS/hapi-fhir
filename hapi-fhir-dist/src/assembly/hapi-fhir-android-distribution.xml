@@ -32,7 +32,7 @@
 				<exclude>ca.uhn.hapi.fhir:hapi-fhir-validation-resources-dstu2</exclude>
 				<exclude>ca.uhn.hapi.fhir:hapi-fhir-validation-resources-dstu3</exclude>
 				<exclude>ca.uhn.hapi.fhir:hapi-fhir-validation-resources-r4</exclude>
-				<exclude>org.codehaus.woodstox:woodstox-core-asl</exclude>
+				<exclude>com.fasterxml.woodstox:woodstox-core</exclude>
 				<exclude>javax.xml.stream:stax-api</exclude>
 				<exclude>org.codehaus.woodstox:stax2-api</exclude>
 			</excludes>
