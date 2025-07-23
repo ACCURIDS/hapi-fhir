@@ -16,8 +16,6 @@
 	<name>HAPI FHIR JPA Server - Enterprise Master Patient Index</name>
 
 	<dependencies>
-
-
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>

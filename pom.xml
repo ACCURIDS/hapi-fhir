@@ -766,6 +766,9 @@
 		<protobuf-java_version>3.25.5</protobuf-java_version>
 		<jetty-servlets_version>11.0.25</jetty-servlets_version>
 		<apache-jena-libs_version>4.9.0</apache-jena-libs_version>
+		<quartz_version>2.5.0</quartz_version>
+		<spring-aop_version>6.2.6</spring-aop_version>
+		<spring-batch_version>4.2.4.RELEASE</spring-batch_version>
 	</properties>
 
 	<dependencyManagement>
@@ -815,7 +818,7 @@
 			<dependency>
 				<groupId>com.google.protobuf</groupId>
 				<artifactId>protobuf-java</artifactId>
-				<version>§{protobuf-java_version}</version>
+				<version>${protobuf-java_version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.atlassian.commonmark</groupId>
@@ -1527,12 +1530,12 @@
 			<dependency>
 				<groupId>org.springframework.batch</groupId>
 				<artifactId>spring-batch-core</artifactId>
-				<version>${spring-aop_version}</version>
+				<version>${spring-batch_version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.batch</groupId>
 				<artifactId>spring-batch-infrastructure</artifactId>
-				<version>${spring-aop_version}</version>
+				<version>${spring-batch_version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
