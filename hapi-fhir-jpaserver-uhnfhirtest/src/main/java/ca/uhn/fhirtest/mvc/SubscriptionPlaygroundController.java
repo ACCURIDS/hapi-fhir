@@ -3,8 +3,6 @@ package ca.uhn.fhirtest.mvc;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Subscription;
 import org.springframework.ui.ModelMap;
@@ -13,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import ca.uhn.fhir.rest.client.impl.GenericClient;
 import ca.uhn.fhir.to.BaseController;
 import ca.uhn.fhir.to.model.HomeRequest;
+
+import javax.servlet.http.HttpServletRequest;
 
 @org.springframework.stereotype.Controller()
 public class SubscriptionPlaygroundController extends BaseController {

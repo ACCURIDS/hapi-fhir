@@ -61,7 +61,7 @@
 				<executions>
 					<execution>
 						<id>copy</id>
-						<phase>process-resources</phase>
+						<phase>package</phase> <!-- Run AFTER packaging -->
 						<goals>
 							<goal>copy</goal>
 						</goals>
