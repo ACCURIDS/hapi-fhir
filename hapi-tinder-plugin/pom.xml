@@ -187,7 +187,7 @@
 		<dependency>
 			<groupId>org.apache.maven</groupId>
 			<artifactId>maven-plugin-api</artifactId>
-			<version>3.8.6</version>
+			<version>3.9.0</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.eclipse.sisu</groupId>
@@ -200,6 +200,12 @@
 			<artifactId>maven-plugin-annotations</artifactId>
 			<version>3.10.2</version>
 			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.maven</groupId>
+					<artifactId>maven-artifact</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<!-- Ant tasks -->
@@ -251,9 +257,12 @@
 				<artifactId>maven-plugin-plugin</artifactId>
 				<version>3.10.2</version>
 				<configuration>
-					<goalPrefix>hapi-tinder</goalPrefix>
+					<!-- see http://jira.codehaus.org/browse/MNG-5346 -->
 					<skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
+					<!-- Add goalPrefix if needed -->
+					<goalPrefix>hapi-tinder</goalPrefix>
 				</configuration>
+
 				<executions>
 					<execution>
 						<id>default-descriptor</id>
