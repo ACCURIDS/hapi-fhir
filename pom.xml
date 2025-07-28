@@ -736,7 +736,7 @@
 		<plexus_compiler_api_version>2.8.5</plexus_compiler_api_version>
 		<servicemix_saxon_version>9.5.1-5_1</servicemix_saxon_version>
 		<servicemix_xmlresolver_version>1.2_5</servicemix_xmlresolver_version>
-		<slf4j_version>1.7.28</slf4j_version>
+		<slf4j_version>2.0.12</slf4j_version>
 		<spring_version>5.2.3.RELEASE</spring_version>
 		<!-- FYI: Spring Data JPA 2.1.9 causes test failures due to unexpected cascading deletes -->
 		<spring_data_version>2.2.0.RELEASE</spring_data_version>
@@ -769,7 +769,18 @@
 			<dependency>
 				<groupId>ch.qos.logback</groupId>
 				<artifactId>logback-classic</artifactId>
-				<version>1.2.3</version>
+				<version>1.5.16</version>
+				<exclusions>
+					<exclusion>
+						<groupId>javax.servlet</groupId>
+						<artifactId>javax.servlet-api</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>ch.qos.logback</groupId>
+				<artifactId>logback-core</artifactId>
+				<version>1.5.16</version>
 			</dependency>
 			<dependency>
 				<groupId>com.atlassian.commonmark</groupId>
@@ -1461,7 +1472,7 @@
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-android</artifactId>
-				<version>${slf4j_version}</version>
+				<version>1.7.36</version> <!-- Last 1.x version -->
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
