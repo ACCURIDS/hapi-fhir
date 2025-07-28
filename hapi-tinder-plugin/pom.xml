@@ -251,7 +251,7 @@
 				<artifactId>maven-plugin-plugin</artifactId>
 				<version>3.10.2</version>
 				<configuration>
-					<goalPrefix>hapi-tinder</goalPrefix>
+					<!-- TODO : Solve the Maven Plugin BUG here -->
 					<skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
 				</configuration>
 				<executions>
