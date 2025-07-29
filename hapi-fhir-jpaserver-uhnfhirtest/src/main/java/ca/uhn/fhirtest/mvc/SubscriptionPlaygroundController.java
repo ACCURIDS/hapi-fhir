@@ -3,15 +3,17 @@ package ca.uhn.fhirtest.mvc;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Subscription;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-import javax.servlet.http.HttpServletRequest;
 
 import ca.uhn.fhir.rest.client.impl.GenericClient;
 import ca.uhn.fhir.to.BaseController;
 import ca.uhn.fhir.to.model.HomeRequest;
+
 @org.springframework.stereotype.Controller()
 public class SubscriptionPlaygroundController extends BaseController {
 	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(SubscriptionPlaygroundController.class);
@@ -38,16 +40,16 @@ public class SubscriptionPlaygroundController extends BaseController {
 			.sort().ascending(Subscription.STATUS)
 			.returnBundle(Bundle.class)
 			.execute();
-		
+
 		List<Subscription> subscriptions = new ArrayList<Subscription>();
 		for (Bundle.BundleEntryComponent next : resp.getEntry()) {
 			if (next.getResource() instanceof Subscription) {
 				subscriptions.add((Subscription) next.getResource());
 			}
 		}
-		
+
 		theModel.put("subscriptions", subscriptions);
-		
+
 		return "subscriptions";
 	}
 
