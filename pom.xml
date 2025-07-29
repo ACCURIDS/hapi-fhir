@@ -891,6 +891,22 @@
 				<version>${ph_commons_version}</version>
 			</dependency>
 			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-api</artifactId>
+				<version>2.20.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-core</artifactId>
+				<version>2.20.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.yaml</groupId>
+				<artifactId>snakeyaml</artifactId>
+				<version>2.2</version>
+			</dependency>
+			<dependency>
 				<groupId>com.squareup.okhttp3</groupId>
 				<artifactId>okhttp</artifactId>
 				<version>3.8.1</version>
@@ -1853,6 +1869,10 @@
 					<artifactId>animal-sniffer-maven-plugin</artifactId>
 					<version>1.18</version>
 					<configuration>
+						<ignores>
+							<ignore>org.quartz</ignore>
+							<ignore>org.apache.derby.*</ignore>
+						</ignores>
 						<signature>
 							<groupId>org.codehaus.mojo.signature</groupId>
 							<artifactId>java17</artifactId>
