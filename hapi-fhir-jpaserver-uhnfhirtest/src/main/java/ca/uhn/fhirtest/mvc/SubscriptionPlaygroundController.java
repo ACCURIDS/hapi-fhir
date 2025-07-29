@@ -40,16 +40,16 @@ public class SubscriptionPlaygroundController extends BaseController {
 			.sort().ascending(Subscription.STATUS)
 			.returnBundle(Bundle.class)
 			.execute();
-		
+
 		List<Subscription> subscriptions = new ArrayList<Subscription>();
 		for (Bundle.BundleEntryComponent next : resp.getEntry()) {
 			if (next.getResource() instanceof Subscription) {
 				subscriptions.add((Subscription) next.getResource());
 			}
 		}
-		
+
 		theModel.put("subscriptions", subscriptions);
-		
+
 		return "subscriptions";
 	}
 

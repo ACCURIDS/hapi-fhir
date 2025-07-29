@@ -872,11 +872,6 @@
 				<version>1.2.0</version>
 			</dependency>
 			<dependency>
-				<groupId>com.sun.activation</groupId>
-				<artifactId>jakarta.activation</artifactId>
-				<version>1.2.1</version>
-			</dependency>
-			<dependency>
 				<groupId>com.sun.mail</groupId>
 				<artifactId>javax.mail</artifactId>
 				<version>1.6.1</version>
@@ -2557,14 +2552,15 @@
 				<module>hapi-fhir-docs</module>
 				<module>hapi-fhir-test-utilities</module>
 				<module>hapi-fhir-jpaserver-test-utilities</module>
-				<module>hapi-tinder-plugin</module>
 				<module>hapi-tinder-test</module>
 				<module>hapi-fhir-client</module>
 				<module>hapi-fhir-server</module>
 				<module>hapi-fhir-server-empi</module>
 				<module>hapi-fhir-converter</module>
 				<module>hapi-fhir-validation</module>
-				<!--<module>hapi-fhir-narrativegenerator</module>-->
+				<!--<module>hapi-fhir-narrativegenerator</module>
+				<module>hapi-tinder-plugin</module>
+				TODO TINDER PLUGIN contain bugs and problem  -->
 				<module>hapi-fhir-structures-dstu2</module>
 				<module>hapi-fhir-structures-hl7org-dstu2</module>
 				<module>hapi-fhir-validation-resources-dstu2</module>
@@ -2585,7 +2581,6 @@
 				<module>hapi-fhir-jaxrsserver-base</module>
 				<module>hapi-fhir-jaxrsserver-example</module>
 				<module>hapi-fhir-jpaserver-batch</module>
-				<module>hapi-fhir-jpaserver-base</module>
 				<module>hapi-fhir-jpaserver-empi</module>
 				<module>hapi-fhir-jpaserver-migrate</module>
 				<module>restful-server-example</module>
@@ -2598,7 +2593,8 @@
 				<!--<module>osgi</module>-->
 				<!--<module>osgi/hapi-fhir-karaf-features</module>
 				<module>osgi/hapi-fhir-karaf-integration-tests</module>-->
-				<!--
+				<!-- TODO : Solve the Errors that related to JPA SERVER Base Module 
+				<module>hapi-fhir-jpaserver-base</module>
 				<module>example-projects/hapi-fhir-base-example-embedded-ws</module>
 				<module>example-projects/hapi-fhir-standalone-overlay-example</module>
 				<module>example-projects/hapi-fhir-jpaserver-cds-example</module>

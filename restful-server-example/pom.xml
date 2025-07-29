@@ -89,7 +89,18 @@
 			<artifactId>javax.servlet-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
-
+		<!-- Spring Core (required for all Spring projects) -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>5.3.30</version> <!-- Match your Spring version -->
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+			<version>2.7.18</version>
+		</dependency>
 		<!-- 
 		If you are using HAPI narrative generation, you will need to include Thymeleaf
 		as well. Otherwise the following can be omitted.
