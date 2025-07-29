@@ -14,7 +14,6 @@
 	<name>HAPI FHIR - Command Line Client - API</name>
 
 	<dependencies>
-
 		<!-- This dependency includes the core HAPI-FHIR classes -->
 		<dependency>
 			<groupId>ca.uhn.hapi.fhir</groupId>
