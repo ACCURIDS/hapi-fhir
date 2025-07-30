@@ -22,13 +22,13 @@
 		</dependency>
 
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>org.hl7.fhir.utilities</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>utilities</artifactId>
 			<version>${fhir_core_version}</version>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>org.hl7.fhir.r4</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>r4</artifactId>
 			<version>${fhir_core_version}</version>
 		</dependency>
 		<dependency>
@@ -370,8 +370,8 @@
 			<dependencies>
 				<!-- When we're building a DIST, make sure that the javadocs for fhir_core are available -->
 				<dependency>
-					<groupId>ca.uhn.hapi.fhir</groupId>
-					<artifactId>org.hl7.fhir.r4</artifactId>
+					<groupId>com.accurids.fhir</groupId>
+					<artifactId>r4</artifactId>
 					<classifier>javadoc</classifier>
 					<scope>provided</scope>
 					<version>${fhir_core_version}</version>

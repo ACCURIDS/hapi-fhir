@@ -27,8 +27,8 @@
 		</dependency>
 
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>org.hl7.fhir.validation</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>validation</artifactId>
 			<version>${fhir_core_version}</version>
 			<exclusions>
 				<exclusion>
@@ -66,8 +66,8 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>org.hl7.fhir.utilities</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>utilities</artifactId>
 			<version>${fhir_core_version}</version>
 		</dependency>
 
