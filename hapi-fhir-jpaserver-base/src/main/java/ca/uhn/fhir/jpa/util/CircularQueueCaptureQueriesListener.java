@@ -28,6 +28,7 @@ import org.hl7.fhir.dstu3.model.InstantType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -216,12 +217,22 @@ public class CircularQueueCaptureQueriesListener extends BaseCaptureQueriesListe
 	/**
 	 * Log all captured SELECT queries
 	 */
-	public void logSelectQueries() {
-		List<String> queries = getSelectQueries()
+	public List<SqlQuery> logSelectQueries() {
+		return logSelectQueries(true, true);
+	}
+
+	/**
+	 * Log all captured SELECT queries
+	 */
+	public List<SqlQuery> logSelectQueries(boolean theInlineParams, boolean theFormatSql) {
+		List<SqlQuery> queries = getSelectQueries();
+		List<String> queriesStrings = queries
 			.stream()
 			.map(CircularQueueCaptureQueriesListener::formatQueryAsSql)
+			.map(t -> CircularQueueCaptureQueriesListener.formatQueryAsSql(t, theInlineParams, theFormatSql))
 			.collect(Collectors.toList());
-		ourLog.info("Select Queries:\n{}", String.join("\n", queries));
+		ourLog.info("Select Queries:\n{}", String.join("\n", queriesStrings));
+		return queries;
 	}
 
 	/**
@@ -339,9 +350,16 @@ public class CircularQueueCaptureQueriesListener extends BaseCaptureQueriesListe
 		return getDeleteQueriesForCurrentThread().size();
 	}
 
-
+	@Nonnull
 	static String formatQueryAsSql(SqlQuery theQuery) {
-		String formattedSql = theQuery.getSql(true, true);
+		boolean inlineParams = true;
+		boolean formatSql = true;
+		return formatQueryAsSql(theQuery, inlineParams, formatSql);
+	}
+
+	@Nonnull
+	static String formatQueryAsSql(SqlQuery theQuery, boolean inlineParams, boolean formatSql) {
+		String formattedSql = theQuery.getSql(inlineParams, formatSql);
 		StringBuilder b = new StringBuilder();
 		b.append("SqlQuery at ");
 		b.append(new InstantType(new Date(theQuery.getQueryTimestamp())).getValueAsString());
