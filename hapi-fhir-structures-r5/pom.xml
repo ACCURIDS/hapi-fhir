@@ -20,15 +20,14 @@
 			<artifactId>hapi-fhir-base</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>org.hl7.fhir.utilities</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>utilities</artifactId>
 			<version>${fhir_core_version}</version>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>org.hl7.fhir.r5</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>r5</artifactId>
 			<version>${fhir_core_version}</version>
 		</dependency>
 		<dependency>

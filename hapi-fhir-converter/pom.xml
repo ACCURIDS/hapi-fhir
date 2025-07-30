@@ -19,8 +19,8 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>org.hl7.fhir.convertors</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>convertors</artifactId>
 			<version>${fhir_core_version}</version>
 		</dependency>
 
