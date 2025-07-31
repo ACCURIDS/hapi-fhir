@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>ca.uhn.hapi.fhir</groupId>
 		<artifactId>hapi-deployable-pom</artifactId>
-		<version>5.1.0</version>
+		<version>5.1.0-patch1</version>
 		<relativePath>../hapi-deployable-pom/pom.xml</relativePath>
 	</parent>
 
@@ -661,6 +661,7 @@
 					<packages>
 						<param>ca.uhn.fhir.jpa.entity</param>
 						<param>ca.uhn.fhir.jpa.model.entity</param>
+						<package>ca.uhn.fhir.jpa.bulk.model</package>
 					</packages>
 				</configuration>
 				<executions>
@@ -680,6 +681,11 @@
 						<groupId>org.glassfish.jaxb</groupId>
 						<artifactId>jaxb-runtime</artifactId>
 						<version>${jaxb_runtime_version}</version>
+					</dependency>
+					<dependency>
+						<groupId>ca.uhn.hapi.fhir</groupId>
+						<artifactId>hapi-fhir-jpaserver-base</artifactId>
+						<version>5.1.0-patch1</version>
 					</dependency>
 					<!--<dependency>-->
 					<!--<groupId>com.sun.xml.bind</groupId>-->
@@ -721,7 +727,7 @@
 			<plugin>
 				<groupId>ca.uhn.hapi.fhir</groupId>
 				<artifactId>hapi-tinder-plugin</artifactId>
-				<version>${project.version}</version>
+				<version>5.1.0</version>
 				<executions>
 					<execution>
 						<id>build_dstu2</id>

@@ -196,7 +196,6 @@ public abstract class BaseHapiScheduler implements IHapiScheduler {
 		private static final long serialVersionUID = 5716197221121989740L;
 
 		// All HAPI FHIR jobs shouldn't allow concurrent execution
-		@Override
 		public boolean isConcurrentExectionDisallowed() {
 			return true;
 		}
