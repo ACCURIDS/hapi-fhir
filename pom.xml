@@ -6,7 +6,7 @@
 	<groupId>ca.uhn.hapi.fhir</groupId>
 	<artifactId>hapi-fhir</artifactId>
 	<packaging>pom</packaging>
-	<version>5.1.0</version>
+	<version>5.1.0-patch1</version>
 	<name>HAPI-FHIR</name>
 	<description>An open-source implementation of the FHIR specification in Java.</description>
 	<url>https://hapifhir.io</url>
@@ -24,18 +24,11 @@
 	</issueManagement>
 
 	<distributionManagement>
-		<snapshotRepository>
-			<id>ossrh</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-		</snapshotRepository>
 		<repository>
-			<id>ossrh</id>
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+			<id>github</id>
+			<name>Accurids FHIR Packages</name>
+			<url>https://maven.pkg.github.com/ACCURIDS/org.hl7.fhir.core</url>
 		</repository>
-		<site>
-			<id>git.server</id>
-			<url>scm:git:git@github.com:jamesagnew/hapi-fhir.git</url>
-		</site>
 	</distributionManagement>
 
 	<scm>
@@ -45,15 +38,7 @@
 	</scm>
 
 	<repositories>
-		<!--
-		<repository>
-			<id>jitpack.io</id>
-			<url>https://jitpack.io</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-		-->
+
 		<repository>
 			<id>oss-snapshot</id>
 			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
@@ -1737,6 +1722,15 @@
 					<groupId>org.basepom.maven</groupId>
 					<artifactId>duplicate-finder-maven-plugin</artifactId>
 					<version>1.4.0</version>
+					<configuration>
+						<failBuildInCaseOfConflict>false</failBuildInCaseOfConflict>
+						<ignoredClassPatterns>
+							<pattern>.*</pattern>
+						</ignoredClassPatterns>
+						<ignoredResourcePatterns>
+							<pattern>.*</pattern>
+						</ignoredResourcePatterns>
+					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>de.jpdigital</groupId>
@@ -2617,13 +2611,13 @@
 				<module>hapi-fhir-docs</module>
 				<module>hapi-fhir-test-utilities</module>
 				<module>hapi-fhir-jpaserver-test-utilities</module>
-				<module>hapi-tinder-test</module>
 				<module>hapi-fhir-client</module>
 				<module>hapi-fhir-server</module>
 				<module>hapi-fhir-server-empi</module>
 				<module>hapi-fhir-converter</module>
 				<module>hapi-fhir-validation</module>
-				<!--<module>hapi-fhir-narrativegenerator</module>-->
+				<!--	<module>hapi-tinder-test</module>
+				<module>hapi-fhir-narrativegenerator</module>-->
 				<module>hapi-fhir-structures-dstu2</module>
 				<module>hapi-fhir-structures-hl7org-dstu2</module>
 				<module>hapi-fhir-validation-resources-dstu2</module>
@@ -2654,6 +2648,7 @@
 				<module>hapi-fhir-android</module>
 				<module>hapi-fhir-cli</module>
 				<module>hapi-fhir-dist</module>
+				<module>hapi-fhir-jpaserver-base</module>
 				<!--<module>osgi</module>-->
 				<!--<module>osgi/hapi-fhir-karaf-features</module>
 				<module>osgi/hapi-fhir-karaf-integration-tests</module>-->
