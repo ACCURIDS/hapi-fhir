@@ -1,6 +1,7 @@
 package ca.uhn.fhir.jpa.dao.r4;
 
 import ca.uhn.fhir.jpa.api.config.DaoConfig;
+import ca.uhn.fhir.jpa.api.model.HistoryCountModeEnum;
 import ca.uhn.fhir.jpa.api.dao.IFhirResourceDao;
 import ca.uhn.fhir.jpa.dao.BaseHapiFhirDao;
 import ca.uhn.fhir.jpa.dao.BaseHapiFhirResourceDao;
@@ -154,6 +155,9 @@ public class FhirResourceDaoR4Test extends BaseJpaR4Test {
 		myDaoConfig.setEnforceReferentialIntegrityOnDelete(new DaoConfig().isEnforceReferentialIntegrityOnDelete());
 		myDaoConfig.setEnforceReferenceTargetTypes(new DaoConfig().isEnforceReferenceTargetTypes());
 		myDaoConfig.setIndexMissingFields(new DaoConfig().getIndexMissingFields());
+		myModelConfig.setNormalizedQuantitySearchLevel(NormalizedQuantitySearchLevel.NORMALIZED_QUANTITY_SEARCH_NOT_SUPPORTED);
+		myDaoConfig.setHistoryCountMode(DaoConfig.DEFAULT_HISTORY_COUNT_MODE);
+
 	}
 
 	@BeforeEach
@@ -1165,6 +1169,7 @@ public class FhirResourceDaoR4Test extends BaseJpaR4Test {
 
 	@Test
 	public void testDeleteResource() {
+		myDaoConfig.setHistoryCountMode(HistoryCountModeEnum.COUNT_ACCURATE);
 		int initialHistory = myPatientDao.history(null, null, mySrd).size();
 
 		IIdType id1;
@@ -1640,6 +1645,7 @@ public class FhirResourceDaoR4Test extends BaseJpaR4Test {
 
 	@Test
 	public void testHistoryOverMultiplePages() throws Exception {
+		myDaoConfig.setHistoryCountMode(HistoryCountModeEnum.COUNT_ACCURATE);
 		String methodName = "testHistoryOverMultiplePages";
 
 		Patient patient = new Patient();
@@ -1790,6 +1796,7 @@ public class FhirResourceDaoR4Test extends BaseJpaR4Test {
 
 	@Test
 	public void testHistoryReflectsMetaOperations() {
+		myDaoConfig.setHistoryCountMode(HistoryCountModeEnum.COUNT_ACCURATE);
 		Patient inPatient = new Patient();
 		inPatient.addName().setFamily("version1");
 		inPatient.getMeta().addProfile("http://example.com/1");
@@ -1874,6 +1881,7 @@ public class FhirResourceDaoR4Test extends BaseJpaR4Test {
 
 	@Test
 	public void testHistoryWithFromAndTo() throws Exception {
+		myDaoConfig.setHistoryCountMode(HistoryCountModeEnum.COUNT_ACCURATE);
 		String methodName = "testHistoryWithFromAndTo";
 
 		Patient patient = new Patient();
@@ -1905,7 +1913,7 @@ public class FhirResourceDaoR4Test extends BaseJpaR4Test {
 
 	@Test
 	public void testHistoryWithFutureSinceDate() throws Exception {
-
+		myDaoConfig.setHistoryCountMode(HistoryCountModeEnum.COUNT_ACCURATE);
 		Date before = new Date();
 		Thread.sleep(10);
 
@@ -3677,15 +3685,15 @@ public class FhirResourceDaoR4Test extends BaseJpaR4Test {
 		published = (ArrayList<Coding>) retrieved.getMeta().getTag();
 		sort(published);
 		assertEquals(3, published.size());
-		assertEquals( "Dog", published.get(0).getCode());
-		assertEquals( "Puppies", published.get(0).getDisplay());
-		assertEquals( null, published.get(0).getSystem());
-		assertEquals( "Cat", published.get(1).getCode());
-		assertEquals( "Kittens", published.get(1).getDisplay());
-		assertEquals( "http://foo", published.get(1).getSystem());
-		assertEquals( "Cow", published.get(2).getCode());
-		assertEquals( "Calves", published.get(2).getDisplay());
-		assertEquals( "http://foo", published.get(2).getSystem());
+		assertEquals("Dog", published.get(0).getCode());
+		assertEquals("Puppies", published.get(0).getDisplay());
+		assertEquals(null, published.get(0).getSystem());
+		assertEquals("Cat", published.get(1).getCode());
+		assertEquals("Kittens", published.get(1).getDisplay());
+		assertEquals("http://foo", published.get(1).getSystem());
+		assertEquals("Cow", published.get(2).getCode());
+		assertEquals("Calves", published.get(2).getDisplay());
+		assertEquals("http://foo", published.get(2).getSystem());
 
 		secLabels = retrieved.getMeta().getSecurity();
 		sortCodings(secLabels);

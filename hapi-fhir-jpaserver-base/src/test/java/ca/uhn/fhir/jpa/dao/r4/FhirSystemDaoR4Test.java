@@ -2,6 +2,7 @@ package ca.uhn.fhir.jpa.dao.r4;
 
 import ca.uhn.fhir.jpa.api.config.DaoConfig;
 import ca.uhn.fhir.jpa.dao.BaseHapiFhirDao;
+import ca.uhn.fhir.util.ClasspathUtil;
 import ca.uhn.fhir.jpa.model.entity.ResourceEncodingEnum;
 import ca.uhn.fhir.jpa.model.entity.ResourceHistoryTable;
 import ca.uhn.fhir.jpa.model.entity.ResourceIndexedSearchParamString;
@@ -460,7 +461,7 @@ public class FhirSystemDaoR4Test extends BaseJpaR4SystemTest {
 	 */
 	@Test
 	public void testContainedArePreservedForBug410() throws IOException {
-		String input = IOUtils.toString(getClass().getResourceAsStream("/r4/bug-410-bundle.xml"), StandardCharsets.UTF_8);
+		String input = ClasspathUtil.loadResource("/r4/bug-410-bundle.xml");
 		Bundle bundle = myFhirCtx.newXmlParser().parseResource(Bundle.class, input);
 
 		Bundle output = mySystemDao.transaction(mySrd, bundle);

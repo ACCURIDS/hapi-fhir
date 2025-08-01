@@ -20,16 +20,25 @@ package ca.uhn.fhir.jpa.util;
  * #L%
  */
 
+import ca.uhn.fhir.jpa.api.config.DaoConfig;
+import ca.uhn.fhir.jpa.api.model.TranslationQuery;
+import ca.uhn.fhir.jpa.model.entity.TagTypeEnum;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hl7.fhir.instance.model.api.IIdType;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import java.util.EnumMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
+
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
 
 /**
  * This class acts as a central spot for all of the many Caffeine caches we use in HAPI FHIR.
@@ -39,6 +48,9 @@ import java.util.function.Function;
  */
 public class MemoryCacheService {
 
+	@Autowired
+	private DaoConfig myDaoConfig;
+
 	private EnumMap<CacheEnum, Cache<?, ?>> myCaches;
 
 	@PostConstruct
@@ -47,7 +59,26 @@ public class MemoryCacheService {
 		myCaches = new EnumMap<>(CacheEnum.class);
 
 		for (CacheEnum next : CacheEnum.values()) {
-			Cache<Object, Object> nextCache = Caffeine.newBuilder().expireAfterWrite(1, TimeUnit.MINUTES).maximumSize(10000).build();
+
+			long timeoutSeconds;
+			switch (next) {
+				case CONCEPT_TRANSLATION:
+				case CONCEPT_TRANSLATION_REVERSE:
+					timeoutSeconds = myDaoConfig.getTranslationCachesExpireAfterWriteInMinutes() * 1000;
+					break;
+				case TAG_DEFINITION:
+				case PERSISTENT_ID:
+				case RESOURCE_LOOKUP:
+				case PID_TO_FORCED_ID:
+				case FORCED_ID_TO_PID:
+				case MATCH_URL:
+				case RESOURCE_CONDITIONAL_CREATE_VERSION:
+				default:
+					timeoutSeconds = 60;
+					break;
+			}
+
+			Cache<Object, Object> nextCache = Caffeine.newBuilder().expireAfterWrite(timeoutSeconds, TimeUnit.MINUTES).maximumSize(10000).build();
 			myCaches.put(next, nextCache);
 		}
 
@@ -55,15 +86,18 @@ public class MemoryCacheService {
 
 
 	public <K, T> T get(CacheEnum theCache, K theKey, Function<K, T> theSupplier) {
+		assert theCache.myKeyType.isAssignableFrom(theKey.getClass());
 		Cache<K, T> cache = getCache(theCache);
 		return cache.get(theKey, theSupplier);
 	}
 
 	public <K, V> V getIfPresent(CacheEnum theCache, K theKey) {
+		assert theCache.myKeyType.isAssignableFrom(theKey.getClass());
 		return (V) getCache(theCache).getIfPresent(theKey);
 	}
 
 	public <K, V> void put(CacheEnum theCache, K theKey, V theValue) {
+		assert theCache.myKeyType.isAssignableFrom(theKey.getClass());
 		getCache(theCache).put(theKey, theValue);
 	}
 
@@ -81,12 +115,105 @@ public class MemoryCacheService {
 
 	public enum CacheEnum {
 
-		TAG_DEFINITION,
-		PERSISTENT_ID,
-		RESOURCE_LOOKUP,
-		FORCED_ID,
+		TAG_DEFINITION(TagDefinitionCacheKey.class),
+		PERSISTENT_ID(String.class),
+		RESOURCE_LOOKUP(String.class),
+		FORCED_ID_TO_PID(String.class),
+		PID_TO_FORCED_ID(Long.class),
+		CONCEPT_TRANSLATION(TranslationQuery.class),
+		MATCH_URL(String.class),
+		CONCEPT_TRANSLATION_REVERSE(TranslationQuery.class),
+		RESOURCE_CONDITIONAL_CREATE_VERSION(IIdType.class),
+		HISTORY_COUNT(HistoryCountKey.class);
 
+		private final Class<?> myKeyType;
+
+		CacheEnum(Class<?> theKeyType) {
+			myKeyType = theKeyType;
+		}
 	}
 
+
+	public static class TagDefinitionCacheKey {
+
+		private final TagTypeEnum myType;
+		private final String mySystem;
+		private final String myCode;
+		private final int myHashCode;
+
+		public TagDefinitionCacheKey(TagTypeEnum theType, String theSystem, String theCode) {
+			myType = theType;
+			mySystem = theSystem;
+			myCode = theCode;
+			myHashCode = new HashCodeBuilder(17, 37)
+				.append(myType)
+				.append(mySystem)
+				.append(myCode)
+				.toHashCode();
+		}
+
+		@Override
+		public boolean equals(Object theO) {
+			boolean retVal = false;
+			if (theO instanceof TagDefinitionCacheKey) {
+				TagDefinitionCacheKey that = (TagDefinitionCacheKey) theO;
+
+				retVal = new EqualsBuilder()
+					.append(myType, that.myType)
+					.append(mySystem, that.mySystem)
+					.append(myCode, that.myCode)
+					.isEquals();
+			}
+			return retVal;
+		}
+
+		@Override
+		public int hashCode() {
+			return myHashCode;
+		}
+	}
+
+
+	public static class HistoryCountKey {
+		private final String myTypeName;
+		private final Long myInstanceId;
+		private final int myHashCode;
+
+		private HistoryCountKey(String theTypeName, Long theInstanceId) {
+			myTypeName = theTypeName;
+			myInstanceId = theInstanceId;
+			myHashCode = new HashCodeBuilder().append(myTypeName).append(myInstanceId).toHashCode();
+		}
+
+		@Override
+		public boolean equals(Object theO) {
+			boolean retVal = false;
+			if (theO instanceof HistoryCountKey) {
+				HistoryCountKey that = (HistoryCountKey) theO;
+				retVal = new EqualsBuilder().append(myTypeName, that.myTypeName).append(myInstanceId, that.myInstanceId).isEquals();
+			}
+			return retVal;
+		}
+
+		@Override
+		public int hashCode() {
+			return myHashCode;
+		}
+
+		public static HistoryCountKey forSystem() {
+			return new HistoryCountKey(null, null);
+		}
+
+		public static HistoryCountKey forType(@Nonnull String theType) {
+			assert isNotBlank(theType);
+			return new HistoryCountKey(theType, null);
+		}
+
+		public static HistoryCountKey forInstance(@Nonnull Long theInstanceId) {
+			assert theInstanceId != null;
+			return new HistoryCountKey(null, theInstanceId);
+		}
+
+	}
 
 }

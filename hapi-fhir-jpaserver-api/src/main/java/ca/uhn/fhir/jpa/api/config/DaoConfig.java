@@ -1,5 +1,6 @@
 package ca.uhn.fhir.jpa.api.config;
 
+import ca.uhn.fhir.jpa.api.model.HistoryCountModeEnum;
 import ca.uhn.fhir.jpa.api.model.WarmCacheEntry;
 import ca.uhn.fhir.jpa.model.entity.ModelConfig;
 import ca.uhn.fhir.jpa.model.entity.ResourceEncodingEnum;
@@ -15,6 +16,7 @@ import org.hl7.fhir.r4.model.Bundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -74,6 +76,7 @@ public class DaoConfig {
 	)));
 	// update setter javadoc if default changes
 	public static final int DEFAULT_MAX_EXPANSION_SIZE = 1000;
+	public static final HistoryCountModeEnum DEFAULT_HISTORY_COUNT_MODE = HistoryCountModeEnum.CACHED_ONLY_WITHOUT_OFFSET;
 	/**
 	 * Default value for {@link #setMaximumSearchResultCountInTransaction(Integer)}
 	 *
@@ -82,7 +85,6 @@ public class DaoConfig {
 	private static final Integer DEFAULT_MAXIMUM_SEARCH_RESULT_COUNT_IN_TRANSACTION = null;
 	private static final Logger ourLog = LoggerFactory.getLogger(DaoConfig.class);
 	private static final int DEFAULT_EXPUNGE_BATCH_SIZE = 800;
-	private IndexEnabledEnum myIndexMissingFieldsEnabled = IndexEnabledEnum.DISABLED;
 	private static final int DEFAULT_MAXIMUM_DELETE_CONFLICT_COUNT = 60;
 
 	/**
@@ -90,7 +92,13 @@ public class DaoConfig {
 	 */
 
 	private ModelConfig myModelConfig = new ModelConfig();
-
+	/**
+	 * Do not change default of {@code 0}!
+	 *
+	 * @since 4.1.0
+	 */
+	private final int myPreExpandValueSetsDefaultOffset = 0;
+	private IndexEnabledEnum myIndexMissingFieldsEnabled = IndexEnabledEnum.DISABLED;
 	/**
 	 * update setter javadoc if default changes
 	 */
@@ -154,6 +162,8 @@ public class DaoConfig {
 	private ClientIdStrategyEnum myResourceClientIdStrategy = ClientIdStrategyEnum.ALPHANUMERIC;
 	private boolean myFilterParameterEnabled = false;
 	private StoreMetaSourceInformationEnum myStoreMetaSourceInformation = StoreMetaSourceInformationEnum.SOURCE_URI_AND_REQUEST_ID;
+	private HistoryCountModeEnum myHistoryCountMode = DEFAULT_HISTORY_COUNT_MODE;
+	private boolean myDeleteExpungeEnabled;
 	/**
 	 * update setter javadoc if default changes
 	 */
@@ -164,12 +174,6 @@ public class DaoConfig {
 	 * @since 4.1.0
 	 */
 	private boolean myPreExpandValueSets = true;
-	/**
-	 * Do not change default of {@code 0}!
-	 *
-	 * @since 4.1.0
-	 */
-	private int myPreExpandValueSetsDefaultOffset = 0;
 	/**
 	 * Do not change default of {@code 1000}!
 	 *
@@ -193,6 +197,8 @@ public class DaoConfig {
 	 */
 	private boolean myDeleteEnabled = true;
 
+
+	private boolean myMatchUrlCache;
 	/**
 	 * If set to <code>true</code> (default is <code>false</code>) the <code>$lastn</code> operation will be enabled for
 	 * indexing Observation resources. This operation involves creating a special set of tables in ElasticSearch for
@@ -244,7 +250,49 @@ public class DaoConfig {
 			setStatusBasedReindexingDisabled(true);
 		}
 	}
-
+	/**
+	 * When performing a FHIR history operation, a <code>Bundle.total</code> value is included in the
+	 * response, indicating the total number of history entries. This response is calculated using a
+	 * SQL COUNT query statement which can be expensive. This setting allows the results of the count
+	 * query to be cached, resulting in a much lighter load on the server, at the expense of
+	 * returning total values that may be slightly out of date. Total counts can also be disabled,
+	 * or forced to always be accurate.
+	 * <p>
+	 * In {@link HistoryCountModeEnum#CACHED_ONLY_WITHOUT_OFFSET} mode, a loading cache is used to fetch the value,
+	 * meaning that only one thread per JVM will fetch the count, and others will block while waiting
+	 * for the cache to load, avoiding excessive load on the database.
+	 * </p>
+	 * <p>
+	 * Default is {@link HistoryCountModeEnum#CACHED_ONLY_WITHOUT_OFFSET}
+	 * </p>
+	 *
+	 * @since 5.4.0
+	 */
+	public HistoryCountModeEnum getHistoryCountMode() {
+		return myHistoryCountMode;
+	}
+	/**
+	 * When performing a FHIR history operation, a <code>Bundle.total</code> value is included in the
+	 * response, indicating the total number of history entries. This response is calculated using a
+	 * SQL COUNT query statement which can be expensive. This setting allows the results of the count
+	 * query to be cached, resulting in a much lighter load on the server, at the expense of
+	 * returning total values that may be slightly out of date. Total counts can also be disabled,
+	 * or forced to always be accurate.
+	 * <p>
+	 * In {@link HistoryCountModeEnum#CACHED_ONLY_WITHOUT_OFFSET} mode, a loading cache is used to fetch the value,
+	 * meaning that only one thread per JVM will fetch the count, and others will block while waiting
+	 * for the cache to load, avoiding excessive load on the database.
+	 * </p>
+	 * <p>
+	 * Default is {@link HistoryCountModeEnum#CACHED_ONLY_WITHOUT_OFFSET}
+	 * </p>
+	 *
+	 * @since 5.4.0
+	 */
+	public void setHistoryCountMode(@Nonnull HistoryCountModeEnum theHistoryCountMode) {
+		Validate.notNull(theHistoryCountMode, "theHistoryCountMode must not be null");
+		myHistoryCountMode = theHistoryCountMode;
+	}
 	/**
 	 * If set to <code>true</code> (default is true) when a resource is being persisted,
 	 * the target resource types of references will be validated to ensure that they
@@ -255,6 +303,15 @@ public class DaoConfig {
 		return myEnforceReferenceTargetTypes;
 	}
 
+	public void setDeleteExpungeEnabled(boolean theDeleteExpungeEnabled) {
+		myDeleteExpungeEnabled = theDeleteExpungeEnabled;
+	}
+	public boolean getMatchUrlCache() {
+		return myMatchUrlCache;
+	}
+	public void setMatchUrlCache(boolean theMatchUrlCache) {
+		myMatchUrlCache = theMatchUrlCache;
+	}
 	/**
 	 * If set to <code>true</code> (default is true) when a resource is being persisted,
 	 * the target resource types of references will be validated to ensure that they
