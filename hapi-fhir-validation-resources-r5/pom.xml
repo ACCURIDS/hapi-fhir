@@ -2,21 +2,21 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>ca.uhn.hapi.fhir</groupId>
-		<artifactId>hapi-deployable-pom</artifactId>
+		<groupId>com.accurids.hapi.fhir</groupId>
+		<artifactId>deployable-pom</artifactId>
 		<version>5.1.0-patch1</version>
 		<relativePath>../hapi-deployable-pom/pom.xml</relativePath>
 	</parent>
 
-	<artifactId>hapi-fhir-validation-resources-r5</artifactId>
+	<artifactId>validation-resources-r5</artifactId>
 	<packaging>bundle</packaging>
 
 	<name>HAPI FHIR - Validation Resources (FHIR R5)</name>
 
 	<dependencies>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-base</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>base</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

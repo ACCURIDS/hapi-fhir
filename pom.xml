@@ -3,17 +3,17 @@
 			xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>ca.uhn.hapi.fhir</groupId>
+	<groupId>com.accurids.hapi.fhir</groupId>
 	<artifactId>hapi-fhir</artifactId>
 	<packaging>pom</packaging>
 	<version>5.1.0-patch1</version>
-	<name>HAPI-FHIR</name>
+	<name>Accurids Secured HAPI FHIR</name>
 	<description>An open-source implementation of the FHIR specification in Java.</description>
 	<url>https://hapifhir.io</url>
 
 	<organization>
-		<name>University Health Network</name>
-		<url>http://www.uhn.ca</url>
+		<name>Accurids</name>
+		<url>https://accurids.com</url>
 	</organization>
 
 	<inceptionYear>2014</inceptionYear>
@@ -27,7 +27,7 @@
 		<repository>
 			<id>github</id>
 			<name>Accurids FHIR Packages</name>
-			<url>https://maven.pkg.github.com/ACCURIDS/org.hl7.fhir.core</url>
+			<url>https://maven.pkg.github.com/ACCURIDS/hapi-fhir</url>
 		</repository>
 	</distributionManagement>
 
@@ -1736,6 +1736,13 @@
 					<groupId>de.jpdigital</groupId>
 					<artifactId>hibernate54-ddl-maven-plugin</artifactId>
 					<version>2.3.0</version>
+					<dependencies>
+						<dependency>
+							<groupId>com.accurids.hapi.fhir</groupId>
+							<artifactId>jpaserver-base</artifactId>
+							<version>5.1.0-patch1</version>
+						</dependency>
+					</dependencies>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -2659,10 +2666,11 @@
 				<module>example-projects/hapi-fhir-jpaserver-cds-example</module>
 				<module>example-projects/hapi-fhir-jpaserver-dynamic</module>
 				<module>example-projects/hapi-fhir-jpaserver-example-postgres</module>
-				-->
-				<module>tests/hapi-fhir-base-test-jaxrsserver-kotlin</module>
+					<module>tests/hapi-fhir-base-test-jaxrsserver-kotlin</module>
 				<module>tests/hapi-fhir-base-test-mindeps-client</module>
 				<module>tests/hapi-fhir-base-test-mindeps-server</module>
+				-->
+
 				<module>hapi-fhir-spring-boot</module>
 				<!--<module>hapi-fhir-osgi-core</module>-->
 			</modules>

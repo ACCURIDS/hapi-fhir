@@ -2,13 +2,13 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>ca.uhn.hapi.fhir</groupId>
-		<artifactId>hapi-deployable-pom</artifactId>
+		<groupId>com.accurids.hapi.fhir</groupId>
+		<artifactId>deployable-pom</artifactId>
 		<version>5.1.0-patch1</version>
 		<relativePath>../hapi-deployable-pom/pom.xml</relativePath>
 	</parent>
 
-	<artifactId>hapi-fhir-validation-resources-dstu2.1</artifactId>
+	<artifactId>validation-resources-dstu2.1</artifactId>
 	<packaging>bundle</packaging>
 
 	<name>HAPI FHIR - Validation Resources DSTU2.1 (2016May)</name>

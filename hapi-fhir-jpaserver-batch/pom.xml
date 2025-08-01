@@ -4,13 +4,13 @@
 			xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>ca.uhn.hapi.fhir</groupId>
-		<artifactId>hapi-deployable-pom</artifactId>
+		<groupId>com.accurids.hapi.fhir</groupId>
+		<artifactId>deployable-pom</artifactId>
 		<version>5.1.0-patch1</version>
 		<relativePath>../hapi-deployable-pom/pom.xml</relativePath>
 	</parent>
 
-	<artifactId>hapi-fhir-jpaserver-batch</artifactId>
+	<artifactId>jpaserver-batch</artifactId>
 	<packaging>jar</packaging>
 
 	<name>HAPI FHIR JPA Server - Batch Task Processor</name>
@@ -38,8 +38,8 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-base</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>base</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<!-- test -->
@@ -54,8 +54,8 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-test-utilities</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>test-utilities</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>

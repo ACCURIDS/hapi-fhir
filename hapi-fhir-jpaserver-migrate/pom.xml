@@ -2,13 +2,13 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>ca.uhn.hapi.fhir</groupId>
-		<artifactId>hapi-deployable-pom</artifactId>
+		<groupId>com.accurids.hapi.fhir</groupId>
+		<artifactId>deployable-pom</artifactId>
 		<version>5.1.0-patch1</version>
 		<relativePath>../hapi-deployable-pom/pom.xml</relativePath>
 	</parent>
 
-	<artifactId>hapi-fhir-jpaserver-migrate</artifactId>
+	<artifactId>jpaserver-migrate</artifactId>
 	<packaging>jar</packaging>
 
 	<name>HAPI FHIR JPA Server - Migration</name>
@@ -38,8 +38,8 @@
 
 		<!-- This dependency includes the core HAPI-FHIR classes -->
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-jpaserver-base</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>jpaserver-base</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<!-- Test Database -->

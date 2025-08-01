@@ -3,12 +3,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>ca.uhn.hapi.fhir</groupId>
-		<artifactId>hapi-fhir-spring-boot</artifactId>
+		<groupId>com.accurids.hapi.fhir</groupId>
+		<artifactId>spring-boot</artifactId>
 		<version>5.1.0-patch1</version>
 	</parent>
 
-	<artifactId>hapi-fhir-spring-boot-samples</artifactId>
+	<artifactId>spring-boot-samples</artifactId>
 	<packaging>pom</packaging>
 
 	<modules>

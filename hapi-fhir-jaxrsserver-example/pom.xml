@@ -4,13 +4,13 @@
 	<!-- Note: HAPI projects use the "hapi-fhir" POM as their base to provide easy management. You do not need to use this in your own projects, so the "parent" tag and it's contents below may be removed
 		if you are using this file as a basis for your own project. -->
 	<parent>
-		<groupId>ca.uhn.hapi.fhir</groupId>
+		<groupId>com.accurids.hapi.fhir</groupId>
 		<artifactId>hapi-fhir</artifactId>
 		<version>5.1.0-patch1</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>hapi-fhir-jaxrsserver-example</artifactId>
+	<artifactId>jaxrsserver-example</artifactId>
 	<packaging>war</packaging>
 
 	<name>HAPI FHIR JAX-RS Server - Example</name>
@@ -29,23 +29,23 @@
 
 		<!-- This dependency includes the core HAPI-FHIR classes -->
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-jaxrsserver-base</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>jaxrsserver-base</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-structures-dstu2</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>structures-dstu2</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-structures-dstu3</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>structures-dstu3</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-structures-r4</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>structures-r4</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

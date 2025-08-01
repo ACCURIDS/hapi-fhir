@@ -3,13 +3,13 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>ca.uhn.hapi.fhir</groupId>
+		<groupId>com.accurids.hapi.fhir</groupId>
 		<artifactId>hapi-fhir</artifactId>
 		<version>5.1.0-patch1</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>hapi-fhir-cli</artifactId>
+	<artifactId>cli</artifactId>
 	<packaging>pom</packaging>
 
 	<name>HAPI FHIR - Command Line Client - Base Project</name>

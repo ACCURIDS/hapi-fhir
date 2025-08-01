@@ -3,12 +3,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>ca.uhn.hapi.fhir</groupId>
-		<artifactId>hapi-fhir-spring-boot-samples</artifactId>
+		<groupId>com.accurids.hapi.fhir</groupId>
+		<artifactId>spring-boot-samples</artifactId>
 		<version>5.1.0-patch1</version>
 	</parent>
 
-	<artifactId>hapi-fhir-spring-boot-sample-server-jpa</artifactId>
+	<artifactId>spring-boot-sample-server-jpa</artifactId>
 
 	<packaging>jar</packaging>
 
@@ -31,18 +31,18 @@
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-spring-boot-starter</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>spring-boot-starter</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-jpaserver-base</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>jpaserver-base</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-jaxrsserver-base</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>jaxrsserver-base</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

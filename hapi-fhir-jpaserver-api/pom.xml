@@ -3,21 +3,21 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>ca.uhn.hapi.fhir</groupId>
-		<artifactId>hapi-deployable-pom</artifactId>
+		<groupId>com.accurids.hapi.fhir</groupId>
+		<artifactId>deployable-pom</artifactId>
 		<version>5.1.0-patch1</version>
 		<relativePath>../hapi-deployable-pom/pom.xml</relativePath>
 	</parent>
 
-	<artifactId>hapi-fhir-jpaserver-api</artifactId>
+	<artifactId>jpaserver-api</artifactId>
 	<packaging>jar</packaging>
 
 	<name>HAPI FHIR JPA API</name>
 
 	<dependencies>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-base</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>base</artifactId>
 			<version>${project.version}</version>
 			<exclusions>
 				<exclusion>
@@ -27,43 +27,43 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-server</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>server</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-structures-dstu2</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>structures-dstu2</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-structures-dstu3</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>structures-dstu3</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-structures-r4</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>structures-r4</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-structures-r5</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>structures-r5</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-structures-hl7org-dstu2</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>structures-hl7org-dstu2</artifactId>
 			<version>${project.version}</version>
 		</dependency>
         <dependency>
-            <groupId>ca.uhn.hapi.fhir</groupId>
-            <artifactId>hapi-fhir-jpaserver-model</artifactId>
+			  <groupId>com.accurids.hapi.fhir</groupId>
+            <artifactId>jpaserver-model</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>ca.uhn.hapi.fhir</groupId>
-            <artifactId>hapi-fhir-jpaserver-searchparam</artifactId>
+			  <groupId>com.accurids.hapi.fhir</groupId>
+            <artifactId>jpaserver-searchparam</artifactId>
             <version>${project.version}</version>
         </dependency>
 		<dependency>

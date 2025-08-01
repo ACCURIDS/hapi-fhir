@@ -4,8 +4,8 @@
 			xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>ca.uhn.hapi.fhir</groupId>
-		<artifactId>hapi-deployable-pom</artifactId>
+		<groupId>com.accurids.hapi.fhir</groupId>
+		<artifactId>deployable-pom</artifactId>
 		<version>5.1.0-patch1</version>
 		<relativePath>../hapi-deployable-pom/pom.xml</relativePath>
 	</parent>
@@ -13,21 +13,21 @@
 	<packaging>jar</packaging>
 
 	<name>HAPI FHIR JPA Server Test Utilities</name>
-	<artifactId>hapi-fhir-jpaserver-test-utilities</artifactId>
+	<artifactId>jpaserver-test-utilities</artifactId>
 	<dependencies>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-test-utilities</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>test-utilities</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-jpaserver-base</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>jpaserver-base</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-test-utilities</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>test-utilities</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

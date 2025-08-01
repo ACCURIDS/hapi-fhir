@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>ca.uhn.hapi.fhir</groupId>
-    <artifactId>hapi-fhir-bom</artifactId>
+    <groupId>com.accurids.hapi.fhir</groupId>
+    <artifactId>bom</artifactId>
     <version>5.1.0-patch1</version>
     <packaging>pom</packaging>
 	 <name>HAPI FHIR BOM</name>
 
     <parent>
-      <groupId>ca.uhn.hapi.fhir</groupId>
-      <artifactId>hapi-deployable-pom</artifactId>
+      <groupId>com.accurids.hapi.fhir</groupId>
+      <artifactId>deployable-pom</artifactId>
       <version>5.1.0-patch1</version>
       <relativePath>../hapi-deployable-pom/pom.xml</relativePath>
    </parent>
@@ -18,7 +18,7 @@
         <dependencies>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>hapi-fhir-base</artifactId>
+                <artifactId>base</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

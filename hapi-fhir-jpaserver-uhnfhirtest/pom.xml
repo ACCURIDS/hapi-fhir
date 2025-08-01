@@ -3,13 +3,13 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>ca.uhn.hapi.fhir</groupId>
+		<groupId>com.accurids.hapi.fhir</groupId>
 		<artifactId>hapi-fhir</artifactId>
 		<version>5.1.0-patch1</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>hapi-fhir-jpaserver-uhnfhirtest</artifactId>
+	<artifactId>jpaserver-uhnfhirtest</artifactId>
 	<packaging>war</packaging>
 
 	<name>HAPI FHIR - fhirtest.uhn.ca Deployable WAR</name>
@@ -25,30 +25,30 @@
 			<artifactId>derby</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-jpaserver-base</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>jpaserver-base</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-structures-dstu2</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>structures-dstu2</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-structures-hl7org-dstu2</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>structures-hl7org-dstu2</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-testpage-overlay</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>testpage-overlay</artifactId>
 			<version>${project.version}</version>
 			<type>war</type>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-testpage-overlay</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>testpage-overlay</artifactId>
 			<version>${project.version}</version>
 			<classifier>classes</classifier>
 		</dependency>
@@ -231,8 +231,8 @@
 					</archive>
 					<overlays>
 						<overlay>
-							<groupId>ca.uhn.hapi.fhir</groupId>
-							<artifactId>hapi-fhir-testpage-overlay</artifactId>
+							<groupId>com.accurids.hapi.fhir</groupId>
+							<artifactId>testpage-overlay</artifactId>
 							<excludes>
 								<exclude>WEB-INF/classes/**/*.class</exclude>
 							</excludes>

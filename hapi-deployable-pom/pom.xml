@@ -2,13 +2,13 @@
 	<modelVersion>4.0.0</modelVersion>
 
     <parent>
-		<groupId>ca.uhn.hapi.fhir</groupId>
+		<groupId>com.accurids.hapi.fhir</groupId>
 		<artifactId>hapi-fhir</artifactId>
 		<version>5.1.0-patch1</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>hapi-deployable-pom</artifactId>
+	<artifactId>deployable-pom</artifactId>
 	<packaging>pom</packaging>
 
 	<name>HAPI FHIR - Deployable Artifact Parent POM</name>

@@ -3,51 +3,51 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>ca.uhn.hapi.fhir</groupId>
-		<artifactId>hapi-deployable-pom</artifactId>
+		<groupId>com.accurids.hapi.fhir</groupId>
+		<artifactId>deployable-pom</artifactId>
 		<version>5.1.0-patch1</version>
 		<relativePath>../hapi-deployable-pom/pom.xml</relativePath>
 	</parent>
 
-	<artifactId>hapi-fhir-docs</artifactId>
+	<artifactId>docs</artifactId>
 	<packaging>jar</packaging>
 
 	<name>HAPI FHIR - Docs</name>
 
 	<dependencies>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-server</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>server</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-structures-dstu3</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>structures-dstu3</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-structures-r4</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>structures-r4</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-validation</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>validation</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-client</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>client</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-client-okhttp</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>client-okhttp</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-jaxrsserver-base</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>jaxrsserver-base</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
@@ -71,15 +71,15 @@
 			<artifactId>spring-web</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-structures-dstu2</artifactId>
-			<version>5.1.0</version>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>structures-dstu2</artifactId>
+			<version>5.1.0-patch1</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-jpaserver-subscription</artifactId>
-			<version>5.1.0</version>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>jpaserver-subscription</artifactId>
+			<version>5.1.0-patch1</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
@@ -94,9 +94,9 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-testpage-overlay</artifactId>
-			<version>5.1.0</version>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>testpage-overlay</artifactId>
+			<version>5.1.0-patch1</version>
 			<classifier>classes</classifier>
 		</dependency>
 		<dependency>

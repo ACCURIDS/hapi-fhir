@@ -4,13 +4,13 @@
 	<!-- Note: HAPI projects use the "hapi-fhir" POM as their base to provide easy management. You do not need to use this in your own projects, so the "parent" tag 
 		and it's contents below may be removed if you are using this file as a basis for your own project. -->
 	<parent>
-		<groupId>ca.uhn.hapi.fhir</groupId>
-		<artifactId>hapi-fhir-cli</artifactId>
+		<groupId>com.accurids.hapi.fhir</groupId>
+		<artifactId>cli</artifactId>
 		<version>5.1.0-patch1</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>hapi-fhir-cli-app</artifactId>
+	<artifactId>cli-app</artifactId>
 	<packaging>jar</packaging>
 
 	<name>HAPI FHIR - Command Line Client - Application</name>
@@ -18,27 +18,27 @@
 	<dependencies>
 
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-cli-api</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>cli-api</artifactId>
 			<version>${project.version}</version>
 			<type>jar</type>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-cli-jpaserver</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>cli-jpaserver</artifactId>
 			<version>${project.version}</version>
 			<type>war</type>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-cli-jpaserver</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>cli-jpaserver</artifactId>
 			<version>${project.version}</version>
 			<type>jar</type>
 			<classifier>classes</classifier>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-testpage-overlay</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>testpage-overlay</artifactId>
 			<version>${project.version}</version>
 			<classifier>classes</classifier>
 		</dependency>
@@ -68,12 +68,12 @@
 						<configuration>
 							<artifactItems>
 								<artifactItem>
-									<groupId>ca.uhn.hapi.fhir</groupId>
-									<artifactId>hapi-fhir-cli-jpaserver</artifactId>
+									<groupId>com.accurids.hapi.fhir</groupId>
+									<artifactId>cli-jpaserver</artifactId>
 									<type>war</type>
 									<overWrite>true</overWrite>
 									<outputDirectory>target/classes</outputDirectory>
-									<destFileName>hapi-fhir-cli-jpaserver.war</destFileName>
+									<destFileName>cli-jpaserver.war</destFileName>
 								</artifactItem>
 							</artifactItems>
 							<!-- other configurations here -->
@@ -103,7 +103,7 @@
 							</artifactSet>
 							<transformers>
 								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<mainClass>ca.uhn.fhir.cli.App</mainClass>
+									<mainClass>com.accurids.fhir.cli.App</mainClass>
 								</transformer>
 							</transformers>
 							<filters>

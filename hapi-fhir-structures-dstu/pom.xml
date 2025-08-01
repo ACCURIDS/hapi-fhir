@@ -2,13 +2,13 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>ca.uhn.hapi.fhir</groupId>
-		<artifactId>hapi-deployable-pom</artifactId>
+		<groupId>com.accurids.hapi.fhir</groupId>
+		<artifactId>deployable-pom</artifactId>
 		<version>3.0.0</version>
 		<relativePath>../hapi-deployable-pom/pom.xml</relativePath>
 	</parent>
 
-	<artifactId>hapi-fhir-structures-dstu</artifactId>
+	<artifactId>structures-dstu</artifactId>
 	<packaging>jar</packaging>
 
 	<name>HAPI FHIR Structures - DSTU1 (FHIR v0.80)</name>
@@ -23,8 +23,8 @@
 		</dependency>
 
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-base</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>base</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 

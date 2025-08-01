@@ -3,13 +3,13 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>ca.uhn.hapi.fhir</groupId>
-		<artifactId>hapi-deployable-pom</artifactId>
+		<groupId>com.accurids.hapi.fhir</groupId>
+		<artifactId>deployable-pom</artifactId>
 		<version>5.1.0-patch1</version>
 		<relativePath>../hapi-deployable-pom/pom.xml</relativePath>
 	</parent>
 
-	<artifactId>hapi-fhir-structures-dstu3</artifactId>
+	<artifactId>structures-dstu3</artifactId>
 	<packaging>bundle</packaging>
 
 	<name>HAPI FHIR Structures - DSTU3</name>
@@ -35,7 +35,7 @@
 				<configuration>
 					<instructions>
 						<Fragment-Host>
-							ca.uhn.hapi.fhir.hapi-fhir-base
+							com.accurids.hapi.fhir.base
 						</Fragment-Host>
 					</instructions>
 				</configuration>
@@ -88,7 +88,7 @@
 				<configuration>
 					<includeDependencySources>true</includeDependencySources>
 					<dependencySourceIncludes>
-						<include>ca.uhn.hapi.fhir:org.hl7.fhir.dstu3</include>
+						<include>com.accurids.fhir:dstu3</include>
 					</dependencySourceIncludes>
 				</configuration>
 			</plugin>
@@ -97,8 +97,8 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-base</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>base</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
@@ -126,8 +126,8 @@
 		Test dependencies on other optional parts of HAPI
 		-->
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-validation-resources-dstu3</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>validation-resources-dstu3</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
@@ -137,14 +137,14 @@
 			<scope>test</scope>
       </dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-client</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>client</artifactId>
 			<version>${project.version}</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-server</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>server</artifactId>
 			<version>${project.version}</version>
 			<optional>true</optional>
 		</dependency>
@@ -266,8 +266,8 @@
 			<scope>test</scope>
 		</dependency>
         <dependency>
-            <groupId>ca.uhn.hapi.fhir</groupId>
-            <artifactId>hapi-fhir-test-utilities</artifactId>
+            <groupId>com.accurids.hapi.fhir</groupId>
+            <artifactId>test-utilities</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>

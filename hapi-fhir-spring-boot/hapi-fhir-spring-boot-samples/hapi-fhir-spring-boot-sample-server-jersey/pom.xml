@@ -3,12 +3,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>ca.uhn.hapi.fhir</groupId>
-		<artifactId>hapi-fhir-spring-boot-samples</artifactId>
+		<groupId>com.accurids.hapi.fhir</groupId>
+		<artifactId>spring-boot-samples</artifactId>
 		<version>5.1.0-patch1</version>
 	</parent>
 
-	<artifactId>hapi-fhir-spring-boot-sample-server-jersey</artifactId>
+	<artifactId>spring-boot-sample-server-jersey</artifactId>
 
 	<packaging>jar</packaging>
 
@@ -27,23 +27,23 @@
 			<artifactId>spring-boot-starter-jersey</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-spring-boot-starter</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>spring-boot-starter</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-jaxrsserver-base</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>jaxrsserver-base</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-validation-resources-dstu3</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>validation-resources-dstu3</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-structures-dstu3</artifactId>
+			<groupId>com.accurids.hapi.fhir</groupId>
+			<artifactId>structures-dstu3</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<!-- Optional -->
