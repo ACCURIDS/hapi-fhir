@@ -36,11 +36,11 @@
                 <artifactId>server</artifactId>
                 <version>${project.version}</version>
             </dependency>
-			  <dependency>
-				  <groupId>${project.groupId}</groupId>
-				  <artifactId>server-empi</artifactId>
-				  <version>${project.version}</version>
-			  </dependency>
+			  	<dependency>
+				  	<groupId>${project.groupId}</groupId>
+				  	<artifactId>server-empi</artifactId>
+				  	<version>${project.version}</version>
+			  	</dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>validation</artifactId>
@@ -101,11 +101,11 @@
                 <artifactId>jpaserver-model</artifactId>
                 <version>${project.version}</version>
             </dependency>
-			  <dependency>
-				  <groupId>${project.groupId}</groupId>
-				  <artifactId>jpaserver-empi</artifactId>
-				  <version>${project.version}</version>
-			  </dependency>
+			  	<dependency>
+				  	<groupId>${project.groupId}</groupId>
+				  	<artifactId>jpaserver-empi</artifactId>
+				  	<version>${project.version}</version>
+			  	</dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>jpaserver-searchparam</artifactId>
