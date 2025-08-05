@@ -2,9 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>com.accurids.hapi.fhir</groupId>
+		<groupId>com.accurids</groupId>
 		<artifactId>deployable-pom</artifactId>
-		<version>5.1.0-patch1</version>
+		<version>2025.8.0</version>
 		<relativePath>../hapi-deployable-pom/pom.xml</relativePath>
 	</parent>
 
@@ -16,8 +16,8 @@
 	<dependencies>
 		<!-- HAPI DEPENDENCIES -->
 		<dependency>
-			<groupId>com.accurids.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-base</artifactId>
+			<groupId>com.accurids</groupId>
+			<artifactId>base</artifactId>
 			<version>${project.version}</version>
 			<exclusions>
 				<exclusion>
@@ -35,7 +35,7 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids.hapi.fhir</groupId>
+			<groupId>com.accurids</groupId>
 			<artifactId>client</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -46,13 +46,13 @@
 
 		<!-- conformance profile -->
 		<dependency>
-			<groupId>com.accurids.hapi.fhir</groupId>
+			<groupId>com.accurids</groupId>
 			<artifactId>structures-dstu2</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids.hapi.fhir</groupId>
+			<groupId>com.accurids</groupId>
 			<artifactId>structures-dstu3</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>
@@ -90,7 +90,7 @@
 			<scope>test</scope>
 		</dependency>
         <dependency>
-			  <groupId>com.accurids.hapi.fhir</groupId>
+			  <groupId>com.accurids</groupId>
             <artifactId>test-utilities</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>

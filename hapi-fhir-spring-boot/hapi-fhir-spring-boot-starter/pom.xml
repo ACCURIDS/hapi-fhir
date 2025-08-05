@@ -3,9 +3,9 @@
 	<modelVersion>4.0.0</modelVersion>
 
    <parent>
-		<groupId>com.accurids.hapi.fhir</groupId>
+		<groupId>com.accurids</groupId>
       <artifactId>deployable-pom</artifactId>
-      <version>5.1.0-patch1</version>
+      <version>1.0.0</version>
       <relativePath>../../hapi-deployable-pom/pom.xml</relativePath>
    </parent>
 
@@ -19,7 +19,7 @@
 			<artifactId>spring-boot-starter</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids.hapi.fhir</groupId>
+			<groupId>com.accurids</groupId>
 			<artifactId>spring-boot-autoconfigure</artifactId>
 			<version>${project.version}</version>
 		</dependency>

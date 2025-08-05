@@ -3,13 +3,14 @@
 			xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.accurids.hapi.fhir</groupId>
-	<artifactId>hapi-fhir</artifactId>
+	<groupId>com.accurids</groupId>
+	<artifactId>ema-acc</artifactId>
 	<packaging>pom</packaging>
-	<version>5.1.0-patch1</version>
+	<version>2025.8.0</version>
 	<name>Accurids Secured HAPI FHIR</name>
 	<description>An open-source implementation of the FHIR specification in Java.</description>
-	<url>https://hapifhir.io</url>
+
+
 
 	<organization>
 		<name>Accurids</name>
@@ -25,7 +26,7 @@
 
 	<distributionManagement>
 		<repository>
-			<id>github</id>
+			<id>github-accurids</id>
 			<name>Accurids FHIR Packages</name>
 			<url>https://maven.pkg.github.com/ACCURIDS/hapi-fhir</url>
 		</repository>
@@ -48,6 +49,10 @@
 			<releases>
 				<enabled>false</enabled>
 			</releases>
+		</repository>
+		<repository>
+			<id>central</id>
+			<url>https://repo.maven.apache.org/maven2</url>
 		</repository>
 	</repositories>
 
@@ -663,7 +668,7 @@
 
 	<properties>
 
-		<fhir_core_version>5.1.0-patch1</fhir_core_version>
+		<fhir_core_version>2025.8.0</fhir_core_version>
 		<ucum_version>1.0.2</ucum_version>
 
 		<surefire_jvm_args>-Dfile.encoding=UTF-8 -Xmx2048m</surefire_jvm_args>
@@ -1738,9 +1743,9 @@
 					<version>2.3.0</version>
 					<dependencies>
 						<dependency>
-							<groupId>com.accurids.hapi.fhir</groupId>
+							<groupId>com.accurids</groupId>
 							<artifactId>jpaserver-base</artifactId>
-							<version>5.1.0-patch1</version>
+							<version>2025.8.0</version>
 						</dependency>
 					</dependencies>
 				</plugin>
@@ -1769,8 +1774,8 @@
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>3.8.1</version>
 					<configuration>
-						<source>1.8</source>
-						<target>1.8</target>
+						<source>21</source>
+						<target>21</target>
 						<forceJavacCompilerUse>true</forceJavacCompilerUse>
 						<encoding>UTF-8</encoding>
 						<fork>true</fork>
@@ -1803,7 +1808,26 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jar-plugin</artifactId>
-					<version>3.1.2</version>
+					<version>3.3.0</version>
+					<configuration>
+						<archive>
+							<manifest>
+								<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+								<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+								<mainClass>com.accurids.ema-acc</mainClass> <!-- if applicable -->
+							</manifest>
+							<manifestEntries>
+								<Implementation-Title>Accurids HAPI Base</Implementation-Title>
+								<Implementation-Version>${project.version}</Implementation-Version>
+								<Bundle-Version>${project.version}</Bundle-Version>
+								<Specification-Version>${project.version}</Specification-Version>
+								<Implementation-Vendor>com.accurids</Implementation-Vendor>
+								<Built-By>yacine</Built-By>
+								<Specification-Version>${project.version}</Specification-Version>
+								<Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
+							</manifestEntries>
+						</archive>
+					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -1981,7 +2005,7 @@
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
+					<version>10.0.0</version>
 					<configuration>
 						<lifecycleMappingMetadata>
 							<pluginExecutions>

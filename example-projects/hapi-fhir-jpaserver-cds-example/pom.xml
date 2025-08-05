@@ -189,8 +189,8 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-test-utilities</artifactId>
+			<groupId>com.accurids</groupId>
+			<artifactId>test-utilities</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>

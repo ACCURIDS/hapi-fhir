@@ -3,9 +3,9 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>com.accurids.hapi.fhir</groupId>
+		<groupId>com.accurids</groupId>
 		<artifactId>deployable-pom</artifactId>
-		<version>5.1.0-patch1</version>
+		<version>2025.8.0</version>
 		<relativePath>../hapi-deployable-pom/pom.xml</relativePath>
 	</parent>
 
@@ -127,6 +127,23 @@
 	<build>
 		<plugins>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.3.0</version>
+				<configuration>
+					<archive>
+						<manifestEntries>
+							<Implementation-Title>${project.name}</Implementation-Title>
+							<Implementation-Version>${project.version}</Implementation-Version>
+							<Implementation-Vendor>Accurids</Implementation-Vendor>
+							<Specification-Version>${project.version}</Specification-Version>
+							<Bundle-Version>${project.version}</Bundle-Version>
+							<Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<configuration>
@@ -156,8 +173,8 @@
 					<instructions>
 						<Import-Package>
 							<!--required when using servers-->
-							ca.uhn.fhir.rest.api.server;resolution:=optional,
-							ca.uhn.fhir.model.api;resolution:=optional,
+							com.accurids.fhir.rest.api.server;resolution:=optional,
+							com.accurids.fhir.model.api;resolution:=optional,
 							*
 						</Import-Package>
 					</instructions>
@@ -175,7 +192,7 @@
 							<goal>create</goal>
 						</goals>
 					</execution>
-					<execution>
+					<!--<execution>
 						<id>downstream</id>
 						<phase>validate</phase>
 						<goals>
@@ -190,7 +207,7 @@
 							<versionPropertyName>hapifhir.version</versionPropertyName>
 							<revisionOnScmFailure>UNKNOWN</revisionOnScmFailure>
 						</configuration>
-					</execution>
+					</execution>-->
 				</executions>
 			</plugin>
 		</plugins>

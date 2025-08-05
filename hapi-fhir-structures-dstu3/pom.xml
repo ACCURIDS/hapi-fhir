@@ -3,9 +3,9 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>com.accurids.hapi.fhir</groupId>
+		<groupId>com.accurids</groupId>
 		<artifactId>deployable-pom</artifactId>
-		<version>5.1.0-patch1</version>
+		<version>2025.8.0</version>
 		<relativePath>../hapi-deployable-pom/pom.xml</relativePath>
 	</parent>
 
@@ -35,7 +35,7 @@
 				<configuration>
 					<instructions>
 						<Fragment-Host>
-							com.accurids.hapi.fhir.base
+							com.accurids.base
 						</Fragment-Host>
 					</instructions>
 				</configuration>
@@ -97,7 +97,7 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>com.accurids.hapi.fhir</groupId>
+			<groupId>com.accurids</groupId>
 			<artifactId>base</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -126,7 +126,7 @@
 		Test dependencies on other optional parts of HAPI
 		-->
 		<dependency>
-			<groupId>com.accurids.hapi.fhir</groupId>
+			<groupId>com.accurids</groupId>
 			<artifactId>validation-resources-dstu3</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>
@@ -137,13 +137,13 @@
 			<scope>test</scope>
       </dependency>
 		<dependency>
-			<groupId>com.accurids.hapi.fhir</groupId>
+			<groupId>com.accurids</groupId>
 			<artifactId>client</artifactId>
 			<version>${project.version}</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids.hapi.fhir</groupId>
+			<groupId>com.accurids</groupId>
 			<artifactId>server</artifactId>
 			<version>${project.version}</version>
 			<optional>true</optional>
@@ -266,7 +266,7 @@
 			<scope>test</scope>
 		</dependency>
         <dependency>
-            <groupId>com.accurids.hapi.fhir</groupId>
+            <groupId>com.accurids</groupId>
             <artifactId>test-utilities</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>

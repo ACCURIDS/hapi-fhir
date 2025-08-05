@@ -6,9 +6,9 @@
 	for your own projects. One thing to note though:  
 	-->
 	<parent>
-		<groupId>com.accurids.hapi.fhir</groupId>
-		<artifactId>hapi-fhir</artifactId>
-		<version>5.1.0-patch1</version>
+		<groupId>com.accurids</groupId>
+		<artifactId>ema-acc</artifactId>
+		<version>2025.8.0</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	
@@ -31,35 +31,35 @@
 
 		<!-- This dependency includes the core HAPI-FHIR classes -->
 		<dependency>
-			<groupId>com.accurids.hapi.fhir</groupId>
+			<groupId>com.accurids</groupId>
 			<artifactId>base</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		
 		<!-- Include the HAPI server framework -->
 		<dependency>
-			<groupId>com.accurids.hapi.fhir</groupId>
+			<groupId>com.accurids</groupId>
 			<artifactId>server</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
 		<!-- At least one "structures" JAR must also be included -->
 		<dependency>
-			<groupId>com.accurids.hapi.fhir</groupId>
+			<groupId>com.accurids</groupId>
 			<artifactId>structures-dstu2</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
 		<!-- This dependency is used for the "FHIR Tester" web app overlay -->
 		<dependency>
-			<groupId>com.accurids.hapi.fhir</groupId>
+			<groupId>com.accurids</groupId>
 			<artifactId>testpage-overlay</artifactId>
 			<version>${project.version}</version>
 			<type>war</type>
 			<scope>provided</scope>		
 		</dependency>
 		<dependency>
-			<groupId>com.accurids.hapi.fhir</groupId>
+			<groupId>com.accurids</groupId>
 			<artifactId>testpage-overlay</artifactId>
 			<version>${project.version}</version>
 			<classifier>classes</classifier>
@@ -164,7 +164,7 @@
 				<configuration>
 					<overlays>
 						<overlay>
-							<groupId>com.accurids.hapi.fhir</groupId>
+							<groupId>com.accurids</groupId>
 							<artifactId>testpage-overlay</artifactId>
 						</overlay>
 					</overlays>

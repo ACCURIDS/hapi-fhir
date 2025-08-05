@@ -4,9 +4,9 @@
 	<!-- Note: HAPI projects use the "hapi-fhir" POM as their base to provide easy management. You do not need to use this in your own projects, so the "parent" tag and it's contents below may be removed 
 		if you are using this file as a basis for your own project. -->
 	<parent>
-		<groupId>com.accurids.hapi.fhir</groupId>
+		<groupId>com.accurids</groupId>
 		<artifactId>deployable-pom</artifactId>
-		<version>5.1.0-patch1</version>
+		<version>2025.8.0</version>
 		<relativePath>../../hapi-deployable-pom</relativePath>
 	</parent>
 
@@ -19,7 +19,7 @@
 
 		<!-- This dependency includes the core HAPI-FHIR classes -->
 		<dependency>
-			<groupId>com.accurids.hapi.fhir</groupId>
+			<groupId>com.accurids</groupId>
 			<artifactId>base</artifactId>
 			<version>${project.version}</version>
 			<scope>provided</scope>
@@ -27,21 +27,21 @@
 
 		<!-- This dependency includes the JPA server itself, which is packaged separately from the rest of HAPI FHIR -->
 		<dependency>
-			<groupId>com.accurids.hapi.fhir</groupId>
+			<groupId>com.accurids</groupId>
 			<artifactId>jpaserver-base</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
 		<!-- This dependency is used for the "FHIR Tester" web app overlay -->
 		<dependency>
-			<groupId>com.accurids.hapi.fhir</groupId>
+			<groupId>com.accurids</groupId>
 			<artifactId>testpage-overlay</artifactId>
 			<version>${project.version}</version>
 			<type>war</type>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids.hapi.fhir</groupId>
+			<groupId>com.accurids</groupId>
 			<artifactId>testpage-overlay</artifactId>
 			<version>${project.version}</version>
 			<classifier>classes</classifier>
@@ -173,7 +173,7 @@
 					</archive>
 					<overlays>
 						<overlay>
-							<groupId>com.accurids.hapi.fhir</groupId>
+							<groupId>com.accurids</groupId>
 							<artifactId>testpage-overlay</artifactId>
 						</overlay>
 					</overlays>

@@ -2,9 +2,9 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>ca.uhn.hapi.fhir</groupId>
-		<artifactId>hapi-fhir</artifactId>
-		<version>5.1.0-patch1</version>
+		<groupId>com.accurids</groupId>
+		<artifactId>ema-acc</artifactId>
+		<version>2025.8.0</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 

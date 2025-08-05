@@ -3,9 +3,9 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>com.accurids.hapi.fhir</groupId>
-		<artifactId>hapi-fhir</artifactId>
-		<version>5.1.0-patch1</version>
+		<groupId>com.accurids</groupId>
+		<artifactId>ema-acc</artifactId>
+		<version>2025.8.0</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -34,19 +34,19 @@
 			<id>DIST</id>
 			<dependencies>
 				<dependency>
-					<groupId>com.accurids.hapi.fhir</groupId>
+					<groupId>com.accurids</groupId>
 					<artifactId>base</artifactId>
 					<version>${project.version}</version>
 				</dependency>
 				<dependency>
-					<groupId>com.accurids.hapi.fhir</groupId>
+					<groupId>com.accurids</groupId>
 					<artifactId>base</artifactId>
 					<version>${project.version}</version>
 					<classifier>sources</classifier>
 					<scope>provided</scope>
 				</dependency>
 				<dependency>
-					<groupId>com.accurids.hapi.fhir</groupId>
+					<groupId>com.accurids</groupId>
 					<artifactId>base</artifactId>
 					<version>${project.version}</version>
 					<classifier>javadoc</classifier>
@@ -54,19 +54,19 @@
 				</dependency>
 
 				<dependency>
-					<groupId>com.accurids.hapi.fhir</groupId>
+					<groupId>com.accurids</groupId>
 					<artifactId>client</artifactId>
 					<version>${project.version}</version>
 				</dependency>
 				<dependency>
-					<groupId>com.accurids.hapi.fhir</groupId>
+					<groupId>com.accurids</groupId>
 					<artifactId>client</artifactId>
 					<version>${project.version}</version>
 					<classifier>sources</classifier>
 					<scope>provided</scope>
 				</dependency>
 				<dependency>
-					<groupId>com.accurids.hapi.fhir</groupId>
+					<groupId>com.accurids</groupId>
 					<artifactId>client</artifactId>
 					<version>${project.version}</version>
 					<classifier>javadoc</classifier>
@@ -74,19 +74,19 @@
 				</dependency>
 
 				<dependency>
-					<groupId>com.accurids.hapi.fhir</groupId>
+					<groupId>com.accurids</groupId>
 					<artifactId>server</artifactId>
 					<version>${project.version}</version>
 				</dependency>
 				<dependency>
-					<groupId>com.accurids.hapi.fhir</groupId>
+					<groupId>com.accurids</groupId>
 					<artifactId>server</artifactId>
 					<version>${project.version}</version>
 					<classifier>sources</classifier>
 					<scope>provided</scope>
 				</dependency>
 				<dependency>
-					<groupId>com.accurids.hapi.fhir</groupId>
+					<groupId>com.accurids</groupId>
 					<artifactId>server</artifactId>
 					<version>${project.version}</version>
 					<classifier>javadoc</classifier>
@@ -95,19 +95,19 @@
 
 
 				<dependency>
-					<groupId>com.accurids.hapi.fhir</groupId>
+					<groupId>com.accurids</groupId>
 					<artifactId>structures-dstu2</artifactId>
 					<version>${project.version}</version>
 				</dependency>
 				<dependency>
-					<groupId>com.accurids.hapi.fhir</groupId>
+					<groupId>com.accurids</groupId>
 					<artifactId>structures-dstu2</artifactId>
 					<version>${project.version}</version>
 					<classifier>sources</classifier>
 					<scope>provided</scope>
 				</dependency>
 				<dependency>
-					<groupId>com.accurids.hapi.fhir</groupId>
+					<groupId>com.accurids</groupId>
 					<artifactId>structures-dstu2</artifactId>
 					<version>${project.version}</version>
 					<classifier>javadoc</classifier>
@@ -115,19 +115,19 @@
 				</dependency>
 		
 				<dependency>
-					<groupId>com.accurids.hapi.fhir</groupId>
+					<groupId>com.accurids</groupId>
 					<artifactId>structures-hl7org-dstu2</artifactId>
 					<version>${project.version}</version>
 				</dependency>
 				<dependency>
-					<groupId>com.accurids.hapi.fhir</groupId>
+					<groupId>com.accurids</groupId>
 					<artifactId>structures-hl7org-dstu2</artifactId>
 					<version>${project.version}</version>
 					<classifier>sources</classifier>
 					<scope>provided</scope>
 				</dependency>
 				<dependency>
-					<groupId>com.accurids.hapi.fhir</groupId>
+					<groupId>com.accurids</groupId>
 					<artifactId>structures-hl7org-dstu2</artifactId>
 					<version>${project.version}</version>
 					<classifier>javadoc</classifier>
@@ -135,19 +135,19 @@
 				</dependency>
 				
 				<dependency>
-					<groupId>com.accurids.hapi.fhir</groupId>
+					<groupId>com.accurids</groupId>
 					<artifactId>structures-dstu2.1</artifactId>
 					<version>${project.version}</version>
 				</dependency>
 				<dependency>
-					<groupId>com.accurids.hapi.fhir</groupId>
+					<groupId>com.accurids</groupId>
 					<artifactId>structures-dstu2.1</artifactId>
 					<version>${project.version}</version>
 					<classifier>sources</classifier>
 					<scope>provided</scope>
 				</dependency>
 				<dependency>
-					<groupId>com.accurids.hapi.fhir</groupId>
+					<groupId>com.accurids</groupId>
 					<artifactId>structures-dstu2.1</artifactId>
 					<version>${project.version}</version>
 					<classifier>javadoc</classifier>
@@ -155,19 +155,19 @@
 				</dependency>
 		
 				<dependency>
-					<groupId>com.accurids.hapi.fhir</groupId>
+					<groupId>com.accurids</groupId>
 					<artifactId>structures-dstu3</artifactId>
 					<version>${project.version}</version>
 				</dependency>
 				<dependency>
-					<groupId>com.accurids.hapi.fhir</groupId>
+					<groupId>com.accurids</groupId>
 					<artifactId>structures-dstu3</artifactId>
 					<version>${project.version}</version>
 					<classifier>sources</classifier>
 					<scope>provided</scope>
 				</dependency>
 				<dependency>
-					<groupId>com.accurids.hapi.fhir</groupId>
+					<groupId>com.accurids</groupId>
 					<artifactId>structures-dstu3</artifactId>
 					<version>${project.version}</version>
 					<classifier>javadoc</classifier>
@@ -175,19 +175,19 @@
 				</dependency>
 
 				<dependency>
-					<groupId>com.accurids.hapi.fhir</groupId>
+					<groupId>com.accurids</groupId>
 					<artifactId>structures-r4</artifactId>
 					<version>${project.version}</version>
 				</dependency>
 				<dependency>
-					<groupId>com.accurids.hapi.fhir</groupId>
+					<groupId>com.accurids</groupId>
 					<artifactId>structures-r4</artifactId>
 					<version>${project.version}</version>
 					<classifier>sources</classifier>
 					<scope>provided</scope>
 				</dependency>
 				<dependency>
-					<groupId>com.accurids.hapi.fhir</groupId>
+					<groupId>com.accurids</groupId>
 					<artifactId>structures-r4</artifactId>
 					<version>${project.version}</version>
 					<classifier>javadoc</classifier>
@@ -195,35 +195,35 @@
 				</dependency>
 
 				<dependency>
-					<groupId>com.accurids.hapi.fhir</groupId>
+					<groupId>com.accurids</groupId>
 					<artifactId>validation-resources-dstu2</artifactId>
 					<version>${project.version}</version>
 				</dependency>
 				<dependency>
-					<groupId>com.accurids.hapi.fhir</groupId>
+					<groupId>com.accurids</groupId>
 					<artifactId>validation-resources-dstu2.1</artifactId>
 					<version>${project.version}</version>
 				</dependency>
 				<dependency>
-					<groupId>com.accurids.hapi.fhir</groupId>
+					<groupId>com.accurids</groupId>
 					<artifactId>validation-resources-dstu3</artifactId>
 					<version>${project.version}</version>
 				</dependency>
 				<dependency>
-					<groupId>com.accurids.hapi.fhir</groupId>
+					<groupId>com.accurids</groupId>
 					<artifactId>validation-resources-r4</artifactId>
 					<version>${project.version}</version>
 				</dependency>
 
 				<dependency>
-					<groupId>com.accurids.hapi.fhir</groupId>
+					<groupId>com.accurids</groupId>
 					<artifactId>cli-app</artifactId>
 					<version>${project.version}</version>
 					<!-- Don't include in standard distribution -->
 					<scope>provided</scope>
 				</dependency>
 				<dependency>
-					<groupId>com.accurids.hapi.fhir</groupId>
+					<groupId>com.accurids</groupId>
 					<artifactId>android</artifactId>
 					<version>${project.version}</version>
 					<!-- Don't include in standard distribution -->
