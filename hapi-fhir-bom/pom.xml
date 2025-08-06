@@ -36,11 +36,11 @@
                 <artifactId>server</artifactId>
                 <version>${project.version}</version>
             </dependency>
-			<dependency>
+            <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>server-empi</artifactId>
-				<version>${project.version}</version>
-			</dependency>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>validation</artifactId>
