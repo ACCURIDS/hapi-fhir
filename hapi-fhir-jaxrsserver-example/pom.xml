@@ -83,12 +83,12 @@
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 		</dependency>
-	  <dependency>
-		  <groupId>com.accurids</groupId>
-		  <artifactId>test-utilities</artifactId>
-		  <version>${project.version}</version>
+		<dependency>
+			<groupId>com.accurids</groupId>
+			<artifactId>test-utilities</artifactId>
+			<version>${project.version}</version>
 			<scope>test</scope>
-	  </dependency>
+		</dependency>
 	</dependencies>
 
 

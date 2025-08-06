@@ -83,8 +83,8 @@
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 		</dependency>
-	  <dependency>
-		  <groupId>com.accurids.uhn.hapi.fhir</groupId>
+		<dependency>
+			<groupId>com.accurids.uhn.hapi.fhir</groupId>
 			<artifactId>test-utilities</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>

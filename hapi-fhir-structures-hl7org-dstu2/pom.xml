@@ -148,12 +148,12 @@
 			<artifactId>thymeleaf</artifactId>
 			<scope>test</scope>
 		</dependency>
-        <dependency>
-			  <groupId>com.accurids</groupId>
-			  <artifactId>test-utilities</artifactId>
-			  <version>${project.version}</version>
+		<dependency>
+			<groupId>com.accurids</groupId>
+			<artifactId>test-utilities</artifactId>
+			<version>${project.version}</version>
             <scope>test</scope>
-        </dependency>
+		</dependency>
 
 		<!-- Dependencies for Schematron -->
 		<dependency>

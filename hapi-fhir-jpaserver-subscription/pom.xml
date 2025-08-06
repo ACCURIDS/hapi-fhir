@@ -35,11 +35,11 @@
 			<artifactId>jpaserver-api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-        <dependency>
-			  <groupId>com.accurids</groupId>
-            <artifactId>jpaserver-model</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+		<dependency>
+			<groupId>com.accurids</groupId>
+			<artifactId>jpaserver-model</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>com.accurids</groupId>
 			<artifactId>validation</artifactId>
@@ -88,11 +88,11 @@
 
 
 		<!-- test dependencies -->
-        <dependency>
-			  <groupId>com.accurids</groupId>
-            <artifactId>test-utilities</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+		<dependency>
+			<groupId>com.accurids</groupId>
+			<artifactId>test-utilities</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
