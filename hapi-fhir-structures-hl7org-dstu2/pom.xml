@@ -152,7 +152,7 @@
 			<groupId>com.accurids</groupId>
 			<artifactId>test-utilities</artifactId>
 			<version>${project.version}</version>
-            <scope>test</scope>
+			<scope>test</scope>
 		</dependency>
 
 		<!-- Dependencies for Schematron -->
