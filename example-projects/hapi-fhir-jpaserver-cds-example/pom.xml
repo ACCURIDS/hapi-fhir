@@ -189,7 +189,7 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
+			<groupId>com.accurids.fhir</groupId>
 			<artifactId>hapi-fhir-test-utilities</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>

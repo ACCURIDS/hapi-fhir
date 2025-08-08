@@ -19,19 +19,19 @@
 			<useTransitiveDependencies>true</useTransitiveDependencies>
 			<useTransitiveFiltering>true</useTransitiveFiltering>
 			<includes>
-				<include>com.accurids.fhir:base</include>
-				<include>com.accurids:utilities</include>
-				<include>com.accurids:android</include>
-				<include>com.accurids:structures-dstu2</include>
-				<include>com.accurids:structures-dstu3</include>
-				<include>com.accurids:structures-r4</include>
+				<include>com.accurids.fhir:hapi-fhir-base</include>
+				<include>com.accurids.fhir:hapi-fhir-utilities</include>
+				<include>com.accurids.fhir:hapi-fhir-android</include>
+				<include>com.accurids.fhir:hapi-fhir-structures-dstu2</include>
+				<include>com.accurids.fhir:hapi-fhir-structures-dstu3</include>
+				<include>com.accurids.fhir:hapi-fhir-structures-r4</include>
 			</includes>
 			<excludes>
 				<exclude>*:*:sources</exclude>
 				<exclude>*:*:javadoc</exclude>
-				<exclude>com.accurids:validation-resources-dstu2</exclude>
-				<exclude>com.accurids:validation-resources-dstu3</exclude>
-				<exclude>com.accurids:validation-resources-r4</exclude>
+				<exclude>com.accurids.fhir:hapi-fhir-validation-resources-dstu2</exclude>
+				<exclude>com.accurids.fhir:hapi-fhir-validation-resources-dstu3</exclude>
+				<exclude>com.accurids.fhir:hapi-fhir-validation-resources-r4</exclude>
 				<exclude>org.codehaus.woodstox:woodstox-core-asl</exclude>
 				<exclude>javax.xml.stream:stax-api</exclude>
 				<exclude>org.codehaus.woodstox:stax2-api</exclude>
