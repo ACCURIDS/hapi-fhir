@@ -3,12 +3,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>com.accurids</groupId>
-		<artifactId>spring-boot-samples</artifactId>
-		<version>2025.8.0</version>
+		<groupId>com.accurids.fhir</groupId>
+		<artifactId>hapi-fhir-spring-boot-samples</artifactId>
+		<version>2025.08.0</version>
 	</parent>
 
-	<artifactId>spring-boot-sample-server-jersey</artifactId>
+	<artifactId>hapi-fhir-spring-boot-sample-server-jersey</artifactId>
 
 	<packaging>jar</packaging>
 
@@ -27,23 +27,23 @@
 			<artifactId>spring-boot-starter-jersey</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>spring-boot-starter</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-spring-boot-starter</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>jaxrsserver-base</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-jaxrsserver-base</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>validation-resources-dstu3</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-validation-resources-dstu3</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>structures-dstu3</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-structures-dstu3</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<!-- Optional -->

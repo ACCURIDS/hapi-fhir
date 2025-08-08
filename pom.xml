@@ -3,10 +3,10 @@
 			xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.accurids</groupId>
-	<artifactId>ema-acc</artifactId>
+	<groupId>com.accurids.fhir</groupId>
+	<artifactId>hapi-fhir</artifactId>
 	<packaging>pom</packaging>
-	<version>2025.8.0</version>
+	<version>2025.08.0</version>
 	<name>Accurids Secured HAPI FHIR</name>
 	<description>An open-source implementation of the FHIR specification in Java.</description>
 
@@ -668,7 +668,7 @@
 
 	<properties>
 
-		<fhir_core_version>2025.8.0</fhir_core_version>
+		<fhir_core_version>2025.08.0</fhir_core_version>
 		<ucum_version>1.0.2</ucum_version>
 
 		<surefire_jvm_args>-Dfile.encoding=UTF-8 -Xmx2048m</surefire_jvm_args>
@@ -1743,9 +1743,9 @@
 					<version>2.3.0</version>
 					<dependencies>
 						<dependency>
-							<groupId>com.accurids</groupId>
-							<artifactId>jpaserver-base</artifactId>
-							<version>2025.8.0</version>
+							<groupId>com.accurids.fhir</groupId>
+							<artifactId>hapi-fhir-jpaserver-base</artifactId>
+							<version>2025.08.0</version>
 						</dependency>
 					</dependencies>
 				</plugin>
@@ -1814,14 +1814,14 @@
 							<manifest>
 								<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
 								<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-								<mainClass>com.accurids.ema-acc</mainClass> <!-- if applicable -->
+								<mainClass>com.accurids.fhir.hapi-fhir</mainClass> <!-- if applicable -->
 							</manifest>
 							<manifestEntries>
 								<Implementation-Title>Accurids HAPI Base</Implementation-Title>
 								<Implementation-Version>${project.version}</Implementation-Version>
 								<Bundle-Version>${project.version}</Bundle-Version>
 								<Specification-Version>${project.version}</Specification-Version>
-								<Implementation-Vendor>com.accurids</Implementation-Vendor>
+								<Implementation-Vendor>com.accurids.fhir</Implementation-Vendor>
 								<Built-By>yacine</Built-By>
 								<Specification-Version>${project.version}</Specification-Version>
 								<Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>

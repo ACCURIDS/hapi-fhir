@@ -3,32 +3,32 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>com.accurids</groupId>
-		<artifactId>deployable-pom</artifactId>
-		<version>2025.8.0</version>
+		<groupId>com.accurids.fhir</groupId>
+		<artifactId>hapi-deployable-pom</artifactId>
+		<version>2025.08.0</version>
 		<relativePath>../hapi-deployable-pom/pom.xml</relativePath>
 	</parent>
 
-	<artifactId>validation</artifactId>
+	<artifactId>hapi-fhir-validation</artifactId>
 	<packaging>bundle</packaging>
 
 	<name>HAPI FHIR - Validation</name>
 
 	<dependencies>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>base</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-base</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>converter</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-converter</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.accurids.fhir</groupId>
-			<artifactId>validation</artifactId>
+			<artifactId>org.hl7.fhir.validation</artifactId>
 			<version>${fhir_core_version}</version>
 			<exclusions>
 				<exclusion>
@@ -67,7 +67,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.accurids.fhir</groupId>
-			<artifactId>utilities</artifactId>
+			<artifactId>org.hl7.fhir.utilities</artifactId>
 			<version>${fhir_core_version}</version>
 		</dependency>
 
@@ -114,68 +114,68 @@
 		Optional dependencies on the various versions of FHIR
 		-->
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>structures-dstu2</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-structures-dstu2</artifactId>
 			<version>${project.version}</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>validation-resources-dstu2</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-validation-resources-dstu2</artifactId>
 			<version>${project.version}</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>structures-hl7org-dstu2</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-structures-hl7org-dstu2</artifactId>
 			<version>${project.version}</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>structures-dstu2.1</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-structures-dstu2.1</artifactId>
 			<version>${project.version}</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>validation-resources-dstu2.1</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-validation-resources-dstu2.1</artifactId>
 			<version>${project.version}</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>structures-dstu3</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-structures-dstu3</artifactId>
 			<version>${project.version}</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>validation-resources-dstu3</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-validation-resources-dstu3</artifactId>
 			<version>${project.version}</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>structures-r4</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-structures-r4</artifactId>
 			<version>${project.version}</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>validation-resources-r4</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-validation-resources-r4</artifactId>
 			<version>${project.version}</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>structures-r5</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-structures-r5</artifactId>
 			<version>${project.version}</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>validation-resources-r5</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-validation-resources-r5</artifactId>
 			<version>${project.version}</version>
 			<optional>true</optional>
 		</dependency>
@@ -187,14 +187,14 @@
          <scope>test</scope>
       </dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>server</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-server</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>client</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-client</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
@@ -244,8 +244,8 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>test-utilities</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-test-utilities</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>

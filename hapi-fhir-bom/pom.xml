@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.accurids</groupId>
-    <artifactId>bom</artifactId>
-    <version>2025.8.0</version>
+    <groupId>com.accurids.fhir</groupId>
+    <artifactId>hapi-fhir-bom</artifactId>
+    <version>2025.08.0</version>
     <packaging>pom</packaging>
 	 <name>HAPI FHIR BOM</name>
 
     <parent>
-      <groupId>com.accurids</groupId>
-      <artifactId>deployable-pom</artifactId>
-      <version>2025.8.0</version>
+      <groupId>com.accurids.fhir</groupId>
+      <artifactId>hapi-deployable-pom</artifactId>
+      <version>2025.08.0</version>
       <relativePath>../hapi-deployable-pom/pom.xml</relativePath>
    </parent>
     
@@ -18,7 +18,7 @@
         <dependencies>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>base</artifactId>
+                <artifactId>hapi-fhir-base</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -28,102 +28,102 @@
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>client</artifactId>
+                <artifactId>hapi-fhir-client</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>server</artifactId>
+                <artifactId>hapi-fhir-server</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>server-empi</artifactId>
+                <artifactId>hapi-fhir-server-empi</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>validation</artifactId>
+                <artifactId>hapi-fhir-validation</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>structures-dstu2</artifactId>
+                <artifactId>hapi-fhir-structures-dstu2</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>structures-hl7org-dstu2</artifactId>
+                <artifactId>hapi-fhir-structures-hl7org-dstu2</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>validation-resources-dstu2</artifactId>
+                <artifactId>hapi-fhir-validation-resources-dstu2</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>structures-dstu2.1</artifactId>
+                <artifactId>hapi-fhir-structures-dstu2.1</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>validation-resources-dstu2.1</artifactId>
+                <artifactId>hapi-fhir-validation-resources-dstu2.1</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>structures-dstu3</artifactId>
+                <artifactId>hapi-fhir-structures-dstu3</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>validation-resources-dstu3</artifactId>
+                <artifactId>hapi-fhir-validation-resources-dstu3</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>structures-r4</artifactId>
+                <artifactId>hapi-fhir-structures-r4</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>validation-resources-r4</artifactId>
+                <artifactId>hapi-fhir-validation-resources-r4</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>igpacks</artifactId>
+                <artifactId>hapi-fhir-igpacks</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>jpaserver-model</artifactId>
+                <artifactId>hapi-fhir-jpaserver-model</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>jpaserver-empi</artifactId>
+                <artifactId>hapi-fhir-jpaserver-empi</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>jpaserver-searchparam</artifactId>
+                <artifactId>hapi-fhir-jpaserver-searchparam</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>jpaserver-subscription</artifactId>
+                <artifactId>hapi-fhir-jpaserver-subscription</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>jaxrsserver-base</artifactId>
+                <artifactId>hapi-fhir-jaxrsserver-base</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>jpaserver-base</artifactId>
+                <artifactId>hapi-fhir-jpaserver-base</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -133,27 +133,27 @@
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>jpaserver-migrate</artifactId>
+                <artifactId>hapi-fhir-jpaserver-migrate</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>client-okhttp</artifactId>
+                <artifactId>hapi-fhir-client-okhttp</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>android</artifactId>
+                <artifactId>hapi-fhir-android</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>converter</artifactId>
+                <artifactId>hapi-fhir-converter</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>spring-boot-autoconfigure</artifactId>
+                <artifactId>hapi-fhir-spring-boot-autoconfigure</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

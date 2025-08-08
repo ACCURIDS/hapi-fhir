@@ -2,13 +2,13 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>com.accurids</groupId>
-		<artifactId>deployable-pom</artifactId>
-		<version>2025.8.0</version>
+		<groupId>com.accurids.fhir</groupId>
+		<artifactId>hapi-deployable-pom</artifactId>
+		<version>2025.08.0</version>
 		<relativePath>../../hapi-deployable-pom/pom.xml</relativePath>
 	</parent>
 
-	<artifactId>cli-api</artifactId>
+	<artifactId>hapi-fhir-cli-api</artifactId>
 	<packaging>jar</packaging>
 
 	<name>HAPI FHIR - Command Line Client - API</name>
@@ -16,35 +16,35 @@
 	<dependencies>
 		<!-- This dependency includes the core HAPI-FHIR classes -->
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>base</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-base</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>jpaserver-base</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-jpaserver-base</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>cli-jpaserver</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-cli-jpaserver</artifactId>
 			<version>${project.version}</version>
 			<type>jar</type>
 			<classifier>classes</classifier>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>igpacks</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-igpacks</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>jpaserver-migrate</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-jpaserver-migrate</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>test-utilities</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-test-utilities</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
@@ -54,28 +54,28 @@
 			<artifactId>commons-compress</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>structures-dstu2</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-structures-dstu2</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>structures-dstu3</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-structures-dstu3</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>structures-hl7org-dstu2</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-structures-hl7org-dstu2</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>validation-resources-dstu2</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-validation-resources-dstu2</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>validation-resources-dstu3</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-validation-resources-dstu3</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

@@ -5,41 +5,41 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>com.accurids</groupId>
-		<artifactId>deployable-pom</artifactId>
-		<version>2025.8.0</version>
+		<groupId>com.accurids.fhir</groupId>
+		<artifactId>hapi-deployable-pom</artifactId>
+		<version>2025.08.0</version>
 		<relativePath>../hapi-deployable-pom/pom.xml</relativePath>
 	</parent>
 
-	<artifactId>server-empi</artifactId>
+	<artifactId>hapi-fhir-server-empi</artifactId>
 	<packaging>jar</packaging>
 
 	<name>HAPI FHIR - Enterprise Master Patient Index</name>
 
 	<dependencies>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>base</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-base</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>server</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-server</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>structures-dstu3</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-structures-dstu3</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>structures-r4</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-structures-r4</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>structures-r5</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-structures-r5</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

@@ -3,30 +3,30 @@
 			xmlns="http://maven.apache.org/POM/4.0.0"
 			xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<parent>
-		<artifactId>deployable-pom</artifactId>
-		<groupId>com.accurids</groupId>
-		<version>2025.8.0</version>
+		<artifactId>hapi-deployable-pom</artifactId>
+		<groupId>com.accurids.fhir</groupId>
+		<version>2025.08.0</version>
 		<relativePath>../hapi-deployable-pom/pom.xml</relativePath>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>igpacks</artifactId>
+	<artifactId>hapi-fhir-igpacks</artifactId>
 
 	<dependencies>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>base</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-base</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>jpaserver-base</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-jpaserver-base</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>structures-dstu3</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-structures-dstu3</artifactId>
 			<version>${project.version}</version>
 			<optional>true</optional>
 		</dependency>

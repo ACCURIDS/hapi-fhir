@@ -3,26 +3,26 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>com.accurids</groupId>
-		<artifactId>deployable-pom</artifactId>
-		<version>2025.8.0</version>
+		<groupId>com.accurids.fhir</groupId>
+		<artifactId>hapi-deployable-pom</artifactId>
+		<version>2025.08.0</version>
 		<relativePath>../hapi-deployable-pom/pom.xml</relativePath>
 	</parent>
 
-	<artifactId>server</artifactId>
+	<artifactId>hapi-fhir-server</artifactId>
 	<packaging>bundle</packaging>
 
 	<name>HAPI FHIR - Server Framework</name>
 
 	<dependencies>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>base</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-base</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.accurids.fhir</groupId>
-			<artifactId>utilities</artifactId>
+			<artifactId>org.hl7.fhir.utilities</artifactId>
 			<version>${fhir_core_version}</version>
 		</dependency>
 

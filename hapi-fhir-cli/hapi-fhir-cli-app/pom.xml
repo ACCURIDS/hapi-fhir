@@ -4,13 +4,13 @@
 	<!-- Note: HAPI projects use the "hapi-fhir" POM as their base to provide easy management. You do not need to use this in your own projects, so the "parent" tag 
 		and it's contents below may be removed if you are using this file as a basis for your own project. -->
 	<parent>
-		<groupId>com.accurids</groupId>
-		<artifactId>cli</artifactId>
-		<version>2025.8.0</version>
+		<groupId>com.accurids.fhir</groupId>
+		<artifactId>hapi-fhir-cli</artifactId>
+		<version>2025.08.0</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>cli-app</artifactId>
+	<artifactId>hapi-fhir-cli-app</artifactId>
 	<packaging>jar</packaging>
 
 	<name>HAPI FHIR - Command Line Client - Application</name>
@@ -18,27 +18,27 @@
 	<dependencies>
 
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>cli-api</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-cli-api</artifactId>
 			<version>${project.version}</version>
 			<type>jar</type>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>cli-jpaserver</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-cli-jpaserver</artifactId>
 			<version>${project.version}</version>
 			<type>war</type>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>cli-jpaserver</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-cli-jpaserver</artifactId>
 			<version>${project.version}</version>
 			<type>jar</type>
 			<classifier>classes</classifier>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>testpage-overlay</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-testpage-overlay</artifactId>
 			<version>${project.version}</version>
 			<classifier>classes</classifier>
 		</dependency>
@@ -68,8 +68,8 @@
 						<configuration>
 							<artifactItems>
 								<artifactItem>
-									<groupId>com.accurids</groupId>
-									<artifactId>cli-jpaserver</artifactId>
+									<groupId>com.accurids.fhir</groupId>
+									<artifactId>hapi-fhir-cli-jpaserver</artifactId>
 									<type>war</type>
 									<overWrite>true</overWrite>
 									<outputDirectory>target/classes</outputDirectory>
@@ -103,7 +103,7 @@
 							</artifactSet>
 							<transformers>
 								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<mainClass>com.accurids.fhir.cli.App</mainClass>
+									<mainClass>com.accurids.fhir.fhir.cli.App</mainClass>
 								</transformer>
 							</transformers>
 							<filters>

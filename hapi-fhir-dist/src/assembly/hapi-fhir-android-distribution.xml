@@ -19,7 +19,7 @@
 			<useTransitiveDependencies>true</useTransitiveDependencies>
 			<useTransitiveFiltering>true</useTransitiveFiltering>
 			<includes>
-				<include>com.accurids:base</include>
+				<include>com.accurids.fhir:base</include>
 				<include>com.accurids:utilities</include>
 				<include>com.accurids:android</include>
 				<include>com.accurids:structures-dstu2</include>

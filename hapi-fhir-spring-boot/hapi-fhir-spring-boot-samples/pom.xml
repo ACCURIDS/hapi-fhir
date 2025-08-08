@@ -3,12 +3,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>com.accurids</groupId>
-		<artifactId>spring-boot</artifactId>
-		<version>2025.8.0</version>
+		<groupId>com.accurids.fhir</groupId>
+		<artifactId>hapi-fhir-spring-boot</artifactId>
+		<version>2025.08.0</version>
 	</parent>
 
-	<artifactId>spring-boot-samples</artifactId>
+	<artifactId>hapi-fhir-spring-boot-samples</artifactId>
 	<packaging>pom</packaging>
 
 	<modules>

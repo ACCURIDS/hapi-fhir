@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>ca.uhn.hapi.fhir</groupId>
-		<artifactId>ema-acc</artifactId>
+		<artifactId>hapi-fhir</artifactId>
 		<version>4.0.0-SNAPSHOT</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>

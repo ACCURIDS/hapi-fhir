@@ -4,21 +4,21 @@
 			xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>com.accurids</groupId>
-		<artifactId>deployable-pom</artifactId>
-		<version>2025.8.0</version>
+		<groupId>com.accurids.fhir</groupId>
+		<artifactId>hapi-deployable-pom</artifactId>
+		<version>2025.08.0</version>
 		<relativePath>../hapi-deployable-pom/pom.xml</relativePath>
 	</parent>
 
-	<artifactId>jpaserver-empi</artifactId>
+	<artifactId>hapi-fhir-jpaserver-empi</artifactId>
 	<packaging>jar</packaging>
 
 	<name>HAPI FHIR JPA Server - Enterprise Master Patient Index</name>
 
 	<dependencies>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>server-empi</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-server-empi</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
@@ -32,8 +32,8 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>jpaserver-base</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-jpaserver-base</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<!-- test -->
@@ -53,15 +53,15 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>test-utilities</artifactId>
-			<version>2025.8.0</version>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-test-utilities</artifactId>
+			<version>2025.08.0</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>jpaserver-test-utilities</artifactId>
-			<version>2025.8.0</version>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-jpaserver-test-utilities</artifactId>
+			<version>2025.08.0</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

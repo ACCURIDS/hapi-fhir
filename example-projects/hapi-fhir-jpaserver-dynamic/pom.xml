@@ -207,7 +207,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.accurids</groupId>
-			<artifactId>test-utilities</artifactId>
+			<artifactId>hapi-fhir-test-utilities</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>

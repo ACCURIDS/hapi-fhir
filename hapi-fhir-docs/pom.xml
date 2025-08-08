@@ -3,51 +3,51 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>com.accurids</groupId>
-		<artifactId>deployable-pom</artifactId>
-		<version>2025.8.0</version>
+		<groupId>com.accurids.fhir</groupId>
+		<artifactId>hapi-deployable-pom</artifactId>
+		<version>2025.08.0</version>
 		<relativePath>../hapi-deployable-pom/pom.xml</relativePath>
 	</parent>
 
-	<artifactId>docs</artifactId>
+	<artifactId>hapi-fhir-docs</artifactId>
 	<packaging>jar</packaging>
 
 	<name>HAPI FHIR - Docs</name>
 
 	<dependencies>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>server</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-server</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>structures-dstu3</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-structures-dstu3</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>structures-r4</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-structures-r4</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>validation</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-validation</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>client</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-client</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>client-okhttp</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-client-okhttp</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>jaxrsserver-base</artifactId>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-jaxrsserver-base</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
@@ -71,15 +71,15 @@
 			<artifactId>spring-web</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>structures-dstu2</artifactId>
-			<version>2025.8.0</version>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-structures-dstu2</artifactId>
+			<version>2025.08.0</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>jpaserver-subscription</artifactId>
-			<version>2025.8.0</version>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-jpaserver-subscription</artifactId>
+			<version>2025.08.0</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
@@ -94,9 +94,9 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.accurids</groupId>
-			<artifactId>testpage-overlay</artifactId>
-			<version>2025.8.0</version>
+			<groupId>com.accurids.fhir</groupId>
+			<artifactId>hapi-fhir-testpage-overlay</artifactId>
+			<version>2025.08.0</version>
 			<classifier>classes</classifier>
 		</dependency>
 		<dependency>
