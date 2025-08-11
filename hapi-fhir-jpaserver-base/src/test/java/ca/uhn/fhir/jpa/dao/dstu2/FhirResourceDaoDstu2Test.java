@@ -655,6 +655,7 @@ public class FhirResourceDaoDstu2Test extends BaseJpaDstu2Test {
 
 	@Test
 	public void testDeleteResource() {
+		myDaoConfig.setHistoryCountMode(HistoryCountModeEnum.COUNT_ACCURATE);
 		int initialHistory = myPatientDao.history(null, null, mySrd).size();
 
 		IIdType id1;

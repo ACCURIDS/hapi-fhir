@@ -4,6 +4,7 @@ import ca.uhn.fhir.context.ConfigurationException;
 import ca.uhn.fhir.jpa.api.config.DaoConfig;
 import ca.uhn.fhir.jpa.api.model.WarmCacheEntry;
 import ca.uhn.fhir.jpa.search.PersistedJpaBundleProvider;
+import ca.uhn.fhir.jpa.search.cache.SearchCacheStatusEnum;
 import ca.uhn.fhir.jpa.search.warm.CacheWarmingSvcImpl;
 import ca.uhn.fhir.jpa.searchparam.SearchParameterMap;
 import ca.uhn.fhir.parser.DataFormatException;
@@ -20,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -102,7 +104,7 @@ public class FhirResourceDaoR4CacheWarmingTest extends BaseJpaR4Test {
 		assertEquals(PersistedJpaBundleProvider.class, result.getClass());
 
 		PersistedJpaBundleProvider resultCasted = (PersistedJpaBundleProvider) result;
-		assertTrue(resultCasted.isCacheHit());
+		assertSame(SearchCacheStatusEnum.HIT, resultCasted.getCacheStatus());
 	}
 
 }
