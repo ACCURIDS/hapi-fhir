@@ -6,9 +6,9 @@
 	for your own projects. One thing to note though:  
 	-->
 	<parent>
-		<groupId>ca.uhn.hapi.fhir</groupId>
+		<groupId>com.accurids.fhir</groupId>
 		<artifactId>hapi-fhir</artifactId>
-		<version>5.1.0</version>
+		<version>2025.08.0</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	
@@ -31,35 +31,35 @@
 
 		<!-- This dependency includes the core HAPI-FHIR classes -->
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
+			<groupId>com.accurids.fhir</groupId>
 			<artifactId>hapi-fhir-base</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		
 		<!-- Include the HAPI server framework -->
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
+			<groupId>com.accurids.fhir</groupId>
 			<artifactId>hapi-fhir-server</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
 		<!-- At least one "structures" JAR must also be included -->
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
+			<groupId>com.accurids.fhir</groupId>
 			<artifactId>hapi-fhir-structures-dstu2</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
 		<!-- This dependency is used for the "FHIR Tester" web app overlay -->
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
+			<groupId>com.accurids.fhir</groupId>
 			<artifactId>hapi-fhir-testpage-overlay</artifactId>
 			<version>${project.version}</version>
 			<type>war</type>
 			<scope>provided</scope>		
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
+			<groupId>com.accurids.fhir</groupId>
 			<artifactId>hapi-fhir-testpage-overlay</artifactId>
 			<version>${project.version}</version>
 			<classifier>classes</classifier>
@@ -164,7 +164,7 @@
 				<configuration>
 					<overlays>
 						<overlay>
-							<groupId>ca.uhn.hapi.fhir</groupId>
+							<groupId>com.accurids.fhir</groupId>
 							<artifactId>hapi-fhir-testpage-overlay</artifactId>
 						</overlay>
 					</overlays>

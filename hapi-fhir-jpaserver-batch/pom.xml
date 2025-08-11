@@ -4,9 +4,9 @@
 			xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>ca.uhn.hapi.fhir</groupId>
+		<groupId>com.accurids.fhir</groupId>
 		<artifactId>hapi-deployable-pom</artifactId>
-		<version>5.1.0</version>
+		<version>2025.08.0</version>
 		<relativePath>../hapi-deployable-pom/pom.xml</relativePath>
 	</parent>
 
@@ -38,7 +38,7 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
+			<groupId>com.accurids.fhir</groupId>
 			<artifactId>hapi-fhir-base</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -54,7 +54,7 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
+			<groupId>com.accurids.fhir</groupId>
 			<artifactId>hapi-fhir-test-utilities</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>

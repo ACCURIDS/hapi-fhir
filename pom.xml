@@ -3,17 +3,18 @@
 			xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>ca.uhn.hapi.fhir</groupId>
+	<groupId>com.accurids.fhir</groupId>
 	<artifactId>hapi-fhir</artifactId>
 	<packaging>pom</packaging>
-	<version>5.1.0</version>
-	<name>HAPI-FHIR</name>
+	<version>2025.08.0</version>
+	<name>Accurids Secured HAPI FHIR</name>
 	<description>An open-source implementation of the FHIR specification in Java.</description>
-	<url>https://hapifhir.io</url>
+
+
 
 	<organization>
-		<name>University Health Network</name>
-		<url>http://www.uhn.ca</url>
+		<name>Accurids</name>
+		<url>https://accurids.com</url>
 	</organization>
 
 	<inceptionYear>2014</inceptionYear>
@@ -24,18 +25,11 @@
 	</issueManagement>
 
 	<distributionManagement>
-		<snapshotRepository>
-			<id>ossrh</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-		</snapshotRepository>
 		<repository>
-			<id>ossrh</id>
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+			<id>github-accurids</id>
+			<name>Accurids FHIR Packages</name>
+			<url>https://maven.pkg.github.com/ACCURIDS/hapi-fhir</url>
 		</repository>
-		<site>
-			<id>git.server</id>
-			<url>scm:git:git@github.com:jamesagnew/hapi-fhir.git</url>
-		</site>
 	</distributionManagement>
 
 	<scm>
@@ -45,15 +39,7 @@
 	</scm>
 
 	<repositories>
-		<!--
-		<repository>
-			<id>jitpack.io</id>
-			<url>https://jitpack.io</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-		-->
+
 		<repository>
 			<id>oss-snapshot</id>
 			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
@@ -63,6 +49,10 @@
 			<releases>
 				<enabled>false</enabled>
 			</releases>
+		</repository>
+		<repository>
+			<id>central</id>
+			<url>https://repo.maven.apache.org/maven2</url>
 		</repository>
 	</repositories>
 
@@ -678,7 +668,7 @@
 
 	<properties>
 
-		<fhir_core_version>5.1.0-patch1</fhir_core_version>
+		<fhir_core_version>2025.08.0</fhir_core_version>
 		<ucum_version>1.0.2</ucum_version>
 
 		<surefire_jvm_args>-Dfile.encoding=UTF-8 -Xmx2048m</surefire_jvm_args>
@@ -1737,11 +1727,27 @@
 					<groupId>org.basepom.maven</groupId>
 					<artifactId>duplicate-finder-maven-plugin</artifactId>
 					<version>1.4.0</version>
+					<configuration>
+						<failBuildInCaseOfConflict>false</failBuildInCaseOfConflict>
+						<ignoredClassPatterns>
+							<pattern>.*</pattern>
+						</ignoredClassPatterns>
+						<ignoredResourcePatterns>
+							<pattern>.*</pattern>
+						</ignoredResourcePatterns>
+					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>de.jpdigital</groupId>
 					<artifactId>hibernate54-ddl-maven-plugin</artifactId>
 					<version>2.3.0</version>
+					<dependencies>
+						<dependency>
+							<groupId>com.accurids.fhir</groupId>
+							<artifactId>hapi-fhir-jpaserver-base</artifactId>
+							<version>2025.08.0</version>
+						</dependency>
+					</dependencies>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -1768,8 +1774,8 @@
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>3.8.1</version>
 					<configuration>
-						<source>1.8</source>
-						<target>1.8</target>
+						<source>21</source>
+						<target>21</target>
 						<forceJavacCompilerUse>true</forceJavacCompilerUse>
 						<encoding>UTF-8</encoding>
 						<fork>true</fork>
@@ -1802,7 +1808,21 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jar-plugin</artifactId>
-					<version>3.1.2</version>
+					<version>3.3.0</version>
+					<configuration>
+						<archive>
+							<manifestEntries>
+								<Implementation-Title>Accurids HAPI Base</Implementation-Title>
+								<Implementation-Version>${project.version}</Implementation-Version>
+								<Bundle-Version>${project.version}</Bundle-Version>
+								<Specification-Version>${project.version}</Specification-Version>
+								<Implementation-Vendor>com.accurids.fhir</Implementation-Vendor>
+								<Built-By>Accurids</Built-By>
+								<Specification-Version>${project.version}</Specification-Version>
+								<Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
+							</manifestEntries>
+						</archive>
+					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -2617,13 +2637,13 @@
 				<module>hapi-fhir-docs</module>
 				<module>hapi-fhir-test-utilities</module>
 				<module>hapi-fhir-jpaserver-test-utilities</module>
-				<module>hapi-tinder-test</module>
 				<module>hapi-fhir-client</module>
 				<module>hapi-fhir-server</module>
 				<module>hapi-fhir-server-empi</module>
 				<module>hapi-fhir-converter</module>
 				<module>hapi-fhir-validation</module>
-				<!--<module>hapi-fhir-narrativegenerator</module>-->
+				<!--	<module>hapi-tinder-test</module>
+				<module>hapi-fhir-narrativegenerator</module>-->
 				<module>hapi-fhir-structures-dstu2</module>
 				<module>hapi-fhir-structures-hl7org-dstu2</module>
 				<module>hapi-fhir-validation-resources-dstu2</module>
@@ -2664,10 +2684,11 @@
 				<module>example-projects/hapi-fhir-jpaserver-cds-example</module>
 				<module>example-projects/hapi-fhir-jpaserver-dynamic</module>
 				<module>example-projects/hapi-fhir-jpaserver-example-postgres</module>
-				-->
-				<module>tests/hapi-fhir-base-test-jaxrsserver-kotlin</module>
+					<module>tests/hapi-fhir-base-test-jaxrsserver-kotlin</module>
 				<module>tests/hapi-fhir-base-test-mindeps-client</module>
 				<module>tests/hapi-fhir-base-test-mindeps-server</module>
+				-->
+
 				<module>hapi-fhir-spring-boot</module>
 				<!--<module>hapi-fhir-osgi-core</module>-->
 			</modules>

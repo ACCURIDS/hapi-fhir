@@ -3,9 +3,9 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>ca.uhn.hapi.fhir</groupId>
+		<groupId>com.accurids.fhir</groupId>
 		<artifactId>hapi-fhir</artifactId>
-		<version>5.1.0</version>
+		<version>2025.08.0</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -25,29 +25,29 @@
 			<artifactId>derby</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
+			<groupId>com.accurids.fhir</groupId>
 			<artifactId>hapi-fhir-jpaserver-base</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
+			<groupId>com.accurids.fhir</groupId>
 			<artifactId>hapi-fhir-structures-dstu2</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
+			<groupId>com.accurids.fhir</groupId>
 			<artifactId>hapi-fhir-structures-hl7org-dstu2</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
+			<groupId>com.accurids.fhir</groupId>
 			<artifactId>hapi-fhir-testpage-overlay</artifactId>
 			<version>${project.version}</version>
 			<type>war</type>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
+			<groupId>com.accurids.fhir</groupId>
 			<artifactId>hapi-fhir-testpage-overlay</artifactId>
 			<version>${project.version}</version>
 			<classifier>classes</classifier>
@@ -156,9 +156,9 @@
 			<artifactId>commons-dbcp2</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
+			<groupId>com.accurids.fhir</groupId>
 			<artifactId>hapi-fhir-converter</artifactId>
-			<version>5.1.0</version>
+			<version>${project.version}</version>
 		</dependency>
 
 	</dependencies>
@@ -231,7 +231,7 @@
 					</archive>
 					<overlays>
 						<overlay>
-							<groupId>ca.uhn.hapi.fhir</groupId>
+							<groupId>com.accurids.fhir</groupId>
 							<artifactId>hapi-fhir-testpage-overlay</artifactId>
 							<excludes>
 								<exclude>WEB-INF/classes/**/*.class</exclude>
