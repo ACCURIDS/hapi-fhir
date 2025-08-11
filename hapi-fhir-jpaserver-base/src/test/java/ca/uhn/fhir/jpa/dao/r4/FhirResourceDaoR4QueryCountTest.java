@@ -40,7 +40,6 @@ public class FhirResourceDaoR4QueryCountTest extends BaseJpaR4Test {
 		myDaoConfig.setResourceMetaCountHardLimit(new DaoConfig().getResourceMetaCountHardLimit());
 		myDaoConfig.setIndexMissingFields(new DaoConfig().getIndexMissingFields());
 		myDaoConfig.setDeleteEnabled(new DaoConfig().isDeleteEnabled());
-		//myDaoConfig.setMatchUrlCache(new DaoConfig().getMatchUrlCache()); Not Available in 5.1.0
 		myDaoConfig.setHistoryCountMode(DaoConfig.DEFAULT_HISTORY_COUNT_MODE);
 	}
 
