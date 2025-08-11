@@ -228,7 +228,6 @@ public class CircularQueueCaptureQueriesListener extends BaseCaptureQueriesListe
 		List<SqlQuery> queries = getSelectQueries();
 		List<String> queriesStrings = queries
 			.stream()
-			.map(CircularQueueCaptureQueriesListener::formatQueryAsSql)
 			.map(t -> CircularQueueCaptureQueriesListener.formatQueryAsSql(t, theInlineParams, theFormatSql))
 			.collect(Collectors.toList());
 		ourLog.info("Select Queries:\n{}", String.join("\n", queriesStrings));

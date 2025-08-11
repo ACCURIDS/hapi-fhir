@@ -83,6 +83,7 @@ public class DaoConfig {
 	 * @see #setMaximumSearchResultCountInTransaction(Integer)
 	 */
 	private static final Integer DEFAULT_MAXIMUM_SEARCH_RESULT_COUNT_IN_TRANSACTION = null;
+	private static final Integer DEFAULT_MAXIMUM_TRANSACTION_BUNDLE_SIZE = null;
 	private static final Logger ourLog = LoggerFactory.getLogger(DaoConfig.class);
 	private static final int DEFAULT_EXPUNGE_BATCH_SIZE = 800;
 	private static final int DEFAULT_MAXIMUM_DELETE_CONFLICT_COUNT = 60;
@@ -131,9 +132,9 @@ public class DaoConfig {
 	/**
 	 * update setter javadoc if default changes
 	 */
-	private boolean myIndexContainedResources = true;
 	private int myMaximumExpansionSize = DEFAULT_MAX_EXPANSION_SIZE;
 	private Integer myMaximumSearchResultCountInTransaction = DEFAULT_MAXIMUM_SEARCH_RESULT_COUNT_IN_TRANSACTION;
+	private Integer myMaximumTransactionBundleSize = DEFAULT_MAXIMUM_TRANSACTION_BUNDLE_SIZE;
 	private ResourceEncodingEnum myResourceEncoding = ResourceEncodingEnum.JSONC;
 	/**
 	 * update setter javadoc if default changes
@@ -149,6 +150,7 @@ public class DaoConfig {
 	private IdStrategyEnum myResourceServerIdStrategy = IdStrategyEnum.SEQUENTIAL_NUMERIC;
 	private boolean myMarkResourcesForReindexingUponSearchParameterChange;
 	private boolean myExpungeEnabled;
+	private boolean myDeleteExpungeEnabled;
 	private int myExpungeBatchSize = DEFAULT_EXPUNGE_BATCH_SIZE;
 	private int myReindexThreadCount;
 	private int myExpungeThreadCount;
@@ -163,7 +165,6 @@ public class DaoConfig {
 	private boolean myFilterParameterEnabled = false;
 	private StoreMetaSourceInformationEnum myStoreMetaSourceInformation = StoreMetaSourceInformationEnum.SOURCE_URI_AND_REQUEST_ID;
 	private HistoryCountModeEnum myHistoryCountMode = DEFAULT_HISTORY_COUNT_MODE;
-	private boolean myDeleteExpungeEnabled;
 	/**
 	 * update setter javadoc if default changes
 	 */
@@ -197,6 +198,7 @@ public class DaoConfig {
 	 */
 	private boolean myDeleteEnabled = true;
 
+	private boolean myIndexContainedResources ;
 
 	private boolean myMatchUrlCache;
 	/**
@@ -306,12 +308,7 @@ public class DaoConfig {
 	public void setDeleteExpungeEnabled(boolean theDeleteExpungeEnabled) {
 		myDeleteExpungeEnabled = theDeleteExpungeEnabled;
 	}
-	public boolean getMatchUrlCache() {
-		return myMatchUrlCache;
-	}
-	public void setMatchUrlCache(boolean theMatchUrlCache) {
-		myMatchUrlCache = theMatchUrlCache;
-	}
+
 	/**
 	 * If set to <code>true</code> (default is true) when a resource is being persisted,
 	 * the target resource types of references will be validated to ensure that they

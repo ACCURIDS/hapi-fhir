@@ -37,6 +37,7 @@ import ca.uhn.fhir.jpa.entity.Search;
 import ca.uhn.fhir.jpa.entity.SearchInclude;
 import ca.uhn.fhir.jpa.entity.SearchTypeEnum;
 import ca.uhn.fhir.jpa.interceptor.JpaPreResourceAccessDetails;
+import ca.uhn.fhir.jpa.search.cache.SearchCacheStatusEnum;
 import ca.uhn.fhir.rest.api.server.storage.ResourcePersistentId;
 import ca.uhn.fhir.jpa.model.search.SearchRuntimeDetails;
 import ca.uhn.fhir.jpa.model.search.SearchStatusEnum;
@@ -427,7 +428,7 @@ public class SearchCoordinatorSvcImpl implements ISearchCoordinatorSvc {
 			JpaInterceptorBroadcaster.doCallHooks(myInterceptorBroadcaster, theRequestDetails, Pointcut.JPA_PERFTRACE_SEARCH_REUSING_CACHED, params);
 
 			PersistedJpaBundleProvider retVal = myPersistedJpaBundleProviderFactory.newInstance(theRequestDetails, searchToUse.getUuid());
-			retVal.setCacheHit();
+			retVal.setCacheStatus(SearchCacheStatusEnum.HIT);
 
 			return retVal;
 		});

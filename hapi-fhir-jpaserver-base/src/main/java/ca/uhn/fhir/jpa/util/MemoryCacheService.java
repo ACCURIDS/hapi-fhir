@@ -22,6 +22,7 @@ package ca.uhn.fhir.jpa.util;
 
 import ca.uhn.fhir.jpa.api.config.DaoConfig;
 import ca.uhn.fhir.jpa.api.model.TranslationQuery;
+import ca.uhn.fhir.jpa.model.entity.ForcedId;
 import ca.uhn.fhir.jpa.model.entity.TagTypeEnum;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
@@ -38,7 +39,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
-
 
 /**
  * This class acts as a central spot for all of the many Caffeine caches we use in HAPI FHIR.
@@ -124,8 +124,8 @@ public class MemoryCacheService {
 		MATCH_URL(String.class),
 		CONCEPT_TRANSLATION_REVERSE(TranslationQuery.class),
 		RESOURCE_CONDITIONAL_CREATE_VERSION(IIdType.class),
-		HISTORY_COUNT(HistoryCountKey.class);
-
+		HISTORY_COUNT(HistoryCountKey.class),
+		FORCED_ID(ForcedId.class);
 		private final Class<?> myKeyType;
 
 		CacheEnum(Class<?> theKeyType) {

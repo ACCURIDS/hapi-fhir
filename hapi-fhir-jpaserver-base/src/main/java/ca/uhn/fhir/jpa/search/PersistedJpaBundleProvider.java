@@ -114,7 +114,7 @@ public class PersistedJpaBundleProvider implements IBundleProvider {
 	private MemoryCacheService myMemoryCacheService;
 	private Search mySearchEntity;
 	private String myUuid;
-	private boolean myCacheHit;
+	private SearchCacheStatusEnum myCacheStatus;
 	private RequestPartitionId myRequestPartitionId;
 
 	/**
@@ -344,14 +344,13 @@ public class PersistedJpaBundleProvider implements IBundleProvider {
 		return myUuid;
 	}
 
-	public boolean isCacheHit() {
-		return myCacheHit;
+	public SearchCacheStatusEnum getCacheStatus() {
+		return myCacheStatus;
 	}
 
-	void setCacheHit() {
-		myCacheHit = true;
+	void setCacheStatus(SearchCacheStatusEnum theSearchCacheStatusEnum) {
+		myCacheStatus = theSearchCacheStatusEnum;
 	}
-
 	@Override
 	public Integer preferredPageSize() {
 		ensureSearchEntityLoaded();
@@ -398,6 +397,11 @@ public class PersistedJpaBundleProvider implements IBundleProvider {
 			return mySearchCoordinatorSvc.getSearchTotal(myUuid).orElse(null);
 		}
 
+	}
+
+	protected boolean hasIncludes() {
+		ensureSearchEntityLoaded();
+		return !mySearchEntity.getIncludes().isEmpty();
 	}
 
 	// Note: Leave as protected, HSPC depends on this
