@@ -35,7 +35,7 @@
 				<configuration>
 					<instructions>
 						<Fragment-Host>
-							com.accurids.base
+							com.accurids.fhir.org.hl7.fhir.base
 						</Fragment-Host>
 					</instructions>
 				</configuration>
@@ -88,7 +88,7 @@
 				<configuration>
 					<includeDependencySources>true</includeDependencySources>
 					<dependencySourceIncludes>
-						<include>com.accurids.fhir:dstu3</include>
+						<include>com.accurids.fhir:org.hl7.fhir.dstu3</include>
 					</dependencySourceIncludes>
 				</configuration>
 			</plugin>
