@@ -338,6 +338,7 @@ public class PersistedJpaBundleProvider implements IBundleProvider {
 				return retVal;
 		}
 	}
+	
 	@Override
 	public String getUuid() {
 		return myUuid;
