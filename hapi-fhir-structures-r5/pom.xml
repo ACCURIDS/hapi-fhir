@@ -18,7 +18,7 @@
 		<dependency>
 			<groupId>com.accurids.fhir</groupId>
 			<artifactId>hapi-fhir-base</artifactId>
-			<version>2025.08.0</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.accurids.fhir</groupId>
@@ -344,7 +344,7 @@
 				<configuration>
 					<instructions>
 						<Fragment-Host>
-							com.accurids.fhir.org.hl7.fhir.base
+							com.accurids.fhir.hapi-fhir-base
 						</Fragment-Host>
 					</instructions>
 				</configuration>

@@ -1811,18 +1811,13 @@
 					<version>3.3.0</version>
 					<configuration>
 						<archive>
-							<manifest>
-								<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-								<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-								<mainClass>com.accurids.fhir.hapi-fhir</mainClass> <!-- if applicable -->
-							</manifest>
 							<manifestEntries>
 								<Implementation-Title>Accurids HAPI Base</Implementation-Title>
 								<Implementation-Version>${project.version}</Implementation-Version>
 								<Bundle-Version>${project.version}</Bundle-Version>
 								<Specification-Version>${project.version}</Specification-Version>
 								<Implementation-Vendor>com.accurids.fhir</Implementation-Vendor>
-								<Built-By>yacine</Built-By>
+								<Built-By>Accurids</Built-By>
 								<Specification-Version>${project.version}</Specification-Version>
 								<Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
 							</manifestEntries>

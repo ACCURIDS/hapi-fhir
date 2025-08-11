@@ -156,9 +156,9 @@
 			<artifactId>commons-dbcp2</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
+			<groupId>com.accurids.fhir</groupId>
 			<artifactId>hapi-fhir-converter</artifactId>
-			<version>5.1.0</version>
+			<version>${project.version}</version>
 		</dependency>
 
 	</dependencies>

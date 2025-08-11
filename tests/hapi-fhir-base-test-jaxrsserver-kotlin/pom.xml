@@ -10,7 +10,7 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>base-test-jaxrsserver-kotlin</artifactId>
+	<artifactId>hapi-fhir-base-test-jaxrsserver-kotlin</artifactId>
 	<packaging>war</packaging>
 
 	<name>HAPI FHIR JAX-RS Server Kotlin test</name>
@@ -36,7 +36,7 @@
 		<dependency>
 			<groupId>com.accurids.fhir</groupId>
 			<artifactId>hapi-fhir-structures-dstu2</artifactId>
-			<version>2025.08.0</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.accurids.fhir</groupId>

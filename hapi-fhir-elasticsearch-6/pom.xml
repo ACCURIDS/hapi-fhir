@@ -13,7 +13,7 @@
 
 	<artifactId>hapi-fhir-elasticsearch-6</artifactId>
 
-	<name>elasticsearch-6</name>
+	<name>hapi-fhir-elasticsearch-6</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

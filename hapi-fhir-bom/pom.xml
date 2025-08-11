@@ -23,7 +23,7 @@
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>utilities</artifactId>
+					<artifactId>hapi-fhir-utilities</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -128,7 +128,7 @@
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>jpaserver-elasticsearch</artifactId>
+                <artifactId>hapi-fhir-jpaserver-elasticsearch</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

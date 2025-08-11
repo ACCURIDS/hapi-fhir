@@ -73,7 +73,7 @@
 									<type>war</type>
 									<overWrite>true</overWrite>
 									<outputDirectory>target/classes</outputDirectory>
-									<destFileName>cli-jpaserver.war</destFileName>
+									<destFileName>hapi-fhir-cli-jpaserver.war</destFileName>
 								</artifactItem>
 							</artifactItems>
 							<!-- other configurations here -->
@@ -103,7 +103,7 @@
 							</artifactSet>
 							<transformers>
 								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<mainClass>com.accurids.fhir.fhir.cli.App</mainClass>
+									<mainClass>ca.uhn.fhir.cli.App</mainClass>
 								</transformer>
 							</transformers>
 							<filters>

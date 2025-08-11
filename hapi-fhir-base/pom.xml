@@ -192,7 +192,7 @@
 							<goal>create</goal>
 						</goals>
 					</execution>
-					<!--<execution>
+					<execution>
 						<id>downstream</id>
 						<phase>validate</phase>
 						<goals>
@@ -207,7 +207,7 @@
 							<versionPropertyName>hapifhir.version</versionPropertyName>
 							<revisionOnScmFailure>UNKNOWN</revisionOnScmFailure>
 						</configuration>
-					</execution>-->
+					</execution>
 				</executions>
 			</plugin>
 		</plugins>
