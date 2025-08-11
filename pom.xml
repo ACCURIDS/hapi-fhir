@@ -2679,7 +2679,6 @@
 				<module>hapi-fhir-android</module>
 				<module>hapi-fhir-cli</module>
 				<module>hapi-fhir-dist</module>
-				<module>hapi-fhir-jpaserver-base</module>
 				<!--<module>osgi</module>-->
 				<!--<module>osgi/hapi-fhir-karaf-features</module>
 				<module>osgi/hapi-fhir-karaf-integration-tests</module>-->
