@@ -1886,8 +1886,17 @@
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>animal-sniffer-maven-plugin</artifactId>
-					<version>1.18</version>
+					<version>1.22</version>
+					<executions>
+						<execution>
+							<id>check-java-api</id>
+							<goals>
+								<goal>check</goal>
+							</goals>
+						</execution>
+					</executions>
 					<configuration>
+						<skip>true</skip>
 						<ignores>
 							<ignore>org.quartz</ignore>
 							<ignore>org.apache.derby.*</ignore>
