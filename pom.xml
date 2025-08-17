@@ -39,7 +39,10 @@
 	</scm>
 
 	<repositories>
-
+      <repository>
+         <id>github-public</id>
+         <url>https://public:&#103;hp_9RazMZ1hMxuzTpaYxYQd2ps1CmRmSV2mg8TJ@maven.pkg.github.com/Accurids/*</url>
+      </repository>
 		<repository>
 			<id>oss-snapshot</id>
 			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
