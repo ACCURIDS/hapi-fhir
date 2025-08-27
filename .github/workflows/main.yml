@@ -35,35 +35,41 @@ jobs:
 
       - name: Run Dependency-Check (Selected Modules)
         run: |
+          # Exit immediately if any command fails
+          set -e
+
           # Define the list of modules to scan
           MODULES=("hapi-fhir-validation" "hapi-fhir-validation-resources-r5")
           for mod in "${MODULES[@]}"; do
             echo "🔎 Scanning module: $mod"
-            REPORT_DIR="target/dependency-check/$mod"
+            LOG_DIR="target/dependency-check/$mod"
+            mkdir -p "$LOG_DIR" # Ensure the log directory exists
             
-            # Run dependency-check for each module.
-            # We will check for the existence of the report file immediately after.
+            # Run dependency-check, saving the full Maven output to a log file.
+            # The workflow will now fail immediately if the mvn command fails, showing the error.
             mvn -B -pl "$mod" org.owasp:dependency-check-maven:check \
               -am \
               -Dformat=ALL \
               -DnvdApiKey=${{ secrets.NVD_API_KEY }} \
-              -DoutputDirectory="$REPORT_DIR" || true # Use '|| true' to prevent set -e from exiting immediately
-
-            # Explicitly check if the report was created. If not, fail the workflow.
-            if [ ! -f "$REPORT_DIR/dependency-check-report.json" ]; then
-              echo "::error::Failed to generate dependency-check report for module: $mod"
-              exit 1
-            fi
-            echo "✅ Report generated successfully for $mod"
+              -DoutputDirectory="$LOG_DIR" \
+              --log-file "$LOG_DIR/mvn.log"
           done
 
+      - name: Upload Maven Logs on Failure
+        # This step only runs if the previous step failed, to help with debugging.
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: maven-logs
+          path: target/dependency-check/**/*.log
+          if-no-files-found: ignore
+
       - name: Upload Dependency Reports
-        # This step runs regardless of whether vulnerabilities were found
+        # This step will only run if the scan was successful
         uses: actions/upload-artifact@v4
         with:
           name: dependency-check-reports
           path: target/dependency-check/**/*.html
-          # If no reports are found, it will gracefully do nothing
           if-no-files-found: ignore
 
       - name: Aggregate and Summarize Reports
