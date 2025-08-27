@@ -37,7 +37,9 @@ jobs:
             mvn -pl "$mod" org.owasp:dependency-check-maven:check \
               -am \
               -Dformat=ALL \
-              -Danalyzer.ossindex.enabled=true \
+              -DnvdApiKey=${{ secrets.NVD_API_KEY }} \
+              -Dnvd.api.enabled=true \
+              -Dnvd.api.waitTime=6000 \
               -DoutputDirectory=target/dependency-check/$mod
           done
 
