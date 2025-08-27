@@ -34,12 +34,11 @@ jobs:
           for mod in "${MODULES[@]}"; do
             echo "🔎 Scanning module: $mod"
             # Run dependency-check for each module, placing the report in a unique subdirectory
+            # The NVD API key is required for reliable data fetching
             mvn -pl "$mod" org.owasp:dependency-check-maven:check \
               -am \
               -Dformat=ALL \
               -DnvdApiKey=${{ secrets.NVD_API_KEY }} \
-              -Dnvd.api.enabled=true \
-              -Dnvd.api.waitTime=6000 \
               -DoutputDirectory=target/dependency-check/$mod
           done
 
