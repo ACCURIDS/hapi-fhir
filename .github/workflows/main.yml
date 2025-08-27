@@ -35,32 +35,27 @@ jobs:
 
       - name: Run Dependency-Check (Selected Modules)
         run: |
-          # Exit immediately if a command exits with a non-zero status.
-          set -e
-          
           # Define the list of modules to scan
           MODULES=("hapi-fhir-validation" "hapi-fhir-validation-resources-r5")
           for mod in "${MODULES[@]}"; do
             echo "🔎 Scanning module: $mod"
-            # Run dependency-check for each module, placing the report in a unique subdirectory
-            # The NVD API key is required for reliable data fetching
-            # -B runs in batch mode for cleaner logs
+            REPORT_DIR="target/dependency-check/$mod"
+            
+            # Run dependency-check for each module.
+            # We will check for the existence of the report file immediately after.
             mvn -B -pl "$mod" org.owasp:dependency-check-maven:check \
               -am \
               -Dformat=ALL \
               -DnvdApiKey=${{ secrets.NVD_API_KEY }} \
-              -DoutputDirectory=target/dependency-check/$mod
-          done
+              -DoutputDirectory="$REPORT_DIR" || true # Use '|| true' to prevent set -e from exiting immediately
 
-      - name: Verify Report Generation
-        id: verify_reports
-        run: |
-          if [ ! -d "target/dependency-check" ] || [ -z "$(ls -A target/dependency-check)" ]; then
-            echo "::error::Dependency-Check failed to generate any reports."
-            exit 1
-          else
-            echo "Reports generated successfully."
-          fi
+            # Explicitly check if the report was created. If not, fail the workflow.
+            if [ ! -f "$REPORT_DIR/dependency-check-report.json" ]; then
+              echo "::error::Failed to generate dependency-check report for module: $mod"
+              exit 1
+            fi
+            echo "✅ Report generated successfully for $mod"
+          done
 
       - name: Upload Dependency Reports
         # This step runs regardless of whether vulnerabilities were found
