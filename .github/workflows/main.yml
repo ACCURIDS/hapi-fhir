@@ -27,6 +27,12 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Cache Dependency-Check Data
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository/org/owasp/dependency-check-data
+          key: ${{ runner.os }}-dependency-check
+
       - name: Run Dependency-Check (Selected Modules)
         run: |
           # Exit immediately if a command exits with a non-zero status.
@@ -45,6 +51,16 @@ jobs:
               -DnvdApiKey=${{ secrets.NVD_API_KEY }} \
               -DoutputDirectory=target/dependency-check/$mod
           done
+
+      - name: Verify Report Generation
+        id: verify_reports
+        run: |
+          if [ ! -d "target/dependency-check" ] || [ -z "$(ls -A target/dependency-check)" ]; then
+            echo "::error::Dependency-Check failed to generate any reports."
+            exit 1
+          else
+            echo "Reports generated successfully."
+          fi
 
       - name: Upload Dependency Reports
         # This step runs regardless of whether vulnerabilities were found
