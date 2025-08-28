@@ -42,12 +42,14 @@ jobs:
             echo "🔎 Scanning module: $mod"
             LOG_DIR="target/dependency-check/$mod"
             mkdir -p "$LOG_DIR"
-            mvn -B -pl "$mod" org.owasp:dependency-check-maven:check \
+            mvn -B -pl "$mod" org.owasp:dependency-check-maven:8.4.0:check \
               -am \
               -Dformats=ALL \
               -DnvdApiKey=${{ secrets.NVD_API_KEY }} \
               -DoutputDirectory="$LOG_DIR" \
               --log-file "$LOG_DIR/mvn.log"
+            echo "---- DEBUG: What reports exist for $mod ----"
+            find target -type f -name "dependency-check-report.*" || true
           done
 
       - name: Upload Maven Logs on Failure
