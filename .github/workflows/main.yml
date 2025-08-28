@@ -42,9 +42,9 @@ jobs:
             echo "🔎 Scanning module: $mod"
             LOG_DIR="target/dependency-check/$mod"
             mkdir -p "$LOG_DIR"
-            mvn -B -pl "$mod" org.owasp:dependency-check-maven:8.4.0:check \
+            mvn -B -pl "$mod" dependency-check:check \
               -am \
-              -Dformats=ALL \
+              -Dformats=JSON \
               -DnvdApiKey=${{ secrets.NVD_API_KEY }} \
               -DoutputDirectory="$LOG_DIR" \
               -DfailBuildOnCVSS=11 \
