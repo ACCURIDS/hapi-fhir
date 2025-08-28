@@ -33,29 +33,26 @@ jobs:
             ~/.m2/repository/org/owasp/dependency-check-data
             ~/.m2/repository/org/owasp/dependency-check-maven
           key: ${{ runner.os }}-dependency-check
-
+          
       - name: Run Dependency-Check (Selected Modules)
         run: |
           set -e
           MODULES=("hapi-fhir-validation" "hapi-fhir-validation-resources-r5")
-
+      
           for mod in "${MODULES[@]}"; do
-            echo "🔎 Scanning module: $mod"
+            echo "🔎 Scanning module folder: $mod"
+      
+            SCAN_DIR="./$mod/target"  # or wherever the module builds jars
             LOG_DIR="target/dependency-check/$mod"
             mkdir -p "$LOG_DIR"
-
-            # Run Dependency-Check for this module (only JSON)
-            mvn -B -pl "$mod" dependency-check:check \
-              -am \
-              -Dformats=JSON \
-              -DoutputDirectory="$LOG_DIR" \
-              -DfailBuildOnAnyVulnerability=false \
-              -DscanTestScope=true \
-              --log-file "$LOG_DIR/mvn.log" || true
-
-            echo "---- DEBUG: Generated files for $mod ----"
-            find "$LOG_DIR" -maxdepth 1 -type f -name "*.json" || true
-
+      
+            dependency-check --project "$mod" \
+              --scan "$SCAN_DIR" \
+              --format JSON \
+              --out "$LOG_DIR" \
+              --disableAssembly \
+              --failOnCVSS 0 || true
+      
             REPORT_FILE="$LOG_DIR/dependency-check-report.json"
             if [ -f "$REPORT_FILE" ]; then
               echo "✅ JSON report generated for $mod"
