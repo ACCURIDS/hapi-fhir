@@ -34,6 +34,15 @@ jobs:
             ~/.m2/repository/org/owasp/dependency-check-maven
           key: ${{ runner.os }}-dependency-check
           
+      - name: Install OWASP Dependency-Check CLI
+        run: |
+          echo "🔧 Installing Dependency-Check CLI..."
+          DEP_CHECK_VERSION=9.0.9
+          wget https://github.com/jeremylong/DependencyCheck/releases/download/v$DEP_CHECK_VERSION/dependency-check-$DEP_CHECK_VERSION-release.zip
+          unzip dependency-check-$DEP_CHECK_VERSION-release.zip -d $HOME/dependency-check
+          export PATH="$HOME/dependency-check:$PATH"
+          echo "✅ Dependency-Check CLI installed" 
+          
       - name: Run Dependency-Check (Selected Modules)
         run: |
           set -e
@@ -75,6 +84,8 @@ jobs:
           name: dependency-check-reports
           path: target/dependency-check/**/*
           if-no-files-found: ignore
+          
+
 
       - name: Display Dependency Check Results in Logs
         run: |
