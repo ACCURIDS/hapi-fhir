@@ -1,258 +1,135 @@
-# GitHub Actions workflow for running OWASP Dependency-Check
-name: Dependency Check
+name: CVE Scan (hapi-fhir-validation-resources-r5)
 
 on:
-  push:
-    branches:
-      - pipelines
-  pull_request:
+  workflow_dispatch:
   schedule:
-    - cron: '0 9 * * 1'  # Weekly on Monday 9AM UTC
+    - cron: "0 3 * * 1" # Every Monday at 03:00 UTC
+  pull_request:
+    branches: [ main, master ]
 
 permissions:
   contents: read
+  security-events: write
   issues: write
+
+env:
+  MODULE_PATH: hapi-fhir-validation-resources-r5
+  REPORT_DIR: reports
+  ISSUE_TITLE: "CVE(s) detected in hapi-fhir-validation-resources-r5 dependencies"
 
 jobs:
   dependency-check:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
+          distribution: temurin
           java-version: '17'
 
-      - name: Cache Dependency-Check Data
+      - name: Cache OWASP Dependency-Check data
         uses: actions/cache@v4
         with:
           path: ~/.m2/repository/org/owasp/dependency-check-data
-          key: ${{ runner.os }}-dependency-check
+          key: owasp-dc-data-${{ runner.os }}
 
-      - name: Run Dependency-Check (Selected Modules)
+      - name: Cache Maven repository
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: maven-${{ runner.os }}-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            maven-${{ runner.os }}-
+
+      - name: Pre-fetch Maven dependencies for module
+        run: mvn -q -pl $MODULE_PATH -am dependency:go-offline
+
+      - name: Run OWASP Dependency-Check
+        uses: dependency-check/Dependency-Check_Action@main
+        with:
+          project: hapi-fhir-validation-resources-r5
+          path: ${{ env.MODULE_PATH }}
+          format: 'HTML,JSON,SARIF'
+          out: ${{ env.REPORT_DIR }}
+          args: >-
+            --enableRetired
+
+      - name: Upload HTML report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-check-report-r5
+          path: ${{ env.REPORT_DIR }}
+
+      - name: Upload SARIF to code scanning
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: ${{ env.REPORT_DIR }}/dependency-check-report.sarif
+
+      - name: Summarize findings
+        id: summarize
         run: |
-          # Exit immediately if any command fails
           set -e
-
-          # Define the list of modules to scan
-          MODULES=("hapi-fhir-validation" "hapi-fhir-validation-resources-r5")
-          for mod in "${MODULES[@]}"; do
-            echo "🔎 Scanning module: $mod"
-            LOG_DIR="target/dependency-check/$mod"
-            mkdir -p "$LOG_DIR" # Ensure the log directory exists
-            
-            # Run dependency-check, saving the full Maven output to a log file.
-            mvn -B -pl "$mod" org.owasp:dependency-check-maven:check \
-              -am \
-              -Dformat=ALL \
-              -DnvdApiKey=${{ secrets.NVD_API_KEY }} \
-              -DoutputDirectory="$LOG_DIR" \
-              --log-file "$LOG_DIR/mvn.log"
-          done
-
-      - name: Upload Maven Logs on Failure
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: maven-logs
-          path: target/dependency-check/**/*.log
-          if-no-files-found: ignore
-
-      - name: Upload Dependency Reports
-        uses: actions/upload-artifact@v4
-        with:
-          name: dependency-check-reports
-          path: target/dependency-check/**/*
-          if-no-files-found: ignore
-
-      - name: Display Dependency Check Results in Logs
-        run: |
-          echo "📊 DEPENDENCY CHECK RESULTS SUMMARY"
-          echo "==================================="
-          
-          # Define the list of modules to scan
-          MODULES=("hapi-fhir-validation" "hapi-fhir-validation-resources-r5")
-          TOTAL_VULNERABILITIES=0
-          MODULES_WITH_VULNS=()
-          
-          for mod in "${MODULES[@]}"; do
-            echo ""
-            echo "📦 Module: $mod"
-            echo "-----------"
-            
-            REPORT_FILE="target/dependency-check/$mod/dependency-check-report.json"
-            
-            if [ ! -f "$REPORT_FILE" ]; then
-              echo "❌ No report found for this module"
-              continue
-            fi
-            
-            # Get basic statistics
-            TOTAL_DEPS=$(jq '.dependencies | length' "$REPORT_FILE")
-            VULN_DEPS=$(jq '[.dependencies[] | select(.vulnerabilities != null and (.vulnerabilities | length) > 0)] | length' "$REPORT_FILE")
-            TOTAL_VULNS=$(jq '[.dependencies[].vulnerabilities[]?] | length' "$REPORT_FILE")
-            
-            echo "📈 Total Dependencies: $TOTAL_DEPS"
-            echo "⚠️  Vulnerable Dependencies: $VULN_DEPS"
-            echo "🔴 Total Vulnerabilities: $TOTAL_VULNS"
-            
-            if [ "$VULN_DEPS" -gt 0 ]; then
-              TOTAL_VULNERABILITIES=$((TOTAL_VULNERABILITIES + TOTAL_VULNS))
-              MODULES_WITH_VULNS+=("$mod")
-              
-              # Get severity breakdown
-              SEVERITY_BREAKDOWN=$(jq -r '
-                [.dependencies[].vulnerabilities[]?.severity] | 
-                group_by(.) | 
-                map("\(.[0]): \(length)") | 
-                join(", ")
-              ' "$REPORT_FILE")
-              
-              echo "📋 Severity Breakdown: $SEVERITY_BREAKDOWN"
-              
-              # Show top 3 critical/high vulnerabilities
-              echo ""
-              echo "🚨 Top Critical/High Vulnerabilities:"
-              jq -r '
-                [.dependencies[] | select(.vulnerabilities != null) | . as $dep | 
-                .vulnerabilities[] | select(.severity == "HIGH" or .severity == "CRITICAL") | 
-                {
-                  dependency: $dep.fileName, 
-                  version: $dep.version, 
-                  cve: .name, 
-                  severity: .severity,
-                  score: (.cvssv3.baseScore // .cvssv2.score // "N/A")
-                }] | 
-                sort_by(.severity) | 
-                .[0:3] | 
-                .[] | 
-                "   • \(.dependency)@\(.version) - \(.cve) (\(.severity), Score: \(.score))"
-              ' "$REPORT_FILE"
-              
-              # Show vulnerable dependencies list
-              echo ""
-              echo "📋 Vulnerable Dependencies:"
-              jq -r '
-                [.dependencies[] | select(.vulnerabilities != null and (.vulnerabilities | length) > 0)] | 
-                .[] | 
-                "   • \(.fileName)@\(.version) - \(.vulnerabilities | length) vuln(s)"
-              ' "$REPORT_FILE"
-            else
-              echo "✅ No vulnerabilities found"
-            fi
-            
-            echo ""
-          done
-          
-          # Overall summary
-          echo "🎯 OVERALL SCAN SUMMARY"
-          echo "======================"
-          echo "📦 Modules Scanned: ${#MODULES[@]}"
-          echo "🚨 Modules with Vulnerabilities: ${#MODULES_WITH_VULNS[@]}"
-          echo "🔴 Total Vulnerabilities Found: $TOTAL_VULNERABILITIES"
-          
-          if [ ${#MODULES_WITH_VULNS[@]} -gt 0 ]; then
-            echo "📋 Affected Modules: ${MODULES_WITH_VULNS[*]}"
-            echo "MODULES_WITH_VULNS=${MODULES_WITH_VULNS[*]}" >> $GITHUB_ENV
-          else
-            echo "✅ All modules are clean - no vulnerabilities found!"
+          JSON=${REPORT_DIR}/dependency-check-report.json
+          if [ ! -f "$JSON" ]; then
+            echo "report_json_missing=true" >> $GITHUB_OUTPUT
+            exit 0
           fi
+          TOTAL=$(jq '[.dependencies[] | select(.vulnerabilities != null) | .vulnerabilities[]] | length' "$JSON")
+          CRITICAL=$(jq '[.dependencies[] | select(.vulnerabilities != null) | .vulnerabilities[] | select(.severity == "Critical")] | length' "$JSON")
+          HIGH=$(jq '[.dependencies[] | select(.vulnerabilities != null) | .vulnerabilities[] | select(.severity == "High")] | length' "$JSON")
+          MEDIUM=$(jq '[.dependencies[] | select(.vulnerabilities != null) | .vulnerabilities[] | select(.severity == "Medium")] | length' "$JSON")
+          LOW=$(jq '[.dependencies[] | select(.vulnerabilities != null) | .vulnerabilities[] | select(.severity == "Low")] | length' "$JSON")
+          echo "total=$TOTAL" >> $GITHUB_OUTPUT
+          echo "critical=$CRITICAL" >> $GITHUB_OUTPUT
+          echo "high=$HIGH" >> $GITHUB_OUTPUT
+          echo "medium=$MEDIUM" >> $GITHUB_OUTPUT
+          echo "low=$LOW" >> $GITHUB_OUTPUT
 
-      - name: Process Module Reports for GitHub Issues
-        if: env.MODULES_WITH_VULNS != ''
-        run: |
-          # Create a directory for module-specific issue data
-          mkdir -p target/dependency-check/issues
-          
-          IFS=' ' read -ra MODULES <<< "$MODULES_WITH_VULNS"
-          
-          for mod in "${MODULES[@]}"; do
-            echo "Processing detailed report for module: $mod"
-            REPORT_FILE="target/dependency-check/$mod/dependency-check-report.json"
-            
-            # Extract critical/high vulnerabilities for this module
-            CRITICAL_CVES=$(jq -r '
-              [.dependencies[] | select(.vulnerabilities != null) | . as $dep | 
-              .vulnerabilities[] | select(.severity == "HIGH" or .severity == "CRITICAL") | 
-              {
-                dependency: $dep.fileName, 
-                version: $dep.version, 
-                cve: .name, 
-                severity: .severity,
-                description: .description,
-                references: [.references[]?.url?] | join(", ")
-              }] | 
-              map("• **\(.dependency)@\(.version)** (\(.severity))\n  **CVE:** \(.cve)\n  **Description:** \(.description | sub("\\n"; " ") | .[0:150])...\n  **References:** \(.references)" ) | 
-              join("\n\n")
-            ' "$REPORT_FILE")
-            
-            # Extract all vulnerabilities breakdown
-            SEVERITY_BREAKDOWN=$(jq -r '
-              [.dependencies[].vulnerabilities[]?.severity] | 
-              group_by(.) | 
-              map("\(.[0]): \(length)") | 
-              join(", ")
-            ' "$REPORT_FILE")
-            
-            # Count total dependencies in module
-            TOTAL_DEPS=$(jq '.dependencies | length' "$REPORT_FILE")
-            VULN_COUNT=$(jq '[.dependencies[] | select(.vulnerabilities != null and (.vulnerabilities | length) > 0)] | length' "$REPORT_FILE")
-            
-            # Create issue data file for this module
-            ISSUE_FILE="target/dependency-check/issues/$mod-issue.md"
-            
-            # Write issue content using printf to avoid heredoc issues
-            printf "### Module: %s\n" "$mod" > "$ISSUE_FILE"
-            printf "**Scan Date:** %s\n" "$(date +'%Y-%m-%d %H:%M %Z')" >> "$ISSUE_FILE"
-            printf "**Total Dependencies:** %s\n" "$TOTAL_DEPS" >> "$ISSUE_FILE"
-            printf "**Vulnerable Dependencies:** %s\n" "$VULN_COUNT" >> "$ISSUE_FILE"
-            printf "**Severity Breakdown:** %s\n\n" "$SEVERITY_BREAKDOWN" >> "$ISSUE_FILE"
-            printf "### Critical/High Vulnerabilities:\n%s\n\n" "$CRITICAL_CVES" >> "$ISSUE_FILE"
-            printf "### Full Report:\nThe complete dependency check report for this module is available in the workflow artifacts.\n\n" >> "$ISSUE_FILE"
-            printf "### Recommended Actions:\n1. Review the identified vulnerabilities\n2. Update affected dependencies to patched versions\n3. Consider alternative dependencies if updates are not available\n4. Re-run the scan after making changes\n\n" >> "$ISSUE_FILE"
-            printf "---\n*This issue was automatically generated by GitHub Actions Dependency Check*\n" >> "$ISSUE_FILE"
-            
-            echo "Created issue data for module: $mod"
-          done
+      - name: Create or update issue on findings
+        if: steps.summarize.outputs.total && fromJSON(steps.summarize.outputs.total) > 0
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { owner, repo } = context.repo;
+            const title = process.env.ISSUE_TITLE;
+            const total = core.getInput('total', { required: false }) || '${{ steps.summarize.outputs.total }}';
+            const critical = '${{ steps.summarize.outputs.critical }}';
+            const high = '${{ steps.summarize.outputs.high }}';
+            const medium = '${{ steps.summarize.outputs.medium }}';
+            const low = '${{ steps.summarize.outputs.low }}';
+            const runUrl = `https://github.com/${owner}/${repo}/actions/runs/${context.runId}`;
+            const reportArtifact = 'dependency-check-report-r5';
 
-      - name: Create GitHub Issues
-        if: env.MODULES_WITH_VULNS != ''
-        run: |
-          # Install GitHub CLI
-          curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
-          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-          sudo apt update
-          sudo apt install gh -y
-          
-          # Create issues for each module with vulnerabilities
-          IFS=' ' read -ra MODULES <<< "$MODULES_WITH_VULNS"
-          for mod in "${MODULES[@]}"; do
-            echo "Creating issue for module: $mod"
-            ISSUE_FILE="target/dependency-check/issues/$mod-issue.md"
-            
-            if [ -f "$ISSUE_FILE" ]; then
-              TITLE="Dependency Check Alert: Vulnerabilities found in $mod module"
-              BODY=$(cat "$ISSUE_FILE")
-              
-              # Create the issue using GitHub CLI
-              gh issue create \
-                --title "$TITLE" \
-                --body "$BODY" \
-                --label "security,dependencies,automated" \
-                --repo "$GITHUB_REPOSITORY"
-                
-              echo "✅ Issue created for module: $mod"
-            else
-              echo "❌ Issue file not found for module: $mod"
-            fi
-          done
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            const body = [
+              `OWASP Dependency-Check detected ${total} vulnerability(ies) in module \`${process.env.MODULE_PATH}\`.`,
+              '',
+              `- Critical: ${critical}`,
+              `- High: ${high}`,
+              `- Medium: ${medium}`,
+              `- Low: ${low}`,
+              '',
+              `Workflow run: ${runUrl}`,
+              '',
+              'Download the HTML report from the workflow artifacts for full details.'
+            ].join('\n');
 
-      - name: Log Clean Scan
-        if: env.MODULES_WITH_VULNS == ''
-        run: echo "✅ No CVEs found in any module - skipping issue creation."
+            // Try to find an open issue with the same title
+            const { data: issues } = await github.rest.issues.listForRepo({ owner, repo, state: 'open' });
+            const existing = issues.find(i => i.title === title);
+
+            if (existing) {
+              await github.rest.issues.update({ owner, repo, issue_number: existing.number, body });
+              core.info(`Updated existing issue #${existing.number}`);
+            } else {
+              const { data: created } = await github.rest.issues.create({ owner, repo, title, body, labels: ['security', 'dependency'] });
+              core.info(`Created issue #${created.number}`);
+            }
+
+
