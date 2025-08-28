@@ -72,9 +72,14 @@ jobs:
           MODULES=("hapi-fhir-validation" "hapi-fhir-validation-resources-r5")
           TOTAL_VULNERABILITIES=0
           MODULES_WITH_VULNS=()
+          
 
           for mod in "${MODULES[@]}"; do
             REPORT_FILE="target/dependency-check/$mod/dependency-check-report.json"
+            echo "---- DEBUG: FULL REPORT for $mod ----"
+            cat "$REPORT_FILE" | jq .
+            echo "---- DEBUG: Report metadata ----"
+            jq '.dependencies[0:3]' "$REPORT_FILE"
             if [ -f "$REPORT_FILE" ]; then
               VULN_DEPS=$(jq '[.dependencies[] | select(.vulnerabilities | length > 0)] | length' "$REPORT_FILE")
               if [ "$VULN_DEPS" -gt 0 ]; then
