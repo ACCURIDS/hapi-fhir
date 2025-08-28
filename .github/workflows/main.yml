@@ -6,7 +6,7 @@ on:
       - 5.1.0-patch1
   pull_request:
   schedule:
-    - cron: '0 9 * * 1'
+    - cron: '0 9 * * 1'  # Weekly on Monday 9AM UTC
 
 permissions:
   contents: read
@@ -23,9 +23,9 @@ jobs:
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
-          distribution: temurin
-          java-version: 17
-      
+          distribution: 'temurin'
+          java-version: '17'
+
       - name: Cache Dependency-Check Data
         uses: actions/cache@v4
         with:
@@ -33,52 +33,35 @@ jobs:
             ~/.m2/repository/org/owasp/dependency-check-data
             ~/.m2/repository/org/owasp/dependency-check-maven
           key: ${{ runner.os }}-dependency-check
-      
+
       - name: Run Dependency-Check (Selected Modules)
         run: |
           set -e
           MODULES=("hapi-fhir-validation" "hapi-fhir-validation-resources-r5")
+
           for mod in "${MODULES[@]}"; do
             echo "🔎 Scanning module: $mod"
             LOG_DIR="target/dependency-check/$mod"
             mkdir -p "$LOG_DIR"
-            
-            echo "---- DEBUG: Current directory structure ----"
-            pwd
-            ls -la || true
-            
-            # Use full plugin coordinates with explicit version
-            echo "Attempting dependency check with full plugin coordinates..."
-            if mvn -B -pl "$mod" org.owasp:dependency-check-maven:9.0.9:check \
+
+            # Run Dependency-Check for this module (only JSON)
+            mvn -B -pl "$mod" dependency-check:check \
               -am \
               -Dformats=JSON \
-              -DnvdApiKey=${{ secrets.NVD_API_KEY }} \
               -DoutputDirectory="$LOG_DIR" \
               -DfailBuildOnAnyVulnerability=false \
-              --log-file "$LOG_DIR/mvn.log"; then
-              echo "✅ Dependency check completed successfully"
+              -DscanTestScope=true \
+              --log-file "$LOG_DIR/mvn.log" || true
+
+            echo "---- DEBUG: Generated files for $mod ----"
+            find "$LOG_DIR" -maxdepth 1 -type f -name "*.json" || true
+
+            REPORT_FILE="$LOG_DIR/dependency-check-report.json"
+            if [ -f "$REPORT_FILE" ]; then
+              echo "✅ JSON report generated for $mod"
             else
-              echo "❌ Dependency check failed, checking logs..."
-              cat "$LOG_DIR/mvn.log" || true
-              echo "Trying alternative approach..."
-              
-              # Alternative: try using the plugin without version
-              mvn -B -pl "$mod" org.owasp:dependency-check-maven:check \
-                -am \
-                -Dformats=JSON \
-                -DoutputDirectory="$LOG_DIR" \
-                -DfailBuildOnAnyVulnerability=false \
-                --log-file "$LOG_DIR/mvn-retry.log" || true
-              cat "$LOG_DIR/mvn-retry.log" || true
+              echo "❌ No report generated for $mod"
             fi
-            
-            echo "---- DEBUG: Generated files ----"
-            find . -name "*.json" -type f | head -10 || true
-            find "$LOG_DIR" -type f -name "*" | head -10 || true
-            
-            # Check if any report was generated
-            REPORT_COUNT=$(find "$LOG_DIR" -name "*.json" -type f | wc -l || echo "0")
-            echo "Found $REPORT_COUNT JSON report(s)"
           done
 
       - name: Upload Maven Logs on Failure
@@ -97,64 +80,47 @@ jobs:
           if-no-files-found: ignore
 
       - name: Display Dependency Check Results in Logs
-        id: summarize
         run: |
           echo "📊 DEPENDENCY CHECK RESULTS SUMMARY"
+          echo "==================================="
+          
           MODULES=("hapi-fhir-validation" "hapi-fhir-validation-resources-r5")
           TOTAL_VULNERABILITIES=0
           MODULES_WITH_VULNS=()
           
-
           for mod in "${MODULES[@]}"; do
             REPORT_FILE="target/dependency-check/$mod/dependency-check-report.json"
-            echo "---- DEBUG: FULL REPORT for $mod ----"
-            cat "$REPORT_FILE" | jq .
-            echo "---- DEBUG: Report metadata ----"
-            jq '.dependencies[0:3]' "$REPORT_FILE"
-            if [ -f "$REPORT_FILE" ]; then
-              VULN_DEPS=$(jq '[.dependencies[] | select(.vulnerabilities | length > 0)] | length' "$REPORT_FILE")
-              if [ "$VULN_DEPS" -gt 0 ]; then
-                MODULES_WITH_VULNS+=("$mod")
-                TOTAL_VULNS=$(jq '[.dependencies[].vulnerabilities[]?] | length' "$REPORT_FILE")
-                TOTAL_VULNERABILITIES=$((TOTAL_VULNERABILITIES + TOTAL_VULNS))
-              fi
+            if [ ! -f "$REPORT_FILE" ]; then
+              echo "❌ No report found for $mod"
+              continue
+            fi
+
+            VULN_DEPS=$(jq '[.dependencies[] | select(.vulnerabilities | length > 0)] | length' "$REPORT_FILE")
+            TOTAL_VULNS=$(jq '[.dependencies[].vulnerabilities[]?] | length' "$REPORT_FILE")
+
+            echo ""
+            echo "📦 Module: $mod"
+            echo "-----------"
+            echo "📈 Vulnerable Dependencies: $VULN_DEPS"
+            echo "🔴 Total Vulnerabilities: $TOTAL_VULNS"
+
+            if [ "$VULN_DEPS" -gt 0 ]; then
+              TOTAL_VULNERABILITIES=$((TOTAL_VULNERABILITIES + TOTAL_VULNS))
+              MODULES_WITH_VULNS+=("$mod")
+            else
+              echo "✅ No vulnerabilities found"
             fi
           done
 
-          echo "Total Vulnerabilities: $TOTAL_VULNERABILITIES"
-          echo "Modules with vulns: ${MODULES_WITH_VULNS[*]}"
-
-          # Export as job outputs
-          echo "modules_with_vulns=${MODULES_WITH_VULNS[*]}" >> $GITHUB_OUTPUT
-          echo "total_vulns=$TOTAL_VULNERABILITIES" >> $GITHUB_OUTPUT
-
-      - name: Process Module Reports for GitHub Issues
-        if: steps.summarize.outputs.modules_with_vulns != ''
-        run: |
-          mkdir -p target/dependency-check/issues
-          IFS=' ' read -ra MODULES <<< "${{ steps.summarize.outputs.modules_with_vulns }}"
-          for mod in "${MODULES[@]}"; do
-            REPORT_FILE="target/dependency-check/$mod/dependency-check-report.json"
-            ISSUE_FILE="target/dependency-check/issues/$mod-issue.md"
-            jq -r '...' "$REPORT_FILE" # (same jq extraction as before, unchanged)
-          done
-
-      - name: Create GitHub Issues
-        if: steps.summarize.outputs.modules_with_vulns != ''
-        run: |
-          sudo apt-get update && sudo apt-get install -y gh
-          IFS=' ' read -ra MODULES <<< "${{ steps.summarize.outputs.modules_with_vulns }}"
-          for mod in "${MODULES[@]}"; do
-            ISSUE_FILE="target/dependency-check/issues/$mod-issue.md"
-            if [ -f "$ISSUE_FILE" ]; then
-              gh issue create \
-                --title "Dependency Check Alert: Vulnerabilities found in $mod module" \
-                --body-file "$ISSUE_FILE" \
-                --label security --label dependencies --label automated \
-                --repo "$GITHUB_REPOSITORY"
-            fi
-          done
-
-      - name: Log Clean Scan
-        if: steps.summarize.outputs.modules_with_vulns == ''
-        run: echo "✅ All modules are clean - no vulnerabilities found!"
+          echo ""
+          echo "🎯 OVERALL SCAN SUMMARY"
+          echo "======================"
+          echo "📦 Modules Scanned: ${#MODULES[@]}"
+          echo "🚨 Modules with Vulnerabilities: ${#MODULES_WITH_VULNS[@]}"
+          echo "🔴 Total Vulnerabilities Found: $TOTAL_VULNERABILITIES"
+          if [ ${#MODULES_WITH_VULNS[@]} -gt 0 ]; then
+            echo "📋 Affected Modules: ${MODULES_WITH_VULNS[*]}"
+            echo "MODULES_WITH_VULNS=${MODULES_WITH_VULNS[*]}" >> $GITHUB_ENV
+          else
+            echo "✅ All modules are clean - no vulnerabilities found!"
+          fi
