@@ -69,49 +69,42 @@ jobs:
           path: target/dependency-check/**/*
           if-no-files-found: ignore
 
-      - name: Process Module Reports
-        id: process-reports
+      - name: Display Dependency Check Results in Logs
         run: |
-          # Create a directory for module-specific issue data
-          mkdir -p target/dependency-check/issues
+          echo "📊 DEPENDENCY CHECK RESULTS SUMMARY"
+          echo "==================================="
           
           # Define the list of modules to scan
           MODULES=("hapi-fhir-validation" "hapi-fhir-validation-resources-r5")
+          TOTAL_VULNERABILITIES=0
           MODULES_WITH_VULNS=()
           
           for mod in "${MODULES[@]}"; do
-            echo "Processing report for module: $mod"
+            echo ""
+            echo "📦 Module: $mod"
+            echo "-----------"
+            
             REPORT_FILE="target/dependency-check/$mod/dependency-check-report.json"
             
             if [ ! -f "$REPORT_FILE" ]; then
-              echo "❌ No report found for module $mod"
+              echo "❌ No report found for this module"
               continue
             fi
             
-            # Count vulnerabilities for this module
-            VULN_COUNT=$(jq '[.dependencies[] | select(.vulnerabilities != null and (.vulnerabilities | length) > 0)] | length' "$REPORT_FILE")
+            # Get basic statistics
+            TOTAL_DEPS=$(jq '.dependencies | length' "$REPORT_FILE")
+            VULN_DEPS=$(jq '[.dependencies[] | select(.vulnerabilities != null and (.vulnerabilities | length) > 0)] | length' "$REPORT_FILE")
+            TOTAL_VULNS=$(jq '[.dependencies[].vulnerabilities[]?] | length' "$REPORT_FILE")
             
-            if [ "$VULN_COUNT" -gt 0 ]; then
-              echo "⚠️  Found $VULN_COUNT vulnerable dependencies in module $mod"
+            echo "📈 Total Dependencies: $TOTAL_DEPS"
+            echo "⚠️  Vulnerable Dependencies: $VULN_DEPS"
+            echo "🔴 Total Vulnerabilities: $TOTAL_VULNS"
+            
+            if [ "$VULN_DEPS" -gt 0 ]; then
+              TOTAL_VULNERABILITIES=$((TOTAL_VULNERABILITIES + TOTAL_VULNS))
               MODULES_WITH_VULNS+=("$mod")
               
-              # Extract critical/high vulnerabilities for this module
-              CRITICAL_CVES=$(jq -r '
-                [.dependencies[] | select(.vulnerabilities != null) | . as $dep | 
-                .vulnerabilities[] | select(.severity == "HIGH" or .severity == "CRITICAL") | 
-                {
-                  dependency: $dep.fileName, 
-                  version: $dep.version, 
-                  cve: .name, 
-                  severity: .severity,
-                  description: .description,
-                  references: [.references[]?.url?] | join(", ")
-                }] | 
-                map("• **\(.dependency)@\(.version)** (\(.severity))\n  **CVE:** \(.cve)\n  **Description:** \(.description | sub("\\n"; " ") | .[0:150])...\n  **References:** \(.references)" ) | 
-                join("\n\n")
-              ' "$REPORT_FILE")
-              
-              # Extract all vulnerabilities breakdown
+              # Get severity breakdown
               SEVERITY_BREAKDOWN=$(jq -r '
                 [.dependencies[].vulnerabilities[]?.severity] | 
                 group_by(.) | 
@@ -119,33 +112,112 @@ jobs:
                 join(", ")
               ' "$REPORT_FILE")
               
-              # Count total dependencies in module
-              TOTAL_DEPS=$(jq '.dependencies | length' "$REPORT_FILE")
+              echo "📋 Severity Breakdown: $SEVERITY_BREAKDOWN"
               
-              # Create issue data file for this module
-              ISSUE_FILE="target/dependency-check/issues/$mod-issue.md"
+              # Show top 3 critical/high vulnerabilities
+              echo ""
+              echo "🚨 Top Critical/High Vulnerabilities:"
+              jq -r '
+                [.dependencies[] | select(.vulnerabilities != null) | . as $dep | 
+                .vulnerabilities[] | select(.severity == "HIGH" or .severity == "CRITICAL") | 
+                {
+                  dependency: $dep.fileName, 
+                  version: $dep.version, 
+                  cve: .name, 
+                  severity: .severity,
+                  score: (.cvssv3.baseScore // .cvssv2.score // "N/A")
+                }] | 
+                sort_by(.severity) | 
+                .[0:3] | 
+                .[] | 
+                "   • \(.dependency)@\(.version) - \(.cve) (\(.severity), Score: \(.score))"
+              ' "$REPORT_FILE"
               
-              # Write issue content using printf to avoid heredoc issues
-              printf "### Module: %s\n" "$mod" > "$ISSUE_FILE"
-              printf "**Scan Date:** %s\n" "$(date +'%Y-%m-%d %H:%M %Z')" >> "$ISSUE_FILE"
-              printf "**Total Dependencies:** %s\n" "$TOTAL_DEPS" >> "$ISSUE_FILE"
-              printf "**Vulnerable Dependencies:** %s\n" "$VULN_COUNT" >> "$ISSUE_FILE"
-              printf "**Severity Breakdown:** %s\n\n" "$SEVERITY_BREAKDOWN" >> "$ISSUE_FILE"
-              printf "### Critical/High Vulnerabilities:\n%s\n\n" "$CRITICAL_CVES" >> "$ISSUE_FILE"
-              printf "### Full Report:\nThe complete dependency check report for this module is available in the workflow artifacts.\n\n" >> "$ISSUE_FILE"
-              printf "### Recommended Actions:\n1. Review the identified vulnerabilities\n2. Update affected dependencies to patched versions\n3. Consider alternative dependencies if updates are not available\n4. Re-run the scan after making changes\n\n" >> "$ISSUE_FILE"
-              printf "---\n*This issue was automatically generated by GitHub Actions Dependency Check*\n" >> "$ISSUE_FILE"
-              
-              echo "Created issue data for module: $mod"
+              # Show vulnerable dependencies list
+              echo ""
+              echo "📋 Vulnerable Dependencies:"
+              jq -r '
+                [.dependencies[] | select(.vulnerabilities != null and (.vulnerabilities | length) > 0)] | 
+                .[] | 
+                "   • \(.fileName)@\(.version) - \(.vulnerabilities | length) vuln(s)"
+              ' "$REPORT_FILE"
             else
-              echo "✅ No vulnerabilities found in module: $mod"
+              echo "✅ No vulnerabilities found"
             fi
+            
+            echo ""
           done
           
-          # Export modules with vulnerabilities as output
+          # Overall summary
+          echo "🎯 OVERALL SCAN SUMMARY"
+          echo "======================"
+          echo "📦 Modules Scanned: ${#MODULES[@]}"
+          echo "🚨 Modules with Vulnerabilities: ${#MODULES_WITH_VULNS[@]}"
+          echo "🔴 Total Vulnerabilities Found: $TOTAL_VULNERABILITIES"
+          
           if [ ${#MODULES_WITH_VULNS[@]} -gt 0 ]; then
+            echo "📋 Affected Modules: ${MODULES_WITH_VULNS[*]}"
             echo "MODULES_WITH_VULNS=${MODULES_WITH_VULNS[*]}" >> $GITHUB_ENV
+          else
+            echo "✅ All modules are clean - no vulnerabilities found!"
           fi
+
+      - name: Process Module Reports for GitHub Issues
+        if: env.MODULES_WITH_VULNS != ''
+        run: |
+          # Create a directory for module-specific issue data
+          mkdir -p target/dependency-check/issues
+          
+          IFS=' ' read -ra MODULES <<< "$MODULES_WITH_VULNS"
+          
+          for mod in "${MODULES[@]}"; do
+            echo "Processing detailed report for module: $mod"
+            REPORT_FILE="target/dependency-check/$mod/dependency-check-report.json"
+            
+            # Extract critical/high vulnerabilities for this module
+            CRITICAL_CVES=$(jq -r '
+              [.dependencies[] | select(.vulnerabilities != null) | . as $dep | 
+              .vulnerabilities[] | select(.severity == "HIGH" or .severity == "CRITICAL") | 
+              {
+                dependency: $dep.fileName, 
+                version: $dep.version, 
+                cve: .name, 
+                severity: .severity,
+                description: .description,
+                references: [.references[]?.url?] | join(", ")
+              }] | 
+              map("• **\(.dependency)@\(.version)** (\(.severity))\n  **CVE:** \(.cve)\n  **Description:** \(.description | sub("\\n"; " ") | .[0:150])...\n  **References:** \(.references)" ) | 
+              join("\n\n")
+            ' "$REPORT_FILE")
+            
+            # Extract all vulnerabilities breakdown
+            SEVERITY_BREAKDOWN=$(jq -r '
+              [.dependencies[].vulnerabilities[]?.severity] | 
+              group_by(.) | 
+              map("\(.[0]): \(length)") | 
+              join(", ")
+            ' "$REPORT_FILE")
+            
+            # Count total dependencies in module
+            TOTAL_DEPS=$(jq '.dependencies | length' "$REPORT_FILE")
+            VULN_COUNT=$(jq '[.dependencies[] | select(.vulnerabilities != null and (.vulnerabilities | length) > 0)] | length' "$REPORT_FILE")
+            
+            # Create issue data file for this module
+            ISSUE_FILE="target/dependency-check/issues/$mod-issue.md"
+            
+            # Write issue content using printf to avoid heredoc issues
+            printf "### Module: %s\n" "$mod" > "$ISSUE_FILE"
+            printf "**Scan Date:** %s\n" "$(date +'%Y-%m-%d %H:%M %Z')" >> "$ISSUE_FILE"
+            printf "**Total Dependencies:** %s\n" "$TOTAL_DEPS" >> "$ISSUE_FILE"
+            printf "**Vulnerable Dependencies:** %s\n" "$VULN_COUNT" >> "$ISSUE_FILE"
+            printf "**Severity Breakdown:** %s\n\n" "$SEVERITY_BREAKDOWN" >> "$ISSUE_FILE"
+            printf "### Critical/High Vulnerabilities:\n%s\n\n" "$CRITICAL_CVES" >> "$ISSUE_FILE"
+            printf "### Full Report:\nThe complete dependency check report for this module is available in the workflow artifacts.\n\n" >> "$ISSUE_FILE"
+            printf "### Recommended Actions:\n1. Review the identified vulnerabilities\n2. Update affected dependencies to patched versions\n3. Consider alternative dependencies if updates are not available\n4. Re-run the scan after making changes\n\n" >> "$ISSUE_FILE"
+            printf "---\n*This issue was automatically generated by GitHub Actions Dependency Check*\n" >> "$ISSUE_FILE"
+            
+            echo "Created issue data for module: $mod"
+          done
 
       - name: Create GitHub Issues
         if: env.MODULES_WITH_VULNS != ''
