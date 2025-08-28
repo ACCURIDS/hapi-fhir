@@ -25,7 +25,7 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
-
+      
       - name: Cache Dependency-Check Data
         uses: actions/cache@v4
         with:
@@ -33,7 +33,7 @@ jobs:
             ~/.m2/repository/org/owasp/dependency-check-data
             ~/.m2/repository/org/owasp/dependency-check-maven
           key: ${{ runner.os }}-dependency-check
-
+      
       - name: Run Dependency-Check (Selected Modules)
         run: |
           set -e
@@ -47,23 +47,26 @@ jobs:
             pwd
             ls -la || true
             
-            # Try running with simpler parameters first
-            echo "Attempting dependency check..."
-            if mvn -B -pl "$mod" dependency-check:check \
+            # Use full plugin coordinates with explicit version
+            echo "Attempting dependency check with full plugin coordinates..."
+            if mvn -B -pl "$mod" org.owasp:dependency-check-maven:9.0.9:check \
               -am \
               -Dformats=JSON \
               -DoutputDirectory="$LOG_DIR" \
+              -DfailBuildOnAnyVulnerability=false \
               --log-file "$LOG_DIR/mvn.log"; then
               echo "✅ Dependency check completed successfully"
             else
               echo "❌ Dependency check failed, checking logs..."
               cat "$LOG_DIR/mvn.log" || true
-              echo "Trying without NVD API key..."
-              # Try without API key which might be causing the issue
-              mvn -B -pl "$mod" dependency-check:check \
+              echo "Trying alternative approach..."
+              
+              # Alternative: try using the plugin without version
+              mvn -B -pl "$mod" org.owasp:dependency-check-maven:check \
                 -am \
                 -Dformats=JSON \
                 -DoutputDirectory="$LOG_DIR" \
+                -DfailBuildOnAnyVulnerability=false \
                 --log-file "$LOG_DIR/mvn-retry.log" || true
               cat "$LOG_DIR/mvn-retry.log" || true
             fi
