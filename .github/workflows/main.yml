@@ -47,6 +47,7 @@ jobs:
               -Dformats=ALL \
               -DnvdApiKey=${{ secrets.NVD_API_KEY }} \
               -DoutputDirectory="$LOG_DIR" \
+              -DfailBuildOnCVSS=11 \
               --log-file "$LOG_DIR/mvn.log"
             echo "---- DEBUG: What reports exist for $mod ----"
             find target -type f -name "dependency-check-report.*" || true
