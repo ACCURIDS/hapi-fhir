@@ -44,7 +44,7 @@ jobs:
             mkdir -p "$LOG_DIR"
             mvn -B -pl "$mod" org.owasp:dependency-check-maven:check \
               -am \
-              -Dformat=ALL \
+              -Dformats=ALL \
               -DnvdApiKey=${{ secrets.NVD_API_KEY }} \
               -DoutputDirectory="$LOG_DIR" \
               --log-file "$LOG_DIR/mvn.log"
