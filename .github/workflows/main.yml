@@ -76,7 +76,7 @@ jobs:
           for mod in "${MODULES[@]}"; do
             REPORT_FILE="target/dependency-check/$mod/dependency-check-report.json"
             if [ -f "$REPORT_FILE" ]; then
-              VULN_DEPS=$(jq '[.dependencies[] | select(.vulnerabilities != null)] | length' "$REPORT_FILE")
+              VULN_DEPS=$(jq '[.dependencies[] | select(.vulnerabilities | length > 0)] | length' "$REPORT_FILE")
               if [ "$VULN_DEPS" -gt 0 ]; then
                 MODULES_WITH_VULNS+=("$mod")
                 TOTAL_VULNS=$(jq '[.dependencies[].vulnerabilities[]?] | length' "$REPORT_FILE")
