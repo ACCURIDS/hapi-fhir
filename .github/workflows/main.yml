@@ -42,15 +42,28 @@ jobs:
             echo "🔎 Scanning module: $mod"
             LOG_DIR="target/dependency-check/$mod"
             mkdir -p "$LOG_DIR"
+            
+            # Run dependency check with explicit report name
             mvn -B -pl "$mod" dependency-check:check \
               -am \
               -Dformats=JSON \
               -DnvdApiKey=${{ secrets.NVD_API_KEY }} \
               -DoutputDirectory="$LOG_DIR" \
-              -DfailBuildOnCVSS=11 \
+              -DdataDirectory="$LOG_DIR/data" \
               --log-file "$LOG_DIR/mvn.log"
+            
             echo "---- DEBUG: What reports exist for $mod ----"
-            find target -type f -name "dependency-check-report.*" || true
+            
+            # Look for reports in the module-specific directory
+            find "$LOG_DIR" -type f -name "*.json" || true
+            find "$LOG_DIR" -type f -name "*.html" || true
+            find "$LOG_DIR" -type f -name "*.xml" || true
+            
+            # Also check the module's target directory
+            MODULE_TARGET_DIR="$mod/target"
+            if [ -d "$MODULE_TARGET_DIR" ]; then
+              find "$MODULE_TARGET_DIR" -type f -name "dependency-check-report.*" || true
+            fi
           done
 
       - name: Upload Maven Logs on Failure
