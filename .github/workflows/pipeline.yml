@@ -49,11 +49,11 @@ jobs:
         
         # Run with correct parameter names
         mvn org.owasp:dependency-check-maven:check \
-        -Dformat=JSON \
-        -DoutputDirectory=../reports \
-        -DdataDirectory=../dependency-check-data \
-        -DnvdApiDelay=2000 \
-        -DfailOnCVSS=0
+          -Dformats=JSON \
+          -DoutputDirectory=../reports \
+          -DdataDirectory=../dependency-check-data \
+          -DnvdApiDelay=2000 \
+          -DfailOnCVSS=0
 
 
     - name: Check if report was generated
