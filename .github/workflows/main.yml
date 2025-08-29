@@ -1,33 +1,26 @@
-name: HAPI FHIR Dependency Security Scan
+name: HAPI FHIR Validation Dependency Scan
 
 on:
   schedule:
     - cron: '0 0 * * 1'  # Run weekly on Monday at midnight
   push:
-    branches: [ main, master ]
+    branches: [ 5.1.0-patch1 ]
     paths:
-      - '**/pom.xml'
+      - 'hapi-fhir-validation/pom.xml'
       - '**/dependencies/**'
   pull_request:
-    branches: [ main, master ]
+    branches: [ 5.1.0-patch1 ]
     paths:
-      - '**/pom.xml'
+      - 'hapi-fhir-validation/pom.xml'
       - '**/dependencies/**'
-  workflow_dispatch:
-    inputs:
-      module:
-        description: 'Specific HAPI FHIR module to scan (e.g., hapi-fhir-validation)'
-        required: false
-        default: ''
+  workflow_dispatch:  # Allow manual triggering
 
 jobs:
   dependency-scan:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        module: ${{ fromJSON(contains(github.event.inputs.module, '') && '[
-          "hapi-fhir-validation", 
-            ]' || '["' + github.event.inputs.module + '"]') }}
+    defaults:
+      run:
+        working-directory: ./hapi-fhir-validation
     
     steps:
     - name: Checkout code
@@ -42,180 +35,164 @@ jobs:
         java-version: '17'
         cache: 'maven'
 
-    - name: Set up OWASP Dependency-Check
+    - name: Download OWASP Dependency-Check
       run: |
-        # Download and setup OWASP Dependency-Check
-        wget https://github.com/jeremylong/DependencyCheck/releases/download/v8.3.1/dependency-check-8.3.1-release.zip
-        unzip dependency-check-8.3.1-release.zip
-        echo "OWASP_HOME=$(pwd)/dependency-check" >> $GITHUB_ENV
-        echo "$(pwd)/dependency-check/bin" >> $GITHUB_PATH
+        wget -q https://github.com/jeremylong/DependencyCheck/releases/download/v8.3.1/dependency-check-8.3.1-release.zip
+        unzip -q dependency-check-8.3.1-release.zip
+        echo "DEPENDENCY_CHECK_HOME=$(pwd)/dependency-check" >> $GITHUB_ENV
 
-    - name: Generate dependency list for module
+    - name: Generate dependency tree
       run: |
-        cd ${{ matrix.module }}
-        # Generate dependency tree
-        mvn dependency:tree -DoutputFile=dependency-tree.txt -q
-        echo "Generated dependency tree for ${{ matrix.module }}"
+        mvn dependency:tree -DoutputFile=../dependency-tree.txt -q
+        echo "Dependency tree generated"
 
-    - name: Run OWASP Dependency-Check on specific module
-      id: owasp_scan
+    - name: Run OWASP Dependency-Check
+      id: security_scan
       run: |
-        cd ${{ matrix.module }}
-        
-        # Run OWASP Dependency-Check
-        dependency-check.sh \
-          --project "${{ matrix.module }}" \
+        # Run dependency check
+        $DEPENDENCY_CHECK_HOME/bin/dependency-check.sh \
+          --project "hapi-fhir-validation" \
           --scan "." \
-          --out "reports" \
+          --out "../reports" \
           --format "JSON" \
           --enableExperimental \
           --failOnCVSS 0 \
-          --data "$(pwd)/../dependency-check-data" || true
+          --data "../dependency-check-data" || true
+
+    - name: Process scan results
+      id: process_results
+      run: |
+        cd ../reports
         
-        # Check if report exists and process it
-        if [ -f "reports/dependency-check-report.json" ]; then
-          echo "REPORT_EXISTS=true" >> $GITHUB_ENV
-          echo "SCAN_RESULTS=$(cat reports/dependency-check-report.json | jq -c .)" >> $GITHUB_OUTPUT
-          
+        if [ -f "dependency-check-report.json" ]; then
           # Count vulnerabilities
-          VULN_COUNT=$(cat reports/dependency-check-report.json | jq '.dependencies[].vulnerabilities | length' | awk '{sum+=$1} END {print sum}')
-          echo "VULN_COUNT=$VULN_COUNT" >> $GITHUB_ENV
-          echo "VULN_COUNT=$VULN_COUNT" >> $GITHUB_OUTPUT
+          VULN_COUNT=$(jq '.dependencies[].vulnerabilities | length' dependency-check-report.json | awk '{sum+=$1} END {print sum}')
+          echo "vuln_count=$VULN_COUNT" >> $GITHUB_OUTPUT
+          
+          # Extract report data
+          REPORT_DATA=$(jq -c '.' dependency-check-report.json)
+          echo "report_data=$REPORT_DATA" >> $GITHUB_OUTPUT
           
           if [ "$VULN_COUNT" -gt 0 ]; then
-            echo "HAS_VULNERABILITIES=true" >> $GITHUB_ENV
-            echo "HAS_VULNERABILITIES=true" >> $GITHUB_OUTPUT
+            echo "has_vulnerabilities=true" >> $GITHUB_OUTPUT
           else
-            echo "HAS_VULNERABILITIES=false" >> $GITHUB_ENV
-            echo "HAS_VULNERABILITIES=false" >> $GITHUB_OUTPUT
+            echo "has_vulnerabilities=false" >> $GITHUB_OUTPUT
           fi
         else
-          echo "REPORT_EXISTS=false" >> $GITHUB_ENV
-          echo "HAS_VULNERABILITIES=false" >> $GITHUB_OUTPUT
+          echo "vuln_count=0" >> $GITHUB_OUTPUT
+          echo "has_vulnerabilities=false" >> $GITHUB_OUTPUT
         fi
 
-    - name: Upload dependency check report
+    - name: Upload scan reports
       uses: actions/upload-artifact@v4
       with:
-        name: dependency-report-${{ matrix.module }}
-        path: ${{ matrix.module }}/reports/
+        name: hapi-fhir-validation-dependency-report
+        path: |
+          reports/
+          dependency-tree.txt
 
-    - name: Run Maven vulnerability check
-      id: maven_scan
-      run: |
-        cd ${{ matrix.module }}
-        
-        # Use Maven vulnerability check plugin
-        mvn org.owasp:dependency-check-maven:check -Dformat=json -Doutput=./maven-report.json -q || true
-        
-        if [ -f "maven-report.json" ]; then
-          echo "MAVEN_REPORT=$(cat maven-report.json | jq -c .)" >> $GITHUB_OUTPUT
-        fi
-
-    - name: Create GitHub Issues for vulnerabilities
-      if: steps.owasp_scan.outputs.HAS_VULNERABILITIES == 'true'
+    - name: Create GitHub Issue for vulnerabilities
+      if: steps.process_results.outputs.has_vulnerabilities == 'true'
       uses: actions/github-script@v7
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
-          const report = JSON.parse('${{ steps.owasp_scan.outputs.SCAN_RESULTS }}');
-          const vulnCount = parseInt('${{ steps.owasp_scan.outputs.VULN_COUNT }}');
+          const reportData = '${{ steps.process_results.outputs.report_data }}';
+          const vulnCount = parseInt('${{ steps.process_results.outputs.vuln_count }}');
           
-          const issueTitle = `[Dependency Vulnerability] ${{ matrix.module }} - ${vulnCount} CVE(s) detected`;
+          let report;
+          try {
+            report = JSON.parse(reportData);
+          } catch (e) {
+            console.error('Failed to parse report data:', e);
+            return;
+          }
+          
+          const issueTitle = `[Security] hapi-fhir-validation - ${vulnCount} vulnerability(s) detected`;
           
           // Check if issue already exists
           const existingIssues = await github.rest.issues.listForRepo({
             owner: context.repo.owner,
             repo: context.repo.repo,
             state: 'open',
-            labels: ['security', 'dependencies', '${{ matrix.module }}']
+            labels: ['security', 'dependencies', 'hapi-fhir-validation']
           });
           
           const alreadyExists = existingIssues.data.some(issue => 
-            issue.title.includes('${{ matrix.module }}') && 
-            issue.title.includes('Dependency Vulnerability')
+            issue.title.includes('hapi-fhir-validation') && 
+            issue.title.includes('vulnerability')
           );
           
           if (!alreadyExists) {
-            let issueBody = `
-              ### 🔍 Dependency Security Scan Results
-              
-              **Module**: ${{ matrix.module }}
-              **Total Vulnerabilities**: ${vulnCount}
-              **Scan Date**: ${new Date().toISOString()}
-              **Scan Type**: OWASP Dependency-Check
-              
-              ### 📋 Vulnerability Summary
-              `;
-
-              // Group vulnerabilities by severity
-              const severityCounts = {
-                CRITICAL: 0,
-                HIGH: 0,
-                MEDIUM: 0,
-                LOW: 0
-              };
-
-              const vulnerabilities = [];
-
-              // Collect all vulnerabilities
-              for (const dependency of report.dependencies || []) {
-                for (const vuln of dependency.vulnerabilities || []) {
-                  severityCounts[vuln.severity] = (severityCounts[vuln.severity] || 0) + 1;
-                  vulnerabilities.push({
-                    name: dependency.fileName,
-                    version: dependency.version,
-                    cve: vuln.name,
-                    severity: vuln.severity,
-                    description: vuln.description,
-                    cvssScore: vuln.cvssv3?.baseScore || vuln.cvssv2?.score || 'N/A'
-                  });
-                }
+            // Group vulnerabilities by severity
+            const vulnerabilities = [];
+            for (const dependency of report.dependencies || []) {
+              for (const vuln of dependency.vulnerabilities || []) {
+                vulnerabilities.push({
+                  cve: vuln.name,
+                  severity: vuln.severity || 'UNKNOWN',
+                  package: dependency.fileName,
+                  version: dependency.version,
+                  description: vuln.description || 'No description available',
+                  cvssScore: vuln.cvssv3?.baseScore || vuln.cvssv2?.score || 'N/A'
+                });
               }
-
-            // Add severity breakdown
-            issueBody += `
-            - **CRITICAL**: ${severityCounts.CRITICAL || 0}
-            - **HIGH**: ${severityCounts.HIGH || 0} 
-            - **MEDIUM**: ${severityCounts.MEDIUM || 0}
-            - **LOW**: ${severityCounts.LOW || 0}
+            }
             
+            // Sort by severity
+            vulnerabilities.sort((a, b) => {
+              const severityOrder = {CRITICAL: 4, HIGH: 3, MEDIUM: 2, LOW: 1, UNKNOWN: 0};
+              return severityOrder[b.severity] - severityOrder[a.severity];
+            });
+            
+            let issueBody = `## 🔍 Dependency Security Scan - hapi-fhir-validation
+          
+            **Total Vulnerabilities**: ${vulnCount}
+            **Scan Date**: ${new Date().toISOString()}
+            **Module**: hapi-fhir-validation
+            
+            ### 📊 Vulnerability Summary
+            `;
+            
+                        // Add severity breakdown
+                        const severityCounts = {};
+                        vulnerabilities.forEach(vuln => {
+                          severityCounts[vuln.severity] = (severityCounts[vuln.severity] || 0) + 1;
+                        });
+                        
+                        Object.entries(severityCounts).forEach(([severity, count]) => {
+                          issueBody += `- **${severity}**: ${count}\n`;
+                        });
+            
+                        issueBody += `
             ### 🎯 Top Vulnerabilities
             `;
 
-            // Add top 5 most critical vulnerabilities
-            vulnerabilities
-              .sort((a, b) => {
-                const severityOrder = {CRITICAL: 4, HIGH: 3, MEDIUM: 2, LOW: 1};
-                return severityOrder[b.severity] - severityOrder[a.severity];
-              })
-              .slice(0, 5)
-              .forEach(vuln => {
-                issueBody += `
-                    #### ${vuln.cve} (${vuln.severity})
-                    **Package**: ${vuln.name}@${vuln.version}
-                    **CVSS Score**: ${vuln.cvssScore}
-                    
-                    ${vuln.description.substring(0, 200)}...
-                    `;
-                                  });
-                    
-                                issueBody += `
-                    ### 📊 Full Report
-                    The complete vulnerability report is available as a workflow artifact.
-                    
-                    ### 🔧 Recommended Actions
-                    1. Review the detailed vulnerability report
-                    2. Update vulnerable dependencies to patched versions
-                    3. Consider alternative libraries if no patches available
-                    4. Re-run this scan after updates
-                    
-                    ### 📝 Scan Details
-                    - **Run ID**: ${context.runId}
-                    - **Commit**: ${context.sha}
-                    - **Workflow**: ${context.workflow}
-                    
-                    [View full scan results](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})
+            // Add top vulnerabilities
+            vulnerabilities.slice(0, 10).forEach((vuln, index) => {
+              issueBody += `
+              #### ${index + 1}. ${vuln.cve} (${vuln.severity})
+              **Package**: ${vuln.package}@${vuln.version}
+              **CVSS Score**: ${vuln.cvssScore}
+              
+              ${vuln.description.substring(0, 250)}...
+              `;
+                          });
+              
+                          issueBody += `
+              ### 📝 Scan Details
+              - **Run ID**: ${context.runId}
+              - **Commit**: ${context.sha}
+              - **Scanner**: OWASP Dependency-Check
+              - **Report**: Available as workflow artifact
+              
+              ### 🔧 Next Steps
+              1. Review the detailed vulnerability report
+              2. Update affected dependencies
+              3. Consider security patches or alternative libraries
+              4. Re-scan after updates
+              
+              [View full scan results](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})
               `;
 
             await github.rest.issues.create({
@@ -223,13 +200,13 @@ jobs:
               repo: context.repo.repo,
               title: issueTitle,
               body: issueBody,
-              labels: ['security', 'dependencies', 'cve', '${{ matrix.module }}', 'hapi-fhir'],
-              assignees: ['security-team']  // Replace with actual username or team
+              labels: ['security', 'dependencies', 'cve', 'hapi-fhir-validation', 'automated-scan'],
+              assignees: []  # Add specific assignees if needed
             });
-
-            console.log(`Created dependency issue for ${{ matrix.module }} with ${vulnCount} vulnerabilities`);
+            
+            console.log(`Created security issue for hapi-fhir-validation with ${vulnCount} vulnerabilities`);
           } else {
-            console.log(`Dependency issue for ${{ matrix.module }} already exists`);
+            console.log('Security issue for hapi-fhir-validation already exists');
           }
 
   summary:
@@ -238,51 +215,12 @@ jobs:
     if: always()
     
     steps:
-    - name: Download all dependency reports
-      uses: actions/download-artifact@v4
-      with:
-        pattern: dependency-report-*
-        path: ./dependency-reports
-
-    - name: Generate security summary
+    - name: Generate scan summary
       run: |
-        echo "### HAPI FHIR Dependency Security Summary" >> $GITHUB_STEP_SUMMARY
+        echo "### HAPI FHIR Validation Dependency Scan Summary" >> $GITHUB_STEP_SUMMARY
+        echo "**Module**: hapi-fhir-validation" >> $GITHUB_STEP_SUMMARY
         echo "**Scan Date**: $(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> $GITHUB_STEP_SUMMARY
-        echo "**Scanned Modules**: ${{ join(matrix.module) }}" >> $GITHUB_STEP_SUMMARY
+        echo "**Vulnerabilities Found**: ${{ needs.dependency-scan.outputs.vuln_count || 0 }}" >> $GITHUB_STEP_SUMMARY
+        echo "**Status**: ${{ needs.dependency-scan.outputs.has_vulnerabilities == 'true' && '❌ Vulnerabilities detected' || '✅ No vulnerabilities found' }}" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "| Module | Vulnerabilities | Status |" >> $GITHUB_STEP_SUMMARY
-        echo "|--------|-----------------|--------|" >> $GITHUB_STEP_SUMMARY
-        echo "| hapi-fhir-base | 0 | ✅ |" >> $GITHUB_STEP_SUMMARY
-        echo "| hapi-fhir-validation | 2 | ⚠️ |" >> $GITHUB_STEP_SUMMARY
-        echo "| hapi-fhir-structures-r4 | 1 | ⚠️ |" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "**Total Vulnerabilities**: 3" >> $GITHUB_STEP_SUMMARY
-        echo "**Issues Created**: ${{ needs.dependency-scan.outputs.HAS_VULNERABILITIES == 'true' && 'Yes' || 'No' }}" >> $GITHUB_STEP_SUMMARY
-
-    - name: Comment on PR with results
-      if: github.event_name == 'pull_request'
-      uses: actions/github-script@v7
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        script: |
-          const summary = `
-          ### 🔒 HAPI FHIR Dependency Security Scan
-          
-          Dependency vulnerability scan completed for all modules.
-          
-          **Results**:
-          - ✅ hapi-fhir-base: 0 vulnerabilities
-          - ⚠️ hapi-fhir-validation: 2 vulnerabilities - [View report](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})
-          - ⚠️ hapi-fhir-structures-r4: 1 vulnerability
-          
-          **Action**: Security issues have been automatically created for review.
-          
-          *Note: This scan focuses on identifying CVEs in project dependencies using OWASP Dependency-Check.*
-                    `;
-
-          await github.rest.issues.createComment({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            issue_number: context.payload.pull_request.number,
-            body: summary
-          });
+        echo "Scan reports are available as workflow artifacts." >> $GITHUB_STEP_SUMMARY
