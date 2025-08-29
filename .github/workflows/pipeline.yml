@@ -109,8 +109,8 @@ jobs:
       with:
         name: dependency-report
         path: |
-          ../target/
-          ../dependency-check-data/
+          target/
+          dependency-check-data/
 
     - name: Create GitHub Issue for vulnerabilities
       if: steps.process_results.outputs.has_vulnerabilities == 'true'
