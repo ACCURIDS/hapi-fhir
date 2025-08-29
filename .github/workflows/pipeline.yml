@@ -106,6 +106,7 @@ jobs:
         CVES: ${{ steps.process_results.outputs.cves }}
         SCAN_DATE: ${{ github.run_started_at }}
       with:
+        filename: .github/ISSUE_TEMPLATE/dependency-scan.md
         title: "Security scan detected ${{ steps.process_results.outputs.vuln_count }} vulnerability(s)"
         body: |
           **HAPI FHIR Validation Dependency Scan**
@@ -116,6 +117,7 @@ jobs:
           **CVE IDs:** ${{ steps.process_results.outputs.cves }}
           
           Please review the attached dependency scan report artifact for details.
+
 
 
   summary:
