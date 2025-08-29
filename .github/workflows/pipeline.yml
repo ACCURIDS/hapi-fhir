@@ -118,16 +118,17 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
-          const reportData = '${{ steps.process_results.outputs.report_data }}';
-          const vulnCount = parseInt('${{ steps.process_results.outputs.vuln_count }}');
-          
-          let report;
-          try {
-            report = JSON.parse(reportData);
-          } catch (e) {
-            console.error('Failed to parse report data:', e);
-            return;
-          }
+          const fs = require('fs');
+          const reportPath = 'target/dependency-check-report.json';
+           if (!fs.existsSync(reportPath)) {
+             console.log("Report file not found, skipping issue creation");
+             return;
+           }
+          const reportData = fs.readFileSync(reportPath, 'utf-8');
+          const report = JSON.parse(reportData);
+          const vulnCount = report.dependencies.reduce((sum, dep) => sum + (dep.vulnerabilities?.length || 0), 0);
+
+
           
           const issueTitle = `[Security] hapi-fhir-validation - ${vulnCount} vulnerability(s) detected`;
           
