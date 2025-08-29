@@ -56,6 +56,7 @@ jobs:
           --out "../reports" \
           --format "JSON" \
           --enableExperimental \
+          --nvdApiKey "${{ secrets.NVD_API_KEY }}" \
           --failOnCVSS 0 \
           --data "../dependency-check-data" || true
 
