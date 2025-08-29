@@ -1,5 +1,5 @@
 name: HAPI FHIR Validation Dependency Scan
- 
+
 on:
   schedule:
     - cron: '0 0 * * 1'  # Run weekly on Monday at midnight
@@ -13,7 +13,7 @@ on:
     paths:
       - 'hapi-fhir-validation/pom.xml'
       - '**/dependencies/**'
-  workflow_dispatch:  # Allows manual runs
+  workflow_dispatch:
 
 jobs:
   dependency-scan:
@@ -24,7 +24,8 @@ jobs:
     outputs:
       vuln_count: ${{ steps.process_results.outputs.vuln_count }}
       has_vulnerabilities: ${{ steps.process_results.outputs.has_vulnerabilities }}
-    
+      cves: ${{ steps.process_results.outputs.cves }}
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -44,11 +45,10 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-nvd-data-
 
-    - name: Run Maven Dependency-Check with correct parameters
+    - name: Run Maven Dependency-Check
       id: security_scan
       run: |
         mkdir -p ../dependency-check-data
-        
         mvn org.owasp:dependency-check-maven:check \
           -Dformats=JSON \
           -DnvdApiKey=${{ secrets.NVD_API_KEY }} \
@@ -57,35 +57,21 @@ jobs:
           -DnvdApiDelay=2000 \
           -DfailOnCVSS=0
 
-    - name: Check if report was generated
+    - name: Check if report exists
       run: |
         if [ -f "target/dependency-check-report.json" ]; then
           echo "Report generated successfully"
         else
-          echo "Report generation failed, trying alternative approach..."
+          echo "Report not found, failing..."
           exit 1
         fi
-
-    - name: Alternative approach using CLI with correct parameters
-      if: failure() && steps.security_scan.conclusion == 'failure'
-      run: |
-        wget -q https://github.com/jeremylong/DependencyCheck/releases/download/v8.3.1/dependency-check-8.3.1-release.zip
-        unzip -q dependency-check-8.3.1-release.zip
-        
-        ./dependency-check/bin/dependency-check.sh \
-          --project "hapi-fhir-validation" \
-          --scan "." \
-          --out "../target" \
-          --format "JSON" \
-          --data "../dependency-check-data" \
-          --noupdate \
-          --failOnCVSS 0
 
     - name: Process scan results
       id: process_results
       run: |
         REPORT_FILE="target/dependency-check-report.json"
         if [ -f "$REPORT_FILE" ]; then
+          # Count vulnerabilities
           VULN_COUNT=$(jq '[.dependencies[].vulnerabilities[]?] | length' "$REPORT_FILE")
           echo "vuln_count=$VULN_COUNT" >> $GITHUB_OUTPUT
           if [ "$VULN_COUNT" -gt 0 ]; then
@@ -93,9 +79,14 @@ jobs:
           else
             echo "has_vulnerabilities=false" >> $GITHUB_OUTPUT
           fi
+
+          # Extract CVE IDs
+          CVES=$(jq -r '.dependencies[].vulnerabilities[]?.name' "$REPORT_FILE" | paste -sd "," -)
+          echo "cves=$CVES" >> $GITHUB_OUTPUT
         else
           echo "vuln_count=0" >> $GITHUB_OUTPUT
           echo "has_vulnerabilities=false" >> $GITHUB_OUTPUT
+          echo "cves=" >> $GITHUB_OUTPUT
         fi
 
     - name: Upload scan reports
@@ -112,16 +103,24 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         VULN_COUNT: ${{ needs.dependency-scan.outputs.vuln_count }}
+        CVES: ${{ needs.dependency-scan.outputs.cves }}
         SCAN_DATE: ${{ github.run_started_at }}
-        SUMMARY: "Found ${{ needs.dependency-scan.outputs.vuln_count }} vulnerabilities in hapi-fhir-validation"
       with:
-        filename: .github/ISSUE_TEMPLATE/dependency-scan.md
+        title: "Security scan detected ${{ needs.dependency-scan.outputs.vuln_count }} vulnerability(s)"
+        body: |
+          **HAPI FHIR Validation Dependency Scan**
+          
+          Scan date: ${{ github.run_started_at }}
+          Vulnerabilities found: ${{ needs.dependency-scan.outputs.vuln_count }}
+          
+          **CVE IDs:** ${{ needs.dependency-scan.outputs.cves }}
+          
+          Please review the attached dependency scan report artifact for details.
 
   summary:
     runs-on: ubuntu-latest
     needs: dependency-scan
     if: always()
-    
     steps:
     - name: Generate scan summary
       run: |
