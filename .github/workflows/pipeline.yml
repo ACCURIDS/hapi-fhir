@@ -52,7 +52,7 @@ jobs:
           -Dformat=JSON \
           -DoutputDirectory=../reports \
           -DdataDirectory=../dependency-check-data \
-          -DautoUpdate=false \
+          -DautoUpdate=true \
           -DnvdApiKey="${{ secrets.NVD_API_KEY }}" \
           -DfailOnCVSS=0
 
