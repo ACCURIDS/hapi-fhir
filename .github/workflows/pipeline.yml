@@ -65,28 +65,25 @@ jobs:
           echo "Report not found, failing..."
           exit 1
         fi
-
     - name: Process scan results
       id: process_results
       run: |
         REPORT_FILE="target/dependency-check-report.json"
+    
         if [ -f "$REPORT_FILE" ]; then
-          # Count vulnerabilities
           VULN_COUNT=$(jq '[.dependencies[].vulnerabilities[]?] | length' "$REPORT_FILE")
+          CVES=$(jq -r '[.dependencies[].vulnerabilities[]?.name] | join(", ")' "$REPORT_FILE")
           echo "vuln_count=$VULN_COUNT" >> $GITHUB_OUTPUT
+          echo "cves=$CVES" >> $GITHUB_OUTPUT
           if [ "$VULN_COUNT" -gt 0 ]; then
             echo "has_vulnerabilities=true" >> $GITHUB_OUTPUT
           else
             echo "has_vulnerabilities=false" >> $GITHUB_OUTPUT
           fi
-
-          # Extract CVE IDs
-          CVES=$(jq -r '.dependencies[].vulnerabilities[]?.name' "$REPORT_FILE" | paste -sd "," -)
-          echo "cves=$CVES" >> $GITHUB_OUTPUT
         else
           echo "vuln_count=0" >> $GITHUB_OUTPUT
-          echo "has_vulnerabilities=false" >> $GITHUB_OUTPUT
           echo "cves=" >> $GITHUB_OUTPUT
+          echo "has_vulnerabilities=false" >> $GITHUB_OUTPUT
         fi
 
     - name: Upload scan reports
@@ -96,28 +93,17 @@ jobs:
         path: |
           target/
           dependency-check-data/
-
     - name: Create GitHub Issue
-      if: steps.process_results.outputs.vuln_count != '0'
+      if: needs.dependency-scan.outputs.vuln_count != '0'
       uses: JasonEtco/create-an-issue@v2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        VULN_COUNT: ${{ steps.process_results.outputs.vuln_count }}
-        CVES: ${{ steps.process_results.outputs.cves }}
+        VULN_COUNT: ${{ needs.dependency-scan.outputs.vuln_count }}
+        CVES: ${{ needs.dependency-scan.outputs.cves }}
         SCAN_DATE: ${{ github.run_started_at }}
       with:
+        title: "Security scan detected ${{ needs.dependency-scan.outputs.vuln_count }} vulnerability(s)"
         filename: .github/ISSUE_TEMPLATE/dependency-scan.md
-        title: "Security scan detected ${{ steps.process_results.outputs.vuln_count }} vulnerability(s)"
-        body: |
-          **HAPI FHIR Validation Dependency Scan**
-          
-          Scan date: ${{ github.run_started_at }}
-          Vulnerabilities found: ${{ steps.process_results.outputs.vuln_count }}
-          
-          **CVE IDs:** ${{ steps.process_results.outputs.cves }}
-          
-          Please review the attached dependency scan report artifact for details.
-
 
 
   summary:
