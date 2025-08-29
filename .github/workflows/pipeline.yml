@@ -50,6 +50,7 @@ jobs:
         # Run with correct parameter names
         mvn org.owasp:dependency-check-maven:check \
           -Dformats=JSON \
+          -DnvdApiKey=${{ secrets.NVD_API_KEY }} \
           -DoutputDirectory=../reports \
           -DdataDirectory=../dependency-check-data \
           -DnvdApiDelay=2000 \
