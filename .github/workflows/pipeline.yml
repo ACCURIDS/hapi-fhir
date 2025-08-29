@@ -90,7 +90,7 @@ jobs:
         
         if [ -f "$REPORT_FILE" ]; then
           # Count vulnerabilities
-          VULN_COUNT=$(jq '.dependencies[].vulnerabilities | length' "$REPORT_FILE" | awk '{sum+=$1} END {print sum}')
+          VULN_COUNT=$(jq '[.dependencies[].vulnerabilities[]?] | length' dependency-check-report.json)
           echo "vuln_count=$VULN_COUNT" >> $GITHUB_OUTPUT
           
           if [ "$VULN_COUNT" -gt 0 ]; then
