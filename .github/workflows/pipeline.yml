@@ -59,13 +59,12 @@ jobs:
 
     - name: Check if report was generated
       run: |
-        if [ -f "../reports/dependency-check-report.json" ]; then
-          echo "Report generated successfully"
-          exit 0
-        else
-          echo "Report generation failed, trying alternative approach..."
-          exit 1
-        fi
+       if [ -f "target/dependency-check-report.json" ]; then
+         echo "Report generated successfully"
+       else
+         echo "Report generation failed, trying alternative approach..."
+         exit 1
+       fi
 
     - name: Alternative approach using CLI with correct parameters
       if: failure() && steps.security_scan.conclusion == 'failure'
@@ -87,8 +86,8 @@ jobs:
     - name: Process scan results
       id: process_results
       run: |
-        if [ -f "../reports/dependency-check-report.json" ]; then
-          cd ../reports
+        if [ -f "../target/dependency-check-report.json" ]; then
+          cd ../target
           # Count vulnerabilities
           VULN_COUNT=$(jq '.dependencies[].vulnerabilities | length' dependency-check-report.json | awk '{sum+=$1} END {print sum}')
           echo "vuln_count=$VULN_COUNT" >> $GITHUB_OUTPUT
