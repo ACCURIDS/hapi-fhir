@@ -52,8 +52,8 @@ jobs:
           -Dformat=JSON \
           -DoutputDirectory=../reports \
           -DdataDirectory=../dependency-check-data \
-          -DconnectionTimeout=60000 \
-          -DreadTimeout=120000 \
+          -DautoUpdate=false \
+          -DnvdApiKey="${{ secrets.NVD_API_KEY }}" \
           -DfailOnCVSS=0
 
     - name: Check if report was generated
