@@ -112,124 +112,16 @@ jobs:
           target/
           dependency-check-data/
 
-    - name: Create GitHub Issue for vulnerabilities
-      if: steps.process_results.outputs.has_vulnerabilities == 'true'
-      uses: actions/github-script@v7
+    - name: Create GitHub Issue
+      if: env.VULN_COUNT != '0'
+      uses: JasonEtco/create-an-issue@v2
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VULN_COUNT: ${{ env.VULN_COUNT }}
+          SCAN_DATE: ${{ env.SCAN_DATE }}
+          SUMMARY: ${{ env.SUMMARY }}
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        script: |
-          const fs = require('fs');
-          const reportPath = 'target/dependency-check-report.json';
-           if (!fs.existsSync(reportPath)) {
-             console.log("Report file not found, skipping issue creation");
-             return;
-           }
-          const reportData = fs.readFileSync(reportPath, 'utf-8');
-          const report = JSON.parse(reportData);
-          const vulnCount = report.dependencies.reduce((sum, dep) => sum + (dep.vulnerabilities?.length || 0), 0);
-
-
-          
-          const issueTitle = `[Security] hapi-fhir-validation - ${vulnCount} vulnerability(s) detected`;
-          
-          // Check if issue already exists
-          const existingIssues = await github.rest.issues.listForRepo({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            state: 'open',
-            labels: ['security', 'dependencies', 'hapi-fhir-validation']
-          });
-          
-          const alreadyExists = existingIssues.data.some(issue => 
-            issue.title.includes('hapi-fhir-validation') && 
-            issue.title.includes('vulnerability')
-          );
-          
-          if (!alreadyExists) {
-            // Group vulnerabilities by severity
-            const vulnerabilities = [];
-            for (const dependency of report.dependencies || []) {
-              for (const vuln of dependency.vulnerabilities || []) {
-                vulnerabilities.push({
-                  cve: vuln.name,
-                  severity: vuln.severity || 'UNKNOWN',
-                  package: dependency.fileName,
-                  version: dependency.version,
-                  description: vuln.description || 'No description available',
-                  cvssScore: vuln.cvssv3?.baseScore || vuln.cvssv2?.score || 'N/A'
-                });
-              }
-            }
-            
-            // Sort by severity
-            vulnerabilities.sort((a, b) => {
-              const severityOrder = {CRITICAL: 4, HIGH: 3, MEDIUM: 2, LOW: 1, UNKNOWN: 0};
-              return severityOrder[b.severity] - severityOrder[a.severity];
-            });
-            
-            let issueBody = `## 🔍 Dependency Security Scan - hapi-fhir-validation
-          
-            **Total Vulnerabilities**: ${vulnCount}
-            **Scan Date**: ${new Date().toISOString()}
-            **Module**: hapi-fhir-validation
-            
-            ### 📊 Vulnerability Summary
-            `;
-            
-                        // Add severity breakdown
-                        const severityCounts = {};
-                        vulnerabilities.forEach(vuln => {
-                          severityCounts[vuln.severity] = (severityCounts[vuln.severity] || 0) + 1;
-                        });
-                        
-                        Object.entries(severityCounts).forEach(([severity, count]) => {
-                          issueBody += `- **${severity}**: ${count}\n`;
-                        });
-            
-                        issueBody += `
-            ### 🎯 Top Vulnerabilities
-            `;
-
-            // Add top vulnerabilities
-            vulnerabilities.slice(0, 10).forEach((vuln, index) => {
-              issueBody += `
-              #### ${index + 1}. ${vuln.cve} (${vuln.severity})
-              **Package**: ${vuln.package}@${vuln.version}
-              **CVSS Score**: ${vuln.cvssScore}
-              
-              ${vuln.description.substring(0, 250)}...
-              `;
-                          });
-              
-                          issueBody += `
-              ### 📝 Scan Details
-              - **Run ID**: ${context.runId}
-              - **Commit**: ${context.sha}
-              - **Scanner**: OWASP Dependency-Check
-              - **Report**: Available as workflow artifact
-              
-              ### 🔧 Next Steps
-              1. Review the detailed vulnerability report
-              2. Update affected dependencies
-              3. Consider security patches or alternative libraries
-              4. Re-scan after updates
-              
-              [View full scan results](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})
-              `;
-
-            await github.rest.issues.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              title: issueTitle,
-              body: issueBody,
-              labels: ['security', 'dependencies', 'cve', 'hapi-fhir-validation', 'automated-scan'],
-              assignees: []  # Add specific assignees if needed
-            });
-            
-            console.log(`Created security issue for hapi-fhir-validation with ${vulnCount} vulnerabilities`);
-          } else {
-            console.log('Security issue for hapi-fhir-validation already exists');
-          }
+          filename: .github/ISSUE_TEMPLATE/dependency-scan.md
 
   summary:
     runs-on: ubuntu-latest
