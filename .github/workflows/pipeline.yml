@@ -86,10 +86,11 @@ jobs:
     - name: Process scan results
       id: process_results
       run: |
-        if [ -f "target/dependency-check-report.json" ]; then
-          cd ../target
+        REPORT_FILE="target/dependency-check-report.json"
+        
+        if [ -f "$REPORT_FILE" ]; then
           # Count vulnerabilities
-          VULN_COUNT=$(jq '.dependencies[].vulnerabilities | length' dependency-check-report.json | awk '{sum+=$1} END {print sum}')
+          VULN_COUNT=$(jq '.dependencies[].vulnerabilities | length' "$REPORT_FILE" | awk '{sum+=$1} END {print sum}')
           echo "vuln_count=$VULN_COUNT" >> $GITHUB_OUTPUT
           
           if [ "$VULN_COUNT" -gt 0 ]; then
