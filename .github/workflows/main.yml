@@ -13,7 +13,7 @@ on:
     paths:
       - 'hapi-fhir-validation/pom.xml'
       - '**/dependencies/**'
-  workflow_dispatch:  # Allow manual triggering
+  workflow_dispatch:  # Allows manual runs
 
 jobs:
   dependency-scan:
