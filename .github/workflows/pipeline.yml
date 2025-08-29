@@ -48,13 +48,13 @@ jobs:
         mkdir -p ../dependency-check-data
         
         # Run with correct parameter names
-        mvn org.owasp:dependency-check-maven:8.3.1:check \
+        mvn org.owasp:dependency-check-maven:9.0.9:check \
           -Dformat=JSON \
           -DoutputDirectory=../reports \
           -DdataDirectory=../dependency-check-data \
-          -DautoUpdate=true \
           -DnvdApiKey="${{ secrets.NVD_API_KEY }}" \
           -DfailOnCVSS=0
+
 
     - name: Check if report was generated
       run: |
