@@ -58,7 +58,6 @@
 			<url>https://repo.maven.apache.org/maven2</url>
 		</repository>
 	</repositories>
-
 	<dependencies>
 		<!-- Cobertura is here as a 'provided' depdendency just to get the @CoverageIgnore annotation. It would be nice if there was a better way for this.. -->
 		<!-- <dependency> <groupId>net.sourceforge.cobertura</groupId> <artifactId>cobertura</artifactId> <version>2.1.1</version> <scope>provided</scope> <exclusions> <exclusion> <artifactId>jetty</artifactId>
@@ -2814,6 +2813,7 @@
 						<version>3.1.1</version>
 						<configuration>
 							<failBuildOnCVSS>8</failBuildOnCVSS>
+							<nvdDatafeedUrl>https://dependency-check.github.io/DependencyCheck_Builder/nvd_cache/nvdcve-{0}.json.gz</nvdDatafeedUrl>
 						</configuration>
 						<executions>
 							<execution>
