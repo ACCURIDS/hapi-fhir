@@ -36,51 +36,61 @@ jobs:
     - name: Cache NVD database
       uses: actions/cache@v3
       with:
-        path: ~/.dependency-check/data
-        key: ${{ runner.os }}-nvd-data-${{ hashFiles('hapi-fhir-validation/pom.xml') }}
+        path: ../dependency-check-data
+        key: ${{ runner.os }}-nvd-data-${{ hashFiles('pom.xml') }}
         restore-keys: |
           ${{ runner.os }}-nvd-data-
 
-    - name: Download OWASP Dependency-Check
-      run: |
-        wget -q https://github.com/jeremylong/DependencyCheck/releases/download/v8.3.1/dependency-check-8.3.1-release.zip
-        unzip -q dependency-check-8.3.1-release.zip
-        echo "DEPENDENCY_CHECK_HOME=$(pwd)/dependency-check" >> $GITHUB_ENV
-
-    - name: Run OWASP Dependency-Check with retry
+    - name: Run Maven Dependency-Check with correct parameters
       id: security_scan
       run: |
-        # Create data directory if it doesn't exist
-        mkdir -p ~/.dependency-check/data
+        # Create data directory
+        mkdir -p ../dependency-check-data
         
-        # Run with retry logic and longer timeouts
-        $DEPENDENCY_CHECK_HOME/bin/dependency-check.sh \
+        # Run with correct parameter names
+        mvn org.owasp:dependency-check-maven:8.3.1:check \
+          -Dformat=JSON \
+          -DoutputDirectory=../reports \
+          -DdataDirectory=../dependency-check-data \
+          -DconnectionTimeout=60000 \
+          -DreadTimeout=120000 \
+          -DfailOnCVSS=0
+
+    - name: Check if report was generated
+      run: |
+        if [ -f "../reports/dependency-check-report.json" ]; then
+          echo "Report generated successfully"
+          exit 0
+        else
+          echo "Report generation failed, trying alternative approach..."
+          exit 1
+        fi
+
+    - name: Alternative approach using CLI with correct parameters
+      if: failure() && steps.security_scan.conclusion == 'failure'
+      run: |
+        # Download OWASP Dependency-Check
+        wget -q https://github.com/jeremylong/DependencyCheck/releases/download/v8.3.1/dependency-check-8.3.1-release.zip
+        unzip -q dependency-check-8.3.1-release.zip
+        
+        # Run with correct CLI parameters (different from Maven plugin!)
+        ./dependency-check/bin/dependency-check.sh \
           --project "hapi-fhir-validation" \
           --scan "." \
           --out "../reports" \
           --format "JSON" \
-          --data ~/.dependency-check/data \
-          --connectionTimeout 30000 \
-          --readTimeout 120000 \
-          --nvdApiKey "${{ secrets.NVD_API_KEY }}" \
-          --disableNexus \
-          --disableCentral \
-          --failOnCVSS 0 || \
-        echo "Dependency check completed with exit code: $?"
+          --data "../dependency-check-data" \
+          --noupdate \
+          --failOnCVSS 0
 
     - name: Process scan results
       id: process_results
       run: |
-        cd ../reports
-        
-        if [ -f "dependency-check-report.json" ]; then
+        if [ -f "../reports/dependency-check-report.json" ]; then
+          cd ../reports
           # Count vulnerabilities
           VULN_COUNT=$(jq '.dependencies[].vulnerabilities | length' dependency-check-report.json | awk '{sum+=$1} END {print sum}')
           echo "vuln_count=$VULN_COUNT" >> $GITHUB_OUTPUT
-          
-          # Extract report data
-          REPORT_DATA=$(jq -c '.' dependency-check-report.json)
-          echo "report_data=$REPORT_DATA" >> $GITHUB_OUTPUT
           
           if [ "$VULN_COUNT" -gt 0 ]; then
             echo "has_vulnerabilities=true" >> $GITHUB_OUTPUT
@@ -90,15 +100,16 @@ jobs:
         else
           echo "vuln_count=0" >> $GITHUB_OUTPUT
           echo "has_vulnerabilities=false" >> $GITHUB_OUTPUT
+          echo "No report file found" >&2
         fi
 
     - name: Upload scan reports
       uses: actions/upload-artifact@v4
       with:
-        name: hapi-fhir-validation-dependency-report
+        name: dependency-report
         path: |
-          reports/
-          dependency-tree.txt
+          ../reports/
+          ../dependency-check-data/
 
     - name: Create GitHub Issue for vulnerabilities
       if: steps.process_results.outputs.has_vulnerabilities == 'true'
