@@ -51,7 +51,7 @@ jobs:
         mvn org.owasp:dependency-check-maven:check \
           -Dformats=JSON \
           -DnvdApiKey=${{ secrets.NVD_API_KEY }} \
-          -DoutputDirectory=../reports \
+          -DoutputDirectory=../target \
           -DdataDirectory=../dependency-check-data \
           -DnvdApiDelay=2000 \
           -DfailOnCVSS=0
@@ -77,7 +77,7 @@ jobs:
         ./dependency-check/bin/dependency-check.sh \
           --project "hapi-fhir-validation" \
           --scan "." \
-          --out "../reports" \
+          --out "../target" \
           --format "JSON" \
           --data "../dependency-check-data" \
           --noupdate \
