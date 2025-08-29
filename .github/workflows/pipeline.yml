@@ -86,7 +86,7 @@ jobs:
     - name: Process scan results
       id: process_results
       run: |
-        if [ -f "../target/dependency-check-report.json" ]; then
+        if [ -f "target/dependency-check-report.json" ]; then
           cd ../target
           # Count vulnerabilities
           VULN_COUNT=$(jq '.dependencies[].vulnerabilities | length' dependency-check-report.json | awk '{sum+=$1} END {print sum}')
