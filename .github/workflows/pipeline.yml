@@ -108,7 +108,7 @@ jobs:
       with:
         name: dependency-report
         path: |
-          ../reports/
+          ../target/
           ../dependency-check-data/
 
     - name: Create GitHub Issue for vulnerabilities
