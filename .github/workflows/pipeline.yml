@@ -98,24 +98,25 @@ jobs:
           dependency-check-data/
 
     - name: Create GitHub Issue
-      if: needs.dependency-scan.outputs.vuln_count != '0'
+      if: steps.process_results.outputs.vuln_count != '0'
       uses: JasonEtco/create-an-issue@v2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        VULN_COUNT: ${{ needs.dependency-scan.outputs.vuln_count }}
-        CVES: ${{ needs.dependency-scan.outputs.cves }}
+        VULN_COUNT: ${{ steps.process_results.outputs.vuln_count }}
+        CVES: ${{ steps.process_results.outputs.cves }}
         SCAN_DATE: ${{ github.run_started_at }}
       with:
-        title: "Security scan detected ${{ needs.dependency-scan.outputs.vuln_count }} vulnerability(s)"
+        title: "Security scan detected ${{ steps.process_results.outputs.vuln_count }} vulnerability(s)"
         body: |
           **HAPI FHIR Validation Dependency Scan**
           
           Scan date: ${{ github.run_started_at }}
-          Vulnerabilities found: ${{ needs.dependency-scan.outputs.vuln_count }}
+          Vulnerabilities found: ${{ steps.process_results.outputs.vuln_count }}
           
-          **CVE IDs:** ${{ needs.dependency-scan.outputs.cves }}
+          **CVE IDs:** ${{ steps.process_results.outputs.cves }}
           
           Please review the attached dependency scan report artifact for details.
+
 
   summary:
     runs-on: ubuntu-latest
