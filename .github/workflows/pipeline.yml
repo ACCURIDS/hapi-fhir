@@ -12,6 +12,11 @@ on:
 jobs:
   dependency-scan:
     runs-on: ubuntu-latest
+    outputs:
+      vuln_count_hapi-fhir-validation: ${{ steps.run_scan.outputs.vuln_count_hapi-fhir-validation }}
+      cves_hapi-fhir-validation: ${{ steps.run_scan.outputs.cves_hapi-fhir-validation }}
+      vuln_count_hapi-fhir-validation-resources-r5: ${{ steps.run_scan.outputs.vuln_count_hapi-fhir-validation-resources-r5 }}
+      cves_hapi-fhir-validation-resources-r5: ${{ steps.run_scan.outputs.cves_hapi-fhir-validation-resources-r5 }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
