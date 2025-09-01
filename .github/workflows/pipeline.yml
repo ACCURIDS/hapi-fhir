@@ -110,7 +110,7 @@ jobs:
           SCAN_DATE: ${{ github.run_started_at }}
         with:
           title: "Security scan detected ${{ needs.dependency-scan.outputs.vuln_count }} vulnerability(s)"
-          filename: .github/ISSUE_TEMPLATE/dependency-scan.md
+          filename: .github/ISSUE_TEMPLATE/dep-scan-template.md
 
 
   summary:
