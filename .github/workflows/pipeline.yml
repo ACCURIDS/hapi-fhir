@@ -143,4 +143,3 @@ jobs:
         
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "The full JSON report is available as a workflow artifact named 'dependency-report'." >> $GITHUB_STEP_SUMMARY
-
