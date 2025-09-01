@@ -14,7 +14,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        module: ["hapi-fhir-validation", "hapi-fhir-validation-resources-r5"]
+        module: 
+          - hapi-fhir-validation
+          - hapi-fhir-validation-resources-r5
     name: Scan ${{ matrix.module }}
     steps:
       - name: Checkout code
