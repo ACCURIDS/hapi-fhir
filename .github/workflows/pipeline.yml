@@ -46,8 +46,7 @@ jobs:
               -Dformats=JSON \
               -DnvdApiKey=${{ secrets.NVD_API_KEY }} \
               -DoutputDirectory="$LOG_DIR" \
-              -DfailBuildOnAnyVulnerability=false \
-
+              -DfailBuildOnAnyVulnerability=false
 
           REPORT_FILE="$LOG_DIR/dependency-check-report.json"
           if [ -f "$REPORT_FILE" ]; then
@@ -58,8 +57,8 @@ jobs:
             CVES=""
           fi
 
-          echo "vuln_count=$VULN_COUNT" >> $GITHUB_OUTPUT
-          echo "cves=$CVES" >> $GITHUB_OUTPUT
+          echo "vuln_count_${{ matrix.module }}=$VULN_COUNT" >> $GITHUB_OUTPUT
+          echo "cves_${{ matrix.module }}=$CVES" >> $GITHUB_OUTPUT
 
       - name: Upload scan report
         uses: actions/upload-artifact@v4
@@ -73,22 +72,22 @@ jobs:
     strategy:
       matrix:
         module: ["hapi-fhir-validation", "hapi-fhir-validation-resources-r5"]
+    if: ${{ needs.dependency-scan.outputs['vuln_count_' + matrix.module] != '0' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Create issue if vulnerabilities found
-        if: needs.dependency-scan.outputs.vuln_count != '0'
+      - name: Create GitHub Issue for ${{ matrix.module }}
         uses: JasonEtco/create-an-issue@v2
         with:
-          title: "Security scan detected ${{ needs.dependency-scan.outputs.vuln_count }} vulnerability(s) in ${{ matrix.module }}"
+          title: "Security scan detected ${{ needs.dependency-scan.outputs['vuln_count_' + matrix.module] }} vulnerability(s) in ${{ matrix.module }}"
           filename: .github/ISSUE_TEMPLATE/dep-scan2.md
           update_existing: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MODULE: ${{ matrix.module }}
-          VULN_COUNT: ${{ needs.dependency-scan.outputs.vuln_count }}
-          CVES: ${{ needs.dependency-scan.outputs.cves }}
+          VULN_COUNT: ${{ needs.dependency-scan.outputs['vuln_count_' + matrix.module] }}
+          CVES: ${{ needs.dependency-scan.outputs['cves_' + matrix.module] }}
           SCAN_DATE: ${{ github.run_started_at }}
 
   summary:
@@ -101,7 +100,8 @@ jobs:
           echo "### HAPI FHIR Dependency Scan Summary" >> $GITHUB_STEP_SUMMARY
           echo "**Scan Date:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> $GITHUB_STEP_SUMMARY
           for mod in hapi-fhir-validation hapi-fhir-validation-resources-r5; do
-            echo "**$mod Vulnerabilities:** ${{ needs.dependency-scan.outputs.vuln_count }}" >> $GITHUB_STEP_SUMMARY
+            COUNT="${{ needs.dependency-scan.outputs['vuln_count_' + mod] }}"
+            echo "**$mod Vulnerabilities:** $COUNT" >> $GITHUB_STEP_SUMMARY
           done
           echo ""
           echo "Scan reports are available as workflow artifacts." >> $GITHUB_STEP_SUMMARY
