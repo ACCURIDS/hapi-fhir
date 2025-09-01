@@ -43,11 +43,10 @@ jobs:
 
           echo "🔎 Scanning module folder: ${{ matrix.module }}"
           mvn -B -pl "${{ matrix.module }}" org.owasp:dependency-check-maven:check \
-              -am \
-              -Dformat=ALL \
+              -Dformats=JSON \
               -DnvdApiKey=${{ secrets.NVD_API_KEY }} \
               -DoutputDirectory="$LOG_DIR" \
-              --log-file "$LOG_DIR/mvn.log"
+              -DfailBuildOnAnyVulnerability=false \
 
 
           REPORT_FILE="$LOG_DIR/dependency-check-report.json"
