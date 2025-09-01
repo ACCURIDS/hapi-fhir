@@ -58,7 +58,7 @@ jobs:
     - name: Process scan results and generate issue body
       id: process_results
       run: |
-        REPORT_FILE="${{ github.workspace }}/target/dependency-check-report.json"
+        REPORT_FILE="${{ github.workspace }}/hapi-fhir-validation/target/dependency-check-report.json"
         
         if [ ! -f "$REPORT_FILE" ]; then
           echo "Report file not found!"
