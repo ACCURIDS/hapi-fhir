@@ -8,7 +8,7 @@ on:
   pull_request:
     branches: [5.1.0-patch1]
   workflow_dispatch:
-
+  
 jobs:
   dependency-scan:
     runs-on: ubuntu-latest
@@ -27,21 +27,11 @@ jobs:
           java-version: '17'
           cache: 'maven'
 
-      - name: Cache NVD database
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2/repository/org/owasp/dependency-check-data
-          key: ${{ runner.os }}-nvd-data-${{ matrix.module }}-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-nvd-data-
-
       - name: Run Dependency-Check
         id: run_scan
         run: |
           LOG_DIR="${{ matrix.module }}/target"
           mkdir -p "$LOG_DIR"
-
-          echo "🔎 Scanning module folder: ${{ matrix.module }}"
           mvn -B -pl "${{ matrix.module }}" org.owasp:dependency-check-maven:check \
               -Dformats=JSON \
               -DnvdApiKey=${{ secrets.NVD_API_KEY }} \
@@ -57,39 +47,29 @@ jobs:
             CVES=""
           fi
 
-          echo "vuln_count_${{ matrix.module }}=$VULN_COUNT" >> $GITHUB_OUTPUT
-          echo "cves_${{ matrix.module }}=$CVES" >> $GITHUB_OUTPUT
+          echo "VULN_COUNT=$VULN_COUNT" >> $GITHUB_ENV
+          echo "CVES=$CVES" >> $GITHUB_ENV
+
+      - name: Create GitHub Issue if vulnerabilities found
+        if: env.VULN_COUNT != '0'
+        uses: JasonEtco/create-an-issue@v2
+        with:
+          title: "Security scan detected ${{ env.VULN_COUNT }} vulnerability(s) in ${{ matrix.module }}"
+          filename: .github/ISSUE_TEMPLATE/dep-scan2.md
+          update_existing: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MODULE: ${{ matrix.module }}
+          VULN_COUNT: ${{ env.VULN_COUNT }}
+          CVES: ${{ env.CVES }}
+          SCAN_DATE: ${{ github.run_started_at }}
 
       - name: Upload scan report
         uses: actions/upload-artifact@v4
         with:
           name: dependency-report-${{ matrix.module }}
           path: ${{ matrix.module }}/target/
-
-  create-issues:
-    needs: dependency-scan
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        module: ["hapi-fhir-validation", "hapi-fhir-validation-resources-r5"]
-    if: ${{ needs.dependency-scan.outputs['vuln_count_' + matrix.module] != '0' }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Create GitHub Issue for ${{ matrix.module }}
-        uses: JasonEtco/create-an-issue@v2
-        with:
-          title: "Security scan detected ${{ needs.dependency-scan.outputs['vuln_count_' + matrix.module] }} vulnerability(s) in ${{ matrix.module }}"
-          filename: .github/ISSUE_TEMPLATE/dep-scan2.md
-          update_existing: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          MODULE: ${{ matrix.module }}
-          VULN_COUNT: ${{ needs.dependency-scan.outputs['vuln_count_' + matrix.module] }}
-          CVES: ${{ needs.dependency-scan.outputs['cves_' + matrix.module] }}
-          SCAN_DATE: ${{ github.run_started_at }}
-
+          
   summary:
     needs: dependency-scan
     runs-on: ubuntu-latest
