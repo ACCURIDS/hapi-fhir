@@ -1,26 +1,16 @@
 ---
-title: "🔍 Dependency Scan Report"
-labels: [security, dependencies, automated-scan]
+name: Dependency Scan Report
+about: Auto-generated security scan report
 ---
 
-A dependency scan detected vulnerabilities.
+# 🔍 Dependency Scan Report - Vulnerabilities Found
 
-- **Module**: hapi-fhir-validation
-- **Scan Date**: {{ date }} 
+**Scan Date:** $SCAN_DATE  
+**Total Vulnerabilities Found:** $VULN_COUNT
 
----
-## title: "🔍 Dependency Scan Report - {{ VULN_COUNT }} vulnerabilities found"
-labels: [security, dependencies, automated-scan]
----
-
-## 📊 Scan Summary
-
-- **Vulnerabilities Found**: {{ VULN_COUNT }}
-- **Scan Date**: {{ SCAN_DATE }}
+## 📊 CVE Summary
+$CVES
 
 ## 📝 Details
-{{ SUMMARY }}
+Please review the uploaded artifact for full vulnerability details.
 
----
-
-⚠️ Please review the uploaded artifact for full vulnerability details.
