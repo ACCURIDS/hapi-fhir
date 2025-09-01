@@ -1,5 +1,6 @@
+
 name: HAPI FHIR Validation Dependency Scan
- 
+
 on:
   schedule:
     - cron: '0 0 * * 1'  # Run weekly on Monday at midnight
@@ -13,7 +14,7 @@ on:
     paths:
       - 'hapi-fhir-validation/pom.xml'
       - '**/dependencies/**'
-  workflow_dispatch:  # Allows manual runs
+  workflow_dispatch:
 
 jobs:
   dependency-scan:
@@ -21,7 +22,11 @@ jobs:
     defaults:
       run:
         working-directory: ./hapi-fhir-validation
-    
+    outputs:
+      vuln_count: ${{ steps.process_results.outputs.vuln_count }}
+      has_vulnerabilities: ${{ steps.process_results.outputs.has_vulnerabilities }}
+      cves: ${{ steps.process_results.outputs.cves }}
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -40,14 +45,10 @@ jobs:
         key: ${{ runner.os }}-nvd-data-${{ hashFiles('pom.xml') }}
         restore-keys: |
           ${{ runner.os }}-nvd-data-
-
-    - name: Run Maven Dependency-Check with correct parameters
+    - name: Run Maven Dependency-Check
       id: security_scan
       run: |
-        # Create data directory
         mkdir -p ../dependency-check-data
-        
-        # Run with correct parameter names
         mvn org.owasp:dependency-check-maven:check \
           -Dformats=JSON \
           -DnvdApiKey=${{ secrets.NVD_API_KEY }} \
@@ -55,44 +56,24 @@ jobs:
           -DdataDirectory=../dependency-check-data \
           -DnvdApiDelay=2000 \
           -DfailOnCVSS=0
-
-
-    - name: Check if report was generated
+    - name: Check if report exists
       run: |
-       if [ -f "target/dependency-check-report.json" ]; then
-         echo "Report generated successfully"
-       else
-         echo "Report generation failed, trying alternative approach..."
-         exit 1
-       fi
-
-    - name: Alternative approach using CLI with correct parameters
-      if: failure() && steps.security_scan.conclusion == 'failure'
-      run: |
-        # Download OWASP Dependency-Check
-        wget -q https://github.com/jeremylong/DependencyCheck/releases/download/v8.3.1/dependency-check-8.3.1-release.zip
-        unzip -q dependency-check-8.3.1-release.zip
-        
-        # Run with correct CLI parameters (different from Maven plugin!)
-        ./dependency-check/bin/dependency-check.sh \
-          --project "hapi-fhir-validation" \
-          --scan "." \
-          --out "../target" \
-          --format "JSON" \
-          --data "../dependency-check-data" \
-          --noupdate \
-          --failOnCVSS 0
-
+        if [ -f "target/dependency-check-report.json" ]; then
+          echo "Report generated successfully"
+        else
+          echo "Report not found, failing..."
+          exit 1
+        fi
     - name: Process scan results
       id: process_results
       run: |
         REPORT_FILE="target/dependency-check-report.json"
-        
+    
         if [ -f "$REPORT_FILE" ]; then
-          # Count vulnerabilities
-          VULN_COUNT=$(jq '.dependencies[].vulnerabilities | length' "$REPORT_FILE" | awk '{sum+=$1} END {print sum}')
+          VULN_COUNT=$(jq '[.dependencies[].vulnerabilities[]?] | length' "$REPORT_FILE")
+          CVES=$(jq -r '[.dependencies[].vulnerabilities[]?.name] | join(", ")' "$REPORT_FILE")
           echo "vuln_count=$VULN_COUNT" >> $GITHUB_OUTPUT
-          
+          echo "cves=$CVES" >> $GITHUB_OUTPUT
           if [ "$VULN_COUNT" -gt 0 ]; then
             echo "has_vulnerabilities=true" >> $GITHUB_OUTPUT
           else
@@ -100,8 +81,8 @@ jobs:
           fi
         else
           echo "vuln_count=0" >> $GITHUB_OUTPUT
+          echo "cves=" >> $GITHUB_OUTPUT
           echo "has_vulnerabilities=false" >> $GITHUB_OUTPUT
-          echo "No report file found" >&2
         fi
 
     - name: Upload scan reports
@@ -111,23 +92,31 @@ jobs:
         path: |
           target/
           dependency-check-data/
+          
+  create-issue:
+    needs: dependency-scan
+    runs-on: ubuntu-latest
+    if: needs.dependency-scan.outputs.has_vulnerabilities == 'true'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
 
-    - name: Create GitHub Issue
-      if: env.VULN_COUNT != '0'
-      uses: JasonEtco/create-an-issue@v2
-      env:
+      - name: Create GitHub Issue
+        uses: JasonEtco/create-an-issue@v2
+        env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VULN_COUNT: ${{ env.VULN_COUNT }}
-          SCAN_DATE: ${{ env.SCAN_DATE }}
-          SUMMARY: ${{ env.SUMMARY }}
-      with:
+          VULN_COUNT: ${{ needs.dependency-scan.outputs.vuln_count }}
+          CVES: ${{ needs.dependency-scan.outputs.cves }}
+          SCAN_DATE: ${{ github.run_started_at }}
+        with:
+          title: "Security scan detected ${{ needs.dependency-scan.outputs.vuln_count }} vulnerability(s)"
           filename: .github/ISSUE_TEMPLATE/dependency-scan.md
+
 
   summary:
     runs-on: ubuntu-latest
     needs: dependency-scan
     if: always()
-    
     steps:
     - name: Generate scan summary
       run: |
