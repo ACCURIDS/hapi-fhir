@@ -43,7 +43,7 @@ jobs:
           mkdir -p target/dependency-check
 
           for mod in "${MODULES[@]}"; do
-            LOG_DIR="$mod/target/dependency-check"
+            LOG_DIR="$mod/target"
             mkdir -p "$LOG_DIR"
 
             echo "🔎 Scanning module folder: $mod"
@@ -72,8 +72,8 @@ jobs:
         with:
           name: dependency-reports
           path: |
-            hapi-fhir-validation/target/dependency-check/
-            hapi-fhir-validation-resources-r5/target/dependency-check/
+            hapi-fhir-validation/target/
+            hapi-fhir-validation-resources-r5/target/
 
   create-issues:
     needs: dependency-scan
