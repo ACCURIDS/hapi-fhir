@@ -48,17 +48,27 @@ jobs:
       run: |
         mkdir -p ${{ github.workspace }}/target
         mkdir -p ${{ github.workspace }}/dependency-check-data
-        mvn org.owasp:dependency-check-maven:check \
+        
+        # Run Maven with Debug flag (-X) for verbose logging
+        mvn -X org.owasp:dependency-check-maven:check \
           -Dformats=JSON \
           -DnvdApiKey=${{ secrets.NVD_API_KEY }} \
           -DoutputDirectory=${{ github.workspace }}/target \
           -DdataDirectory=${{ github.workspace }}/dependency-check-data \
           -DfailOnCVSS=0
+          
+        # Add an immediate check to see if the report was generated
+        if [ ! -f "${{ github.workspace }}/target/dependency-check-report.json" ]; then
+          echo "::error::Maven dependency-check did not generate a report file."
+          exit 1
+        else
+          echo "Successfully generated dependency-check report."
+        fi
     
     - name: Process scan results and generate issue body
       id: process_results
       run: |
-        REPORT_FILE="${{ github.workspace }}/hapi-fhir-validation/target/dependency-check-report.json"
+        REPORT_FILE="${{ github.workspace }}/target/dependency-check-report.json"
         
         if [ ! -f "$REPORT_FILE" ]; then
           echo "Report file not found!"
@@ -91,12 +101,10 @@ jobs:
           ) | .[]
           ')
 
-          # Use a heredoc to set the multiline output for the issue body
-          cat <<EOF >> $GITHUB_OUTPUT
-          issue_body<<DELIMITER
-          $ISSUE_BODY
-          DELIMITER
-          EOF
+          # Set the multiline output for the issue body using the correct syntax
+          echo "issue_body<<DELIMITER" >> $GITHUB_OUTPUT
+          echo "$ISSUE_BODY" >> $GITHUB_OUTPUT
+          echo "DELIMITER" >> $GITHUB_OUTPUT
         fi
 
     - name: Upload scan reports
