@@ -69,7 +69,7 @@ jobs:
           ALL_CVES=""
 
           for mod in $MODULES; do
-            REPORT_FILE="target/$mod/dependency-check-report.json"
+            REPORT_FILE="$mod/target/dependency-check-report.json"
             if [ -f "$REPORT_FILE" ]; then
               VULN_COUNT=$(jq '[.dependencies[].vulnerabilities[]?] | length' "$REPORT_FILE")
               CVES=$(jq -r '[.dependencies[].vulnerabilities[]?.name] | join(", ")' "$REPORT_FILE")
@@ -107,7 +107,7 @@ jobs:
           MODULES="hapi-fhir-validation hapi-fhir-validation-resources-r5"
   
           for mod in $MODULES; do
-            REPORT_FILE="target/$mod/dependency-check-report.json"
+            REPORT_FILE="$mod/target/dependency-check-report.json"
             if [ -f "$REPORT_FILE" ]; then
               VULN_COUNT=$(jq '[.dependencies[].vulnerabilities[]?] | length' "$REPORT_FILE")
               if [ "$VULN_COUNT" -gt 0 ]; then
