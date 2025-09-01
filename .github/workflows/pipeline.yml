@@ -70,18 +70,3 @@ jobs:
           name: dependency-report-${{ matrix.module }}
           path: ${{ matrix.module }}/target/
           
-  summary:
-    needs: dependency-scan
-    runs-on: ubuntu-latest
-    if: always()
-    steps:
-      - name: Generate workflow summary
-        run: |
-          echo "### HAPI FHIR Dependency Scan Summary" >> $GITHUB_STEP_SUMMARY
-          echo "**Scan Date:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> $GITHUB_STEP_SUMMARY
-          for mod in hapi-fhir-validation hapi-fhir-validation-resources-r5; do
-            COUNT="${{ needs.dependency-scan.outputs['vuln_count_' + mod] }}"
-            echo "**$mod Vulnerabilities:** $COUNT" >> $GITHUB_STEP_SUMMARY
-          done
-          echo ""
-          echo "Scan reports are available as workflow artifacts." >> $GITHUB_STEP_SUMMARY
