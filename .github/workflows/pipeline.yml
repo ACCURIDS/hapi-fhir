@@ -1,8 +1,8 @@
-name: HAPI FHIR Multi-Module Dependency Scan
+name: HAPI FHIR Dependency Scan
 
 on:
   schedule:
-    - cron: '0 0 * * 1'  # Weekly on Monday midnight
+    - cron: '0 0 * * 1' # weekly on Monday midnight
   push:
     branches: [5.1.0-patch1]
   pull_request:
@@ -12,11 +12,10 @@ on:
 jobs:
   dependency-scan:
     runs-on: ubuntu-latest
-    outputs:
-      vuln_count_hapi-fhir-validation: ${{ steps.run_scan.outputs.vuln_count_hapi-fhir-validation }}
-      cves_hapi-fhir-validation: ${{ steps.run_scan.outputs.cves_hapi-fhir-validation }}
-      vuln_count_hapi-fhir-validation-resources-r5: ${{ steps.run_scan.outputs.vuln_count_hapi-fhir-validation-resources-r5 }}
-      cves_hapi-fhir-validation-resources-r5: ${{ steps.run_scan.outputs.cves_hapi-fhir-validation-resources-r5 }}
+    strategy:
+      matrix:
+        module: ["hapi-fhir-validation", "hapi-fhir-validation-resources-r5"]
+    name: Scan ${{ matrix.module }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -28,86 +27,67 @@ jobs:
           java-version: '17'
           cache: 'maven'
 
-      - name: Cache NVD data
+      - name: Cache NVD database
         uses: actions/cache@v4
         with:
           path: ~/.m2/repository/org/owasp/dependency-check-data
-          key: ${{ runner.os }}-nvd-data-${{ hashFiles('**/pom.xml') }}
+          key: ${{ runner.os }}-nvd-data-${{ matrix.module }}-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-nvd-data-
 
-      - name: Run Dependency-Check per module
+      - name: Run Dependency-Check
         id: run_scan
         run: |
-          MODULES=("hapi-fhir-validation" "hapi-fhir-validation-resources-r5")
-          mkdir -p target/dependency-check
+          LOG_DIR="${{ matrix.module }}/target/dependency-check"
+          mkdir -p "$LOG_DIR"
 
-          for mod in "${MODULES[@]}"; do
-            LOG_DIR="$mod/target"
-            mkdir -p "$LOG_DIR"
+          echo "🔎 Scanning module folder: ${{ matrix.module }}"
+          mvn -B -pl "${{ matrix.module }}" org.owasp:dependency-check-maven:9.0.9:check \
+            -Dformats=JSON \
+            -DoutputDirectory="$LOG_DIR" \
+            -DfailBuildOnAnyVulnerability=false \
+            -DnvdApiKey=${{ secrets.NVD_API_KEY }} || true
 
-            echo "🔎 Scanning module folder: $mod"
-            mvn -B -pl "$mod" org.owasp:dependency-check-maven:check \
-              -Dformats=JSON \
-              -DoutputDirectory="$LOG_DIR" \
-              -DfailBuildOnAnyVulnerability=false \
-              -DnvdApiKey=${{ secrets.NVD_API_KEY }} || true
+          REPORT_FILE="$LOG_DIR/dependency-check-report.json"
+          if [ -f "$REPORT_FILE" ]; then
+            VULN_COUNT=$(jq '[.dependencies[].vulnerabilities[]?] | length' "$REPORT_FILE")
+            CVES=$(jq -r '[.dependencies[].vulnerabilities[]?.name] | join(", ")' "$REPORT_FILE")
+          else
+            VULN_COUNT=0
+            CVES=""
+          fi
 
-            REPORT_FILE="$LOG_DIR/dependency-check-report.json"
-            if [ -f "$REPORT_FILE" ]; then
-              VULN_COUNT=$(jq '[.dependencies[].vulnerabilities[]?] | length' "$REPORT_FILE")
-              CVES=$(jq -r '[.dependencies[].vulnerabilities[]?.name] | join(", ")' "$REPORT_FILE")
-            else
-              VULN_COUNT=0
-              CVES=""
-            fi
+          echo "vuln_count=$VULN_COUNT" >> $GITHUB_OUTPUT
+          echo "cves=$CVES" >> $GITHUB_OUTPUT
 
-            # Save outputs per module
-            echo "vuln_count_$mod=$VULN_COUNT" >> $GITHUB_OUTPUT
-            echo "cves_$mod=$CVES" >> $GITHUB_OUTPUT
-          done
-
-      - name: Upload scan reports
+      - name: Upload scan report
         uses: actions/upload-artifact@v4
         with:
-          name: dependency-reports
-          path: |
-            hapi-fhir-validation/target/
-            hapi-fhir-validation-resources-r5/target/
+          name: dependency-report-${{ matrix.module }}
+          path: ${{ matrix.module }}/target/dependency-check/
 
   create-issues:
     needs: dependency-scan
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        module: ["hapi-fhir-validation", "hapi-fhir-validation-resources-r5"]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Create issue for hapi-fhir-validation
-        if: ${{ needs.dependency-scan.outputs.vuln_count_hapi-fhir-validation != '0' }}
+      - name: Create issue if vulnerabilities found
+        if: needs.dependency-scan.outputs.vuln_count != '0'
         uses: JasonEtco/create-an-issue@v2
         with:
-          title: "Security scan detected ${{ needs.dependency-scan.outputs.vuln_count_hapi-fhir-validation }} vulnerability(s) in hapi-fhir-validation"
+          title: "Security scan detected ${{ needs.dependency-scan.outputs.vuln_count }} vulnerability(s) in ${{ matrix.module }}"
           filename: .github/ISSUE_TEMPLATE/dep-scan2.md
           update_existing: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          MODULE: hapi-fhir-validation
-          VULN_COUNT: ${{ needs.dependency-scan.outputs.vuln_count_hapi-fhir-validation }}
-          CVES: ${{ needs.dependency-scan.outputs.cves_hapi-fhir-validation }}
-          SCAN_DATE: ${{ github.run_started_at }}
-
-      - name: Create issue for hapi-fhir-validation-resources-r5
-        if: ${{ needs.dependency-scan.outputs.vuln_count_hapi-fhir-validation-resources-r5 != '0' }}
-        uses: JasonEtco/create-an-issue@v2
-        with:
-          title: "Security scan detected ${{ needs.dependency-scan.outputs.vuln_count_hapi-fhir-validation-resources-r5 }} vulnerability(s) in hapi-fhir-validation-resources-r5"
-          filename: .github/ISSUE_TEMPLATE/dep-scan2.md
-          update_existing: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          MODULE: hapi-fhir-validation-resources-r5
-          VULN_COUNT: ${{ needs.dependency-scan.outputs.vuln_count_hapi-fhir-validation-resources-r5 }}
-          CVES: ${{ needs.dependency-scan.outputs.cves_hapi-fhir-validation-resources-r5 }}
+          MODULE: ${{ matrix.module }}
+          VULN_COUNT: ${{ needs.dependency-scan.outputs.vuln_count }}
+          CVES: ${{ needs.dependency-scan.outputs.cves }}
           SCAN_DATE: ${{ github.run_started_at }}
 
   summary:
@@ -119,7 +99,8 @@ jobs:
         run: |
           echo "### HAPI FHIR Dependency Scan Summary" >> $GITHUB_STEP_SUMMARY
           echo "**Scan Date:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> $GITHUB_STEP_SUMMARY
-          echo "**hapi-fhir-validation Vulnerabilities:** ${{ needs.dependency-scan.outputs.vuln_count_hapi-fhir-validation }}" >> $GITHUB_STEP_SUMMARY
-          echo "**hapi-fhir-validation-resources-r5 Vulnerabilities:** ${{ needs.dependency-scan.outputs.vuln_count_hapi-fhir-validation-resources-r5 }}" >> $GITHUB_STEP_SUMMARY
+          for mod in hapi-fhir-validation hapi-fhir-validation-resources-r5; do
+            echo "**$mod Vulnerabilities:** ${{ needs.dependency-scan.outputs.vuln_count }}" >> $GITHUB_STEP_SUMMARY
+          done
           echo ""
           echo "Scan reports are available as workflow artifacts." >> $GITHUB_STEP_SUMMARY
