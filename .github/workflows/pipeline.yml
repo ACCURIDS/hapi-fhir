@@ -92,17 +92,25 @@ jobs:
         path: |
           target/
           dependency-check-data/
-    - name: Create GitHub Issue
-      if: needs.dependency-scan.outputs.vuln_count != '0'
-      uses: JasonEtco/create-an-issue@v2
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        VULN_COUNT: ${{ needs.dependency-scan.outputs.vuln_count }}
-        CVES: ${{ needs.dependency-scan.outputs.cves }}
-        SCAN_DATE: ${{ github.run_started_at }}
-      with:
-        title: "Security scan detected ${{ needs.dependency-scan.outputs.vuln_count }} vulnerability(s)"
-        filename: .github/ISSUE_TEMPLATE/dependency-scan.md
+          
+  create-issue:
+    needs: dependency-scan
+    runs-on: ubuntu-latest
+    if: needs.dependency-scan.outputs.has_vulnerabilities == 'true'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Create GitHub Issue
+        uses: JasonEtco/create-an-issue@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VULN_COUNT: ${{ needs.dependency-scan.outputs.vuln_count }}
+          CVES: ${{ needs.dependency-scan.outputs.cves }}
+          SCAN_DATE: ${{ github.run_started_at }}
+        with:
+          title: "Security scan detected ${{ needs.dependency-scan.outputs.vuln_count }} vulnerability(s)"
+          filename: .github/ISSUE_TEMPLATE/dependency-scan.md
 
 
   summary:
