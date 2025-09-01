@@ -74,6 +74,7 @@ jobs:
 
         # Only generate the issue body if vulnerabilities were found
         if [ "$VULN_COUNT" -gt 0 ]; then
+          echo "Vulnerabilities found: $VULN_COUNT. Generating issue body."
           ISSUE_BODY=$(echo "$VULN_DATA" | jq -r --arg date "${{ github.run_started_at }}" --arg actor "${{ github.triggering_actor }}" --arg event "${{ github.event_name }}" '
           (
             ["### 🚨 OWASP Dependency-Check Security Scan Report"],
