@@ -1,3 +1,4 @@
+
 name: HAPI FHIR Validation Dependency Scan
 
 on:
@@ -44,7 +45,6 @@ jobs:
         key: ${{ runner.os }}-nvd-data-${{ hashFiles('pom.xml') }}
         restore-keys: |
           ${{ runner.os }}-nvd-data-
-
     - name: Run Maven Dependency-Check
       id: security_scan
       run: |
@@ -56,7 +56,6 @@ jobs:
           -DdataDirectory=../dependency-check-data \
           -DnvdApiDelay=2000 \
           -DfailOnCVSS=0
-
     - name: Check if report exists
       run: |
         if [ -f "target/dependency-check-report.json" ]; then
