@@ -42,11 +42,13 @@ jobs:
           mkdir -p "$LOG_DIR"
 
           echo "🔎 Scanning module folder: ${{ matrix.module }}"
-          mvn -B -pl "${{ matrix.module }}" org.owasp:dependency-check-maven:9.0.9:check \
-            -Dformats=JSON \
-            -DoutputDirectory="$LOG_DIR" \
-            -DfailBuildOnAnyVulnerability=false \
-            -DnvdApiKey=${{ secrets.NVD_API_KEY }} || true
+          mvn -B -pl "${{ matrix.module }}" org.owasp:dependency-check-maven:check \
+              -am \
+              -Dformat=ALL \
+              -DnvdApiKey=${{ secrets.NVD_API_KEY }} \
+              -DoutputDirectory="$LOG_DIR" \
+              --log-file "$LOG_DIR/mvn.log"
+
 
           REPORT_FILE="$LOG_DIR/dependency-check-report.json"
           if [ -f "$REPORT_FILE" ]; then
