@@ -38,7 +38,7 @@ jobs:
       - name: Run Dependency-Check
         id: run_scan
         run: |
-          LOG_DIR="${{ matrix.module }}/target/dependency-check"
+          LOG_DIR="${{ matrix.module }}/target"
           mkdir -p "$LOG_DIR"
 
           echo "🔎 Scanning module folder: ${{ matrix.module }}"
@@ -65,7 +65,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: dependency-report-${{ matrix.module }}
-          path: ${{ matrix.module }}/target/dependency-check/
+          path: ${{ matrix.module }}/target/
 
   create-issues:
     needs: dependency-scan
