@@ -113,25 +113,39 @@ jobs:
               if [ "$VULN_COUNT" -gt 0 ]; then
                 CVES=$(jq -r '[.dependencies[].vulnerabilities[]?.name] | join(", ")' "$REPORT_FILE")
   
-                # Export environment variables used by your template
+                # Export environment variables for your template
                 echo "MODULE=$mod" >> $GITHUB_ENV
                 echo "VULN_COUNT=$VULN_COUNT" >> $GITHUB_ENV
                 echo "CVES=$CVES" >> $GITHUB_ENV
                 echo "SCAN_DATE=${{ github.run_started_at }}" >> $GITHUB_ENV
   
-                echo "Creating GitHub issue for module: $mod"
+                echo "Checking if issue already exists for module: $mod"
   
-                # Use the JasonEtco action with the template
-                gh issue create \
-                  --title "Security scan detected $VULN_COUNT vulnerability(s) in $mod" \
-                  --body "$(envsubst < .github/ISSUE_TEMPLATE/dep-scan2.md)" \
+                # Search for an existing open issue with the module name in the title
+                EXISTING=$(gh issue list \
+                  --repo "$GITHUB_REPOSITORY" \
                   --label "security,dependencies,automated" \
-                  --repo "$GITHUB_REPOSITORY"
+                  --state open \
+                  --search "$mod" \
+                  --json number \
+                  | jq '.[0].number // empty')
+  
+                if [ -n "$EXISTING" ]; then
+                  echo "❌ Issue already exists (#$EXISTING) for module $mod, skipping creation."
+                else
+                  echo "✅ Creating new issue for module $mod"
+                  gh issue create \
+                    --title "Security scan detected $VULN_COUNT vulnerability(s) in $mod" \
+                    --body "$(envsubst < .github/ISSUE_TEMPLATE/dep-scan2.md)" \
+                    --label "security,dependencies,automated" \
+                    --repo "$GITHUB_REPOSITORY"
+                fi
               fi
             fi
           done
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
   summary:
     runs-on: ubuntu-latest
