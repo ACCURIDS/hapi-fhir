@@ -28,7 +28,10 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
           cache: 'maven'
-
+          
+      - name: Set scan date
+        run: echo "SCAN_DATE=$(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
+        
       - name: Run Dependency-Check
         id: run_scan
         run: |
@@ -36,7 +39,7 @@ jobs:
           mkdir -p "$LOG_DIR"
           mvn -B -pl "${{ matrix.module }}" org.owasp:dependency-check-maven:check \
               -Dformats=JSON \
-              -DnvdApiKey=${{ secrets.NVD_API_KEY }} \
+              --nvdDatafeed \
               -DoutputDirectory="$LOG_DIR" \
               -DfailBuildOnAnyVulnerability=false
 
@@ -52,19 +55,17 @@ jobs:
           echo "VULN_COUNT=$VULN_COUNT" >> $GITHUB_ENV
           echo "CVES=$CVES" >> $GITHUB_ENV
 
-      - name: Create GitHub Issue if vulnerabilities found
-        if: env.VULN_COUNT != '0'
+      - name: Create or update issue
         uses: JasonEtco/create-an-issue@v2
         with:
-          title: "Security scan detected ${{ env.VULN_COUNT }} vulnerability(s) in ${{ matrix.module }}"
           filename: .github/ISSUE_TEMPLATE/dep-scan2.md
           update_existing: true
+          search_existing: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          MODULE: ${{ matrix.module }}
-          VULN_COUNT: ${{ env.VULN_COUNT }}
-          CVES: ${{ env.CVES }}
-          SCAN_DATE: ${{ github.run_started_at }}
+          SCAN_DATE: ${{ steps.scan.outputs.date }}
+          VULN_COUNT: ${{ steps.scan.outputs.vuln_count }}
+          CVES: ${{ steps.scan.outputs.cves }}
 
       - name: Upload scan report
         uses: actions/upload-artifact@v4
