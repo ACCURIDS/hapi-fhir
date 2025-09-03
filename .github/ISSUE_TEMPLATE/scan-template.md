@@ -1,8 +1,8 @@
 ---
-name: Dependency Scan Report
-about: Auto-generated security scan report
-title: "Security scan detected {{ env.VULN_COUNT }} vulnerability(s)"
-labels: [security, dependencies, automated-scan]
+title: 'Security scan detected {{ env.VULN_COUNT }} vulnerability(s)'
+labels: [ 'security', 'dependencies', 'automated-scan' ]
+name: 'Dependency Scan Report'
+about: 'Auto-generated security scan report'
 ---
 
 # 🔍 Dependency Scan Report - Vulnerabilities Found
