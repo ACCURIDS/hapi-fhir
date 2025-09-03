@@ -32,6 +32,9 @@ jobs:
               java-version: '17'
               cache: 'maven'
 
+         - name: Set scan date
+           run: echo "SCAN_DATE=$(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
+
          - name: Run Dependency-Check
            id: run_scan
            run: |
@@ -56,15 +59,14 @@ jobs:
            if: env.VULN_COUNT != '0'
            uses: JasonEtco/create-an-issue@v2
            with:
-              title: "Security scan detected ${{ env.VULN_COUNT }} vulnerability(s) in ${{ matrix.module }}"
-              filename: .github/ISSUE_TEMPLATE/scan-template.md
-              update_existing: true
+            filename: .github/ISSUE_TEMPLATE/scan-template.md
+            update_existing: true
+            search_existing: true
            env:
-              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              MODULE: ${{ matrix.module }}
-              VULN_COUNT: ${{ env.VULN_COUNT }}
-              CVES: ${{ env.CVES }}
-              SCAN_DATE: ${{ github.run_started_at }}
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            SCAN_DATE: ${{ steps.scan.outputs.date }}
+            VULN_COUNT: ${{ steps.scan.outputs.vuln_count }}
+            CVES: ${{ steps.scan.outputs.cves }}
 
          - name: Upload scan report
            uses: actions/upload-artifact@v4
