@@ -56,7 +56,7 @@ jobs:
            uses: JasonEtco/create-an-issue@v2
            with:
               title: "Security scan detected ${{ env.VULN_COUNT }} vulnerability(s) in ${{ matrix.module }}"
-              filename: .github/ISSUE_TEMPLATE/scan-Template.md
+              filename: .github/ISSUE_TEMPLATE/scan-template.md
               update_existing: true
            env:
               GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
