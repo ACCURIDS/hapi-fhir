@@ -19,6 +19,7 @@ jobs:
             module:
                - hapi-fhir-validation
                - hapi-fhir-validation-resources-r5
+               - hapi-fhir-structures-r5
       name: Scan ${{ matrix.module }}
       steps:
          - name: Checkout code
