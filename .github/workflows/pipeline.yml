@@ -39,7 +39,6 @@ jobs:
           mkdir -p "$LOG_DIR"
           mvn -B -pl "${{ matrix.module }}" org.owasp:dependency-check-maven:check \
               -Dformats=JSON \
-              -nvdDatafeed \
               -DoutputDirectory="$LOG_DIR" \
               -DfailBuildOnAnyVulnerability=false
 
