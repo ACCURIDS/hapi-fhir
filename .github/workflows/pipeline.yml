@@ -61,7 +61,7 @@ jobs:
            uses: JasonEtco/create-an-issue@v2
            with:
               filename: .github/ISSUE_TEMPLATE/scan-template.md
-              update_existing: true
+              update_existing: false
               search_existing: true
               assignees: yassinbnsalah, aliariff
            env:
