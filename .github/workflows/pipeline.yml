@@ -31,7 +31,9 @@ jobs:
               cache: 'maven'
 
          - name: Set scan date
-           run: echo "SCAN_DATE=$(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
+           run: |
+              echo "SCAN_DATE=$(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
+              echo "MODULE=${{ matrix.module }}" >> $GITHUB_ENV
 
          - name: Run Dependency-Check
            id: run_scan
@@ -61,7 +63,7 @@ jobs:
               filename: .github/ISSUE_TEMPLATE/scan-template.md
               update_existing: true
               search_existing: true
-              assignees: yassinebensalah
+              assignees: yassinbnsalah
            env:
               GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               SCAN_DATE: ${{ env.SCAN_DATE }}
