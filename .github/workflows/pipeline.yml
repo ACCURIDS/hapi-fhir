@@ -1,7 +1,6 @@
 name: HAPI FHIR Dependency Scan
 
 on:
-
    schedule:
       - cron: '0 0 * * 1' # weekly on Monday midnight
    push:
@@ -9,7 +8,6 @@ on:
    pull_request:
       branches: [5.1.0-patch1]
    workflow_dispatch:
-
 
 jobs:
    dependency-scan:
@@ -55,18 +53,19 @@ jobs:
               fi
               echo "VULN_COUNT=$VULN_COUNT" >> $GITHUB_ENV
               echo "CVES=$CVES" >> $GITHUB_ENV
+
          - name: Create GitHub Issue if vulnerabilities found
            if: env.VULN_COUNT != '0'
            uses: JasonEtco/create-an-issue@v2
            with:
-            filename: .github/ISSUE_TEMPLATE/scan-template.md
-            update_existing: true
-            search_existing: true
+              filename: .github/ISSUE_TEMPLATE/scan-template.md
+              update_existing: true
+              search_existing: true
            env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            SCAN_DATE: ${{ steps.scan.outputs.date }}
-            VULN_COUNT: ${{ steps.scan.outputs.vuln_count }}
-            CVES: ${{ steps.scan.outputs.cves }}
+              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              SCAN_DATE: ${{ env.SCAN_DATE }}
+              VULN_COUNT: ${{ env.VULN_COUNT }}
+              CVES: ${{ env.CVES }}
 
          - name: Upload scan report
            uses: actions/upload-artifact@v4
