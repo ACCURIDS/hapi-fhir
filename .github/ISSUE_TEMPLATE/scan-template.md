@@ -13,5 +13,3 @@ about: 'Auto-generated security scan report'
 
 📊 **CVE Summary**
 {{ env.CVES }}
-
-📝 Check the uploaded artifact for the full report.
