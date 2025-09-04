@@ -2,7 +2,7 @@ name: HAPI FHIR Dependency Scan
 
 on:
    schedule:
-      - cron: '0 0 * * 1' # weekly on Monday midnight
+      - cron: '0 0 * * 1'
    push:
       branches: [5.1.0-patch1]
    pull_request:
