@@ -63,7 +63,7 @@ jobs:
               filename: .github/ISSUE_TEMPLATE/scan-template.md
               update_existing: true
               search_existing: true
-              assignees: yassinebensalah, alia riff
+              assignees: yassinbnsalah, aliariff
            env:
               GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               SCAN_DATE: ${{ env.SCAN_DATE }}
