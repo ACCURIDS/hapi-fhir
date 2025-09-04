@@ -61,11 +61,13 @@ jobs:
               filename: .github/ISSUE_TEMPLATE/scan-template.md
               update_existing: true
               search_existing: true
+              assignees: yassinebensalah
            env:
               GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               SCAN_DATE: ${{ env.SCAN_DATE }}
               VULN_COUNT: ${{ env.VULN_COUNT }}
               CVES: ${{ env.CVES }}
+              MODULE: ${{ env.MODULE }}
 
          - name: Upload scan report
            uses: actions/upload-artifact@v4
