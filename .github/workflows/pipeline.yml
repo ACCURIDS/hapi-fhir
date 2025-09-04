@@ -61,9 +61,9 @@ jobs:
            uses: JasonEtco/create-an-issue@v2
            with:
               filename: .github/ISSUE_TEMPLATE/scan-template.md
-              update_existing: false
-              search_existing: false
-              assignees: yassinbnsalah, aliariff
+              update_existing: true
+              search_existing: true
+              assignees: yassinbnsalah, aliariff, oleksandrsnizhko
            env:
               GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               SCAN_DATE: ${{ env.SCAN_DATE }}
