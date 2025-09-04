@@ -7,11 +7,11 @@ about: 'Auto-generated security scan report'
 
 # 🔍 Dependency Scan Report - Vulnerabilities Found
 
-- **Module:** ${{ env.MODULE }}
-- **Scan Date:** ${{ env.SCAN_DATE }}
-- **Vulnerabilities Found:** ${{ env.VULN_COUNT }}
+- **Module:** {{ env.MODULE }}
+- **Scan Date:** {{ env.SCAN_DATE }}
+- **Vulnerabilities Found:** {{ env.VULN_COUNT }}
 
 📊 **CVE Summary**
-${{ env.CVES }}
+{{ env.CVES }}
 
 📝 Check the uploaded artifact for the full report.
