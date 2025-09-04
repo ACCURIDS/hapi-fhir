@@ -1,5 +1,5 @@
 ---
-title: 'Security scan detected {{ env.VULN_COUNT }} vulnerability(s)'
+title: 'Security scan detected on {{ env.MODULE }}'
 labels: [ 'security', 'dependencies', 'automated-scan' ]
 name: 'Dependency Scan Report'
 about: 'Auto-generated security scan report'
