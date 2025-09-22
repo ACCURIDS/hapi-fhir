@@ -45,7 +45,8 @@ jobs:
                   -DnvdDatafeedUrl=https://dependency-check.github.io/DependencyCheck_Builder/nvd_cache/nvdcve-{0}.json.gz \
                   -DoutputDirectory="$LOG_DIR" \
                   -DfailBuildOnAnyVulnerability=false \
-                  -DossIndexAnalyzerEnabled=false
+                  -DossIndexUsername=${{ secrets.OSSINDEX_USER }} \
+                  -DossIndexPassword=${{ secrets.OSSINDEX_TOKEN }}
               REPORT_FILE="$LOG_DIR/dependency-check-report.json"
               if [ -f "$REPORT_FILE" ]; then
                 VULN_COUNT=$(jq '[.dependencies[].vulnerabilities[]?] | length' "$REPORT_FILE")
